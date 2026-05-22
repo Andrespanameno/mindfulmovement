@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { Flame, Sparkles, Droplet, Play, ArrowRight } from "lucide-react";
+import { Flame, Sparkles, Droplet, ArrowRight } from "lucide-react";
+import { movements } from "@/lib/movements";
+import { MovementCard } from "@/components/mm/MovementCard";
+import { useSessionStore } from "@/lib/useSessionStore";
 
 export const Route = createFileRoute("/home")({
   head: () => ({
@@ -12,14 +15,10 @@ export const Route = createFileRoute("/home")({
   component: HomePage,
 });
 
-const suggestions = [
-  { title: "Neck & Shoulder Release", meta: "3 minutes • Gentle", tint: "bg-primary/20" },
-  { title: "Box Breathing", meta: "5 minutes • Focus", tint: "bg-warm/40" },
-  { title: "Mindful Walk Break", meta: "10 minutes • Refresh", tint: "bg-accent/20" },
-];
-
 function HomePage() {
   const hydrationPct = 64;
+  const { xpToday } = useSessionStore();
+  const suggestions = movements.slice(0, 3);
   return (
     <AppShell>
       <header className="flex items-center justify-between mb-8">
@@ -45,7 +44,7 @@ function HomePage() {
             <Sparkles className="size-4 text-primary" />
             <span className="text-xs font-medium text-muted-foreground">XP Today</span>
           </div>
-          <p className="text-2xl font-semibold">450</p>
+          <p className="text-2xl font-semibold">{xpToday}</p>
         </div>
       </section>
 
@@ -71,21 +70,8 @@ function HomePage() {
         Suggested Movement
       </h4>
       <div className="space-y-3 mb-8">
-        {suggestions.map((s) => (
-          <Link
-            key={s.title}
-            to="/move"
-            className="p-3 pr-4 rounded-2xl bg-card ring-1 ring-black/5 flex items-center gap-4 hover:ring-primary/60 transition"
-          >
-            <div className={`size-12 rounded-xl flex items-center justify-center ${s.tint}`}>
-              <Play className="size-4" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium">{s.title}</p>
-              <p className="text-xs text-muted-foreground">{s.meta}</p>
-            </div>
-            <ArrowRight className="size-4 text-muted-foreground" />
-          </Link>
+        {suggestions.map((m) => (
+          <MovementCard key={m.id} movement={m} variant="compact" />
         ))}
       </div>
 
