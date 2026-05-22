@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { Movement } from "./movements";
 
 const KEY = "mm-session-state";
 
@@ -6,6 +7,19 @@ export const HYDRATION_GOAL_OZ = 64;
 export const HYDRATION_XP_PER_8OZ = 5;
 export const QUICK_ADDS_OZ = [8, 12, 16] as const;
 export const STREAK_BONUS_XP = 20;
+export const HISTORY_DAYS = 90;
+
+export interface DailyEntry {
+  date: string;
+  sessions: number;
+  minutes: number;
+  pushups: number;
+  squats: number;
+  breathing: number;
+  ouncesLogged: number;
+  hitHydrationGoal: boolean;
+  xp: number;
+}
 
 export interface SessionState {
   xpToday: number;
@@ -22,6 +36,12 @@ export interface SessionState {
   bestStreak: number;
   lastActiveDate: string | null;
   streakBonusDate: string | null;
+  totalSessions: number;
+  totalMinutes: number;
+  totalPushups: number;
+  totalSquats: number;
+  totalBreathing: number;
+  history: Record<string, DailyEntry>;
 }
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -30,6 +50,58 @@ const yesterday = () => {
   d.setDate(d.getDate() - 1);
   return d.toISOString().slice(0, 10);
 };
+const daysAgo = (n: number) => {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return d.toISOString().slice(0, 10);
+};
+
+function seedHistory(): Record<string, DailyEntry> {
+  const h: Record<string, DailyEntry> = {};
+  // Two weeks of gentle, realistic activity so trends look meaningful
+  const seed = [
+    { d: 13, s: 2, m: 7, pu: 0, sq: 0, br: 1, oz: 48, hit: false },
+    { d: 12, s: 1, m: 3, pu: 0, sq: 0, br: 1, oz: 56, hit: false },
+    { d: 11, s: 3, m: 11, pu: 5, sq: 0, br: 1, oz: 64, hit: true },
+    { d: 10, s: 2, m: 7, pu: 0, sq: 6, br: 1, oz: 56, hit: false },
+    { d: 9, s: 3, m: 12, pu: 5, sq: 0, br: 1, oz: 64, hit: true },
+    { d: 8, s: 1, m: 3, pu: 0, sq: 0, br: 1, oz: 40, hit: false },
+    { d: 7, s: 2, m: 8, pu: 0, sq: 6, br: 1, oz: 64, hit: true },
+    { d: 6, s: 3, m: 12, pu: 8, sq: 0, br: 1, oz: 56, hit: false },
+    { d: 5, s: 3, m: 11, pu: 0, sq: 0, br: 1, oz: 64, hit: true },
+    { d: 4, s: 4, m: 15, pu: 0, sq: 12, br: 2, oz: 72, hit: true },
+    { d: 3, s: 3, m: 12, pu: 10, sq: 0, br: 1, oz: 64, hit: true },
+    { d: 2, s: 4, m: 16, pu: 0, sq: 12, br: 2, oz: 64, hit: true },
+    { d: 1, s: 3, m: 11, pu: 10, sq: 0, br: 1, oz: 56, hit: false },
+  ];
+  for (const r of seed) {
+    const date = daysAgo(r.d);
+    h[date] = {
+      date,
+      sessions: r.s,
+      minutes: r.m,
+      pushups: r.pu,
+      squats: r.sq,
+      breathing: r.br,
+      ouncesLogged: r.oz,
+      hitHydrationGoal: r.hit,
+      xp: r.s * 35 + (r.hit ? 20 : 0),
+    };
+  }
+  return h;
+}
+
+const seededHistory = (typeof window === "undefined" ? {} : seedHistory());
+const seedTotals = Object.values(seededHistory).reduce(
+  (acc, e) => ({
+    sessions: acc.sessions + e.sessions,
+    minutes: acc.minutes + e.minutes,
+    pushups: acc.pushups + e.pushups,
+    squats: acc.squats + e.squats,
+    breathing: acc.breathing + e.breathing,
+  }),
+  { sessions: 0, minutes: 0, pushups: 0, squats: 0, breathing: 0 },
+);
 
 const initial: SessionState = {
   xpToday: 0,
@@ -46,6 +118,12 @@ const initial: SessionState = {
   bestStreak: 14,
   lastActiveDate: yesterday(),
   streakBonusDate: null,
+  totalSessions: seedTotals.sessions,
+  totalMinutes: seedTotals.minutes,
+  totalPushups: seedTotals.pushups,
+  totalSquats: seedTotals.squats,
+  totalBreathing: seedTotals.breathing,
+  history: seededHistory,
 };
 
 function read(): SessionState {
@@ -113,11 +191,59 @@ function applyActivity(s: SessionState, xpGained: number): SessionState {
   };
 }
 
-export function completeMovement(id: string, xp: number) {
+function ensureDay(history: Record<string, DailyEntry>, date: string): DailyEntry {
+  return (
+    history[date] ?? {
+      date,
+      sessions: 0,
+      minutes: 0,
+      pushups: 0,
+      squats: 0,
+      breathing: 0,
+      ouncesLogged: 0,
+      hitHydrationGoal: false,
+      xp: 0,
+    }
+  );
+}
+
+function trimHistory(history: Record<string, DailyEntry>): Record<string, DailyEntry> {
+  const cutoff = daysAgo(HISTORY_DAYS);
+  const out: Record<string, DailyEntry> = {};
+  for (const [k, v] of Object.entries(history)) {
+    if (k >= cutoff) out[k] = v;
+  }
+  return out;
+}
+
+export function completeMovement(movement: Movement) {
   setState((s) => {
-    if (s.completedToday.includes(id)) return s;
-    const next = applyActivity(s, xp);
-    return { ...next, completedToday: [...s.completedToday, id] };
+    if (s.completedToday.includes(movement.id)) return s;
+    const afterActivity = applyActivity(s, movement.xp);
+    const t = today();
+    const day = ensureDay(afterActivity.history, t);
+    const isBreathing = movement.category === "Breathing";
+    const updated: DailyEntry = {
+      ...day,
+      sessions: day.sessions + 1,
+      minutes: day.minutes + movement.duration,
+      pushups: day.pushups + (movement.repsType === "pushups" ? movement.reps ?? 0 : 0),
+      squats: day.squats + (movement.repsType === "squats" ? movement.reps ?? 0 : 0),
+      breathing: day.breathing + (isBreathing ? 1 : 0),
+      xp: day.xp + movement.xp,
+    };
+    return {
+      ...afterActivity,
+      completedToday: [...s.completedToday, movement.id],
+      totalSessions: s.totalSessions + 1,
+      totalMinutes: s.totalMinutes + movement.duration,
+      totalPushups:
+        s.totalPushups + (movement.repsType === "pushups" ? movement.reps ?? 0 : 0),
+      totalSquats:
+        s.totalSquats + (movement.repsType === "squats" ? movement.reps ?? 0 : 0),
+      totalBreathing: s.totalBreathing + (isBreathing ? 1 : 0),
+      history: trimHistory({ ...afterActivity.history, [t]: updated }),
+    };
   });
 }
 
@@ -138,11 +264,19 @@ export function logHydration(deltaOz: number) {
       nextOz >= HYDRATION_GOAL_OZ && !s.hydrationGoalReachedDates.includes(t)
         ? [...s.hydrationGoalReachedDates, t]
         : s.hydrationGoalReachedDates;
+    const day = ensureDay(s.history, t);
+    const updatedDay: DailyEntry = {
+      ...day,
+      ouncesLogged: nextOz,
+      hitHydrationGoal: nextOz >= HYDRATION_GOAL_OZ,
+      xp: day.xp + xpDelta,
+    };
     const base: SessionState = {
       ...s,
       ouncesToday: nextOz,
       hydrationXpToday: s.hydrationXpToday + xpDelta,
       hydrationGoalReachedDates: reached,
+      history: trimHistory({ ...s.history, [t]: updatedDay }),
     };
     if (xpDelta <= 0) return base;
     return applyActivity(base, xpDelta);
