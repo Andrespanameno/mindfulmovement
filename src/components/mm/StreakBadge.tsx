@@ -1,0 +1,23 @@
+import { Flame } from "lucide-react";
+import { useSessionStore } from "@/lib/useSessionStore";
+import { cn } from "@/lib/utils";
+
+export function StreakBadge({ className }: { className?: string }) {
+  const { streak, bestStreak } = useSessionStore();
+  return (
+    <div className={cn("p-4 rounded-2xl bg-secondary/60 ring-1 ring-black/5", className)}>
+      <div className="flex items-center gap-2 mb-3">
+        <Flame className="size-4 text-accent" />
+        <span className="text-xs font-medium text-muted-foreground">Streak</span>
+      </div>
+      <p className="text-2xl font-semibold">
+        {streak} <span className="text-sm font-medium text-muted-foreground">days</span>
+      </p>
+      <p className="text-[11px] text-muted-foreground mt-1">Best: {bestStreak} days</p>
+    </div>
+  );
+}
+
+export function Milestones({ className }: { className?: string }) {
+  return null;
+}
