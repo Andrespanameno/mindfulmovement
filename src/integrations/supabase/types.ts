@@ -14,7 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          daily_water_goal: number
+          fitness_level: string | null
+          full_name: string | null
+          id: string
+          onboarding_completed: boolean
+          updated_at: string
+          wellness_goals: string[] | null
+          work_style: string | null
+        }
+        Insert: {
+          created_at?: string
+          daily_water_goal?: number
+          fitness_level?: string | null
+          full_name?: string | null
+          id: string
+          onboarding_completed?: boolean
+          updated_at?: string
+          wellness_goals?: string[] | null
+          work_style?: string | null
+        }
+        Update: {
+          created_at?: string
+          daily_water_goal?: number
+          fitness_level?: string | null
+          full_name?: string | null
+          id?: string
+          onboarding_completed?: boolean
+          updated_at?: string
+          wellness_goals?: string[] | null
+          work_style?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
