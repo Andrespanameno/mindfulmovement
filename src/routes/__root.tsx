@@ -11,6 +11,8 @@ import {
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { ReminderRunner } from "@/components/mm/ReminderRunner";
+import { AuthProvider } from "@/lib/auth-context";
+import { AuthGate } from "@/components/mm/AuthGate";
 
 function NotFoundComponent() {
   return (
@@ -121,9 +123,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <Toaster position="top-center" />
-      <ReminderRunner />
+      <AuthProvider>
+        <AuthGate>
+          <Outlet />
+        </AuthGate>
+        <Toaster position="top-center" />
+        <ReminderRunner />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
