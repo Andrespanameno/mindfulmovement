@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { Bell, Heart, Settings, HelpCircle, LogOut, ChevronRight } from "lucide-react";
+import { useSessionStore } from "@/lib/useSessionStore";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -11,12 +12,6 @@ export const Route = createFileRoute("/profile")({
   }),
   component: ProfilePage,
 });
-
-const stats = [
-  { label: "Day streak", value: "12" },
-  { label: "Total XP", value: "2.1k" },
-  { label: "Sessions", value: "48" },
-];
 
 const groups = [
   {
@@ -36,6 +31,12 @@ const groups = [
 ];
 
 function ProfilePage() {
+  const { streak, totalXp, completedToday } = useSessionStore();
+  const stats = [
+    { label: "Day streak", value: String(streak) },
+    { label: "Total XP", value: totalXp >= 1000 ? `${(totalXp / 1000).toFixed(1)}k` : String(totalXp) },
+    { label: "Today", value: String(completedToday.length) },
+  ];
   return (
     <AppShell>
       <header className="flex flex-col items-center text-center mb-8">

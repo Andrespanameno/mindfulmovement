@@ -2,6 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { Smile, Clock, Droplet, Wind } from "lucide-react";
 import type { ReactNode } from "react";
+import { XPBar } from "@/components/mm/XPBar";
+import { StreakBadge } from "@/components/mm/StreakBadge";
+import { MilestoneGrid } from "@/components/mm/MilestoneGrid";
+import { useSessionStore } from "@/lib/useSessionStore";
 
 export const Route = createFileRoute("/progress")({
   head: () => ({
@@ -24,17 +28,22 @@ const days = [
 ];
 
 function ProgressPage() {
+  const { xpToday } = useSessionStore();
   return (
     <AppShell>
       <h1 className="text-2xl font-semibold mb-6">Your Journey</h1>
 
-      <div className="p-6 rounded-3xl bg-foreground text-background mb-8 relative overflow-hidden">
-        <p className="text-xs text-background/60 mb-1">Level 14</p>
-        <p className="text-lg font-medium mb-4">Mindful Seeker</p>
-        <div className="w-full h-1.5 bg-background/15 rounded-full overflow-hidden mb-2">
-          <div className="h-full bg-primary rounded-full" style={{ width: "70%" }} />
+      <div className="mb-6">
+        <XPBar variant="dark" />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 mb-8">
+        <StreakBadge />
+        <div className="p-4 rounded-2xl bg-secondary/60 ring-1 ring-black/5">
+          <p className="text-xs font-medium text-muted-foreground mb-3">XP Today</p>
+          <p className="text-2xl font-semibold">{xpToday}</p>
+          <p className="text-[11px] text-muted-foreground mt-1">You're building momentum.</p>
         </div>
-        <p className="text-[10px] text-background/60">2,140 / 3,000 XP to Level 15</p>
       </div>
 
       <div className="flex items-center justify-between mb-4">
@@ -62,18 +71,11 @@ function ProgressPage() {
         <Row icon={<Wind className="size-4 text-accent" />} bg="bg-accent/20" label="Breathing Sessions" trend="+3%" />
       </div>
 
-      <h3 className="text-sm font-semibold mb-3">Recent wins</h3>
-      <div className="grid grid-cols-3 gap-3">
-        {["7-day streak", "First flow", "Hydrated week"].map((b) => (
-          <div
-            key={b}
-            className="aspect-square rounded-2xl bg-card ring-1 ring-black/5 p-3 flex flex-col justify-between"
-          >
-            <div className="size-8 rounded-lg bg-primary/25" />
-            <p className="text-xs font-medium leading-tight">{b}</p>
-          </div>
-        ))}
-      </div>
+      <h3 className="text-sm font-semibold mb-3">Milestones</h3>
+      <MilestoneGrid />
+      <p className="text-xs text-muted-foreground italic mt-4 text-center">
+        Small actions create big change.
+      </p>
     </AppShell>
   );
 }

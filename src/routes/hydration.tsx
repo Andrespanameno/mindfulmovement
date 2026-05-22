@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { Droplet, Minus, Plus, ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { toast } from "sonner";
+import { useSessionStore, logHydration, HYDRATION_GOAL, HYDRATION_XP } from "@/lib/useSessionStore";
 
 export const Route = createFileRoute("/hydration")({
   head: () => ({
@@ -13,13 +14,18 @@ export const Route = createFileRoute("/hydration")({
   component: HydrationPage,
 });
 
-const GOAL = 8;
-
 function HydrationPage() {
-  const [glasses, setGlasses] = useState(5);
-  const pct = Math.min(100, Math.round((glasses / GOAL) * 100));
+  const { glasses } = useSessionStore();
+  const pct = Math.min(100, Math.round((glasses / HYDRATION_GOAL) * 100));
   const r = 86;
   const c = 2 * Math.PI * r;
+
+  const add = () => {
+    if (glasses < HYDRATION_GOAL) {
+      toast.success(`+${HYDRATION_XP} XP`, { description: "Small sips, big impact." });
+    }
+    logHydration(1);
+  };
 
   return (
     <AppShell>
@@ -53,7 +59,7 @@ function HydrationPage() {
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <Droplet className="size-5 text-primary mb-1" />
             <p className="text-4xl font-semibold">{glasses}</p>
-            <p className="text-xs text-muted-foreground">of {GOAL} glasses</p>
+            <p className="text-xs text-muted-foreground">of {HYDRATION_GOAL} glasses</p>
           </div>
         </div>
         <p className="text-sm text-muted-foreground text-pretty">
@@ -63,13 +69,13 @@ function HydrationPage() {
 
       <div className="flex items-center justify-center gap-6 mb-8">
         <button
-          onClick={() => setGlasses((g) => Math.max(0, g - 1))}
+          onClick={() => logHydration(-1)}
           className="size-14 rounded-full bg-card ring-1 ring-black/5 grid place-items-center"
         >
           <Minus className="size-5" />
         </button>
         <button
-          onClick={() => setGlasses((g) => Math.min(GOAL + 4, g + 1))}
+          onClick={add}
           className="h-14 px-8 rounded-full bg-primary text-primary-foreground font-medium flex items-center gap-2"
         >
           <Plus className="size-5" /> Add a glass
@@ -77,7 +83,7 @@ function HydrationPage() {
       </div>
 
       <div className="grid grid-cols-4 gap-3">
-        {Array.from({ length: GOAL }).map((_, i) => (
+        {Array.from({ length: HYDRATION_GOAL }).map((_, i) => (
           <div
             key={i}
             className={`aspect-[3/4] rounded-2xl ring-1 ring-black/5 flex items-end justify-center pb-2 transition ${
