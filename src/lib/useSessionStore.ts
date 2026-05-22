@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 
 const KEY = "mm-session-state";
 
-export const HYDRATION_GOAL = 8;
-export const HYDRATION_XP = 5;
+export const HYDRATION_GOAL_OZ = 64;
+export const HYDRATION_XP_PER_8OZ = 5;
+export const QUICK_ADDS_OZ = [8, 12, 16] as const;
 export const STREAK_BONUS_XP = 20;
 
 export interface SessionState {
@@ -11,8 +12,12 @@ export interface SessionState {
   totalXp: number;
   completedToday: string[]; // movement ids
   lastDate: string; // YYYY-MM-DD
-  glasses: number;
+  ouncesToday: number;
   hydrationXpToday: number;
+  hydrationGoalReachedDates: string[];
+  remindersEnabled: boolean;
+  reminderIntervalMin: number;
+  lastReminderAt: number | null;
   streak: number;
   bestStreak: number;
   lastActiveDate: string | null;
@@ -31,8 +36,12 @@ const initial: SessionState = {
   totalXp: 2140,
   completedToday: [],
   lastDate: today(),
-  glasses: 0,
+  ouncesToday: 0,
   hydrationXpToday: 0,
+  hydrationGoalReachedDates: [],
+  remindersEnabled: true,
+  reminderIntervalMin: 60,
+  lastReminderAt: null,
   streak: 12,
   bestStreak: 14,
   lastActiveDate: yesterday(),
@@ -50,7 +59,7 @@ function read(): SessionState {
         ...parsed,
         xpToday: 0,
         completedToday: [],
-        glasses: 0,
+        ouncesToday: 0,
         hydrationXpToday: 0,
         lastDate: today(),
       };
@@ -112,17 +121,44 @@ export function completeMovement(id: string, xp: number) {
   });
 }
 
-export function logHydration(delta: number) {
+export function logHydration(deltaOz: number) {
   setState((s) => {
-    const nextGlasses = Math.max(0, Math.min(HYDRATION_GOAL + 4, s.glasses + delta));
-    if (nextGlasses === s.glasses) return s;
-    const cappedPrev = Math.min(s.glasses, HYDRATION_GOAL);
-    const cappedNext = Math.min(nextGlasses, HYDRATION_GOAL);
-    const xpDelta = Math.max(0, (cappedNext - cappedPrev) * HYDRATION_XP);
-    const base: SessionState = { ...s, glasses: nextGlasses, hydrationXpToday: s.hydrationXpToday + xpDelta };
+    const max = HYDRATION_GOAL_OZ + 32;
+    const nextOz = Math.max(0, Math.min(max, s.ouncesToday + deltaOz));
+    if (nextOz === s.ouncesToday) return s;
+    const cappedPrev = Math.min(s.ouncesToday, HYDRATION_GOAL_OZ);
+    const cappedNext = Math.min(nextOz, HYDRATION_GOAL_OZ);
+    const xpDelta = Math.max(
+      0,
+      Math.floor((cappedNext / 8)) * HYDRATION_XP_PER_8OZ -
+        Math.floor((cappedPrev / 8)) * HYDRATION_XP_PER_8OZ,
+    );
+    const t = today();
+    const reached =
+      nextOz >= HYDRATION_GOAL_OZ && !s.hydrationGoalReachedDates.includes(t)
+        ? [...s.hydrationGoalReachedDates, t]
+        : s.hydrationGoalReachedDates;
+    const base: SessionState = {
+      ...s,
+      ouncesToday: nextOz,
+      hydrationXpToday: s.hydrationXpToday + xpDelta,
+      hydrationGoalReachedDates: reached,
+    };
     if (xpDelta <= 0) return base;
     return applyActivity(base, xpDelta);
   });
+}
+
+export function setRemindersEnabled(enabled: boolean) {
+  setState((s) => ({ ...s, remindersEnabled: enabled, lastReminderAt: Date.now() }));
+}
+
+export function setReminderInterval(min: number) {
+  setState((s) => ({ ...s, reminderIntervalMin: min }));
+}
+
+export function markReminderShown() {
+  setState((s) => ({ ...s, lastReminderAt: Date.now() }));
 }
 
 export function useSessionStore(): SessionState {
