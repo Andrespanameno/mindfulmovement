@@ -6,6 +6,7 @@ import { MovementCard } from "@/components/mm/MovementCard";
 import { useSessionStore, HYDRATION_GOAL_OZ } from "@/lib/useSessionStore";
 import { XPBar } from "@/components/mm/XPBar";
 import { StreakBadge } from "@/components/mm/StreakBadge";
+import { ThemeToggle } from "@/components/mm/ThemeToggle";
 
 export const Route = createFileRoute("/home")({
   head: () => ({
@@ -28,7 +29,10 @@ function HomePage() {
           <p className="text-sm text-muted-foreground">Good morning, Alex</p>
           <h1 className="text-2xl font-semibold">Today is a fresh start</h1>
         </div>
-        <Link to="/profile" className="size-10 rounded-full bg-secondary ring-1 ring-black/5" />
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Link to="/profile" className="size-10 rounded-full bg-secondary ring-1 ring-border" />
+        </div>
       </header>
 
       <section className="grid grid-cols-2 gap-4 mb-6">
