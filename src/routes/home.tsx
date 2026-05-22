@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { Flame, Sparkles, Droplet, ArrowRight } from "lucide-react";
+import { Droplet, ArrowRight } from "lucide-react";
 import { movements } from "@/lib/movements";
 import { MovementCard } from "@/components/mm/MovementCard";
-import { useSessionStore } from "@/lib/useSessionStore";
+import { useSessionStore, HYDRATION_GOAL } from "@/lib/useSessionStore";
+import { XPBar } from "@/components/mm/XPBar";
+import { StreakBadge } from "@/components/mm/StreakBadge";
 
 export const Route = createFileRoute("/home")({
   head: () => ({
@@ -16,8 +18,8 @@ export const Route = createFileRoute("/home")({
 });
 
 function HomePage() {
-  const hydrationPct = 64;
-  const { xpToday } = useSessionStore();
+  const { glasses } = useSessionStore();
+  const hydrationPct = Math.min(100, Math.round((glasses / HYDRATION_GOAL) * 100));
   const suggestions = movements.slice(0, 3);
   return (
     <AppShell>
@@ -29,24 +31,14 @@ function HomePage() {
         <Link to="/profile" className="size-10 rounded-full bg-secondary ring-1 ring-black/5" />
       </header>
 
-      <section className="grid grid-cols-2 gap-4 mb-8">
-        <div className="p-4 rounded-2xl bg-secondary/60 ring-1 ring-black/5">
-          <div className="flex items-center gap-2 mb-3">
-            <Flame className="size-4 text-accent" />
-            <span className="text-xs font-medium text-muted-foreground">Streak</span>
-          </div>
-          <p className="text-2xl font-semibold">
-            12 <span className="text-sm font-medium text-muted-foreground">days</span>
-          </p>
-        </div>
-        <div className="p-4 rounded-2xl bg-secondary/60 ring-1 ring-black/5">
-          <div className="flex items-center gap-2 mb-3">
-            <Sparkles className="size-4 text-primary" />
-            <span className="text-xs font-medium text-muted-foreground">XP Today</span>
-          </div>
-          <p className="text-2xl font-semibold">{xpToday}</p>
-        </div>
+      <section className="grid grid-cols-2 gap-4 mb-6">
+        <StreakBadge />
+        <XpToday />
       </section>
+
+      <div className="mb-8">
+        <XPBar />
+      </div>
 
       <Link
         to="/hydration"
@@ -59,7 +51,9 @@ function HomePage() {
               <Droplet className="size-4 text-primary" /> Hydration Goal
             </h3>
             <p className="text-sm text-muted-foreground text-pretty mt-1">
-              Almost there. Just two more glasses to reach your mark.
+              {glasses >= HYDRATION_GOAL
+                ? "Goal reached. Beautifully done."
+                : `${HYDRATION_GOAL - glasses} more glasses to reach your mark.`}
             </p>
           </div>
           <ArrowRight className="size-4 text-muted-foreground shrink-0" />
@@ -84,6 +78,24 @@ function HomePage() {
       </div>
     </AppShell>
   );
+}
+
+function XpToday() {
+  const { xpToday } = useSessionStore();
+  return (
+    <div className="p-4 rounded-2xl bg-secondary/60 ring-1 ring-black/5">
+      <div className="flex items-center gap-2 mb-3">
+        <SparklesIcon />
+        <span className="text-xs font-medium text-muted-foreground">XP Today</span>
+      </div>
+      <p className="text-2xl font-semibold">{xpToday}</p>
+      <p className="text-[11px] text-muted-foreground mt-1">Every movement counts.</p>
+    </div>
+  );
+}
+
+function SparklesIcon() {
+  return <SparklesGlyph />;
 }
 
 function HydrationRing({ pct }: { pct: number }) {
