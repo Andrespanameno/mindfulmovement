@@ -3,7 +3,7 @@ import { AppShell } from "@/components/mm/AppShell";
 import { Droplet, ArrowRight, Sparkles } from "lucide-react";
 import { movements } from "@/lib/movements";
 import { MovementCard } from "@/components/mm/MovementCard";
-import { useSessionStore, HYDRATION_GOAL } from "@/lib/useSessionStore";
+import { useSessionStore, HYDRATION_GOAL_OZ } from "@/lib/useSessionStore";
 import { XPBar } from "@/components/mm/XPBar";
 import { StreakBadge } from "@/components/mm/StreakBadge";
 
@@ -18,8 +18,8 @@ export const Route = createFileRoute("/home")({
 });
 
 function HomePage() {
-  const { glasses } = useSessionStore();
-  const hydrationPct = Math.min(100, Math.round((glasses / HYDRATION_GOAL) * 100));
+  const { ouncesToday } = useSessionStore();
+  const hydrationPct = Math.min(100, Math.round((ouncesToday / HYDRATION_GOAL_OZ) * 100));
   const suggestions = movements.slice(0, 3);
   return (
     <AppShell>
@@ -51,9 +51,9 @@ function HomePage() {
               <Droplet className="size-4 text-primary" /> Hydration Goal
             </h3>
             <p className="text-sm text-muted-foreground text-pretty mt-1">
-              {glasses >= HYDRATION_GOAL
+              {ouncesToday >= HYDRATION_GOAL_OZ
                 ? "Goal reached. Beautifully done."
-                : `${HYDRATION_GOAL - glasses} more glasses to reach your mark.`}
+                : `${HYDRATION_GOAL_OZ - ouncesToday} oz to reach your mark.`}
             </p>
           </div>
           <ArrowRight className="size-4 text-muted-foreground shrink-0" />

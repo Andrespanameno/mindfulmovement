@@ -36,7 +36,7 @@ export interface Milestone {
   label: string;
   description: string;
   icon: LucideIcon;
-  achieved: (s: { streak: number; bestStreak: number; totalXp: number; glasses: number }) => boolean;
+  achieved: (s: { streak: number; bestStreak: number; totalXp: number; ouncesToday: number }) => boolean;
 }
 
 export const milestones: Milestone[] = [
@@ -73,7 +73,7 @@ export const milestones: Milestone[] = [
     label: "Hydrated Day",
     description: "Hit your water goal.",
     icon: Droplet,
-    achieved: (s) => s.glasses >= 8,
+    achieved: (s) => s.ouncesToday >= 64,
   },
   {
     id: "xp-1000",
