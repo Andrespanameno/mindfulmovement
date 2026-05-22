@@ -19,7 +19,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
 
   const handleComplete = () => {
     if (done) return;
-    completeMovement(movement.id, movement.xp);
+    completeMovement(movement);
     setJustDone(true);
     const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
     toast.success(`+${movement.xp} XP`, { description: msg });
