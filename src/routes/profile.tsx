@@ -1,7 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { Bell, Heart, Settings, HelpCircle, LogOut, ChevronRight } from "lucide-react";
 import { useSessionStore } from "@/lib/useSessionStore";
+import { useAuth } from "@/lib/auth-context";
 
 type Item = {
   icon: typeof Bell;
@@ -38,6 +39,17 @@ const groups: { title: string; items: Item[] }[] = [
 
 function ProfilePage() {
   const { streak, totalXp, completedToday } = useSessionStore();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const displayName =
+    (user?.user_metadata?.full_name as string | undefined) ?? user?.email ?? "Friend";
+  const initial = displayName.charAt(0).toUpperCase();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate({ to: "/" });
+  };
+
   const stats = [
     { label: "Day streak", value: String(streak) },
     { label: "Total XP", value: totalXp >= 1000 ? `${(totalXp / 1000).toFixed(1)}k` : String(totalXp) },
@@ -47,10 +59,10 @@ function ProfilePage() {
     <AppShell>
       <header className="flex flex-col items-center text-center mb-8">
         <div className="size-24 rounded-full bg-secondary ring-1 ring-black/5 mb-4 grid place-items-center text-2xl font-semibold text-muted-foreground">
-          A
+          {initial}
         </div>
-        <h1 className="text-xl font-semibold">Alex Rivera</h1>
-        <p className="text-sm text-muted-foreground">Member since Oct 2023</p>
+        <h1 className="text-xl font-semibold">{displayName}</h1>
+        <p className="text-sm text-muted-foreground">{user?.email}</p>
       </header>
 
       <div className="grid grid-cols-3 gap-3 mb-8">
@@ -103,12 +115,12 @@ function ProfilePage() {
           </div>
         ))}
 
-        <Link
-          to="/"
+        <button
+          onClick={handleSignOut}
           className="w-full h-12 rounded-2xl bg-card ring-1 ring-black/5 flex items-center justify-center gap-2 text-sm font-medium text-muted-foreground"
         >
           <LogOut className="size-4" /> Sign out
-        </Link>
+        </button>
       </div>
     </AppShell>
   );
