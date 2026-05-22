@@ -3,6 +3,12 @@ import { AppShell } from "@/components/mm/AppShell";
 import { Bell, Heart, Settings, HelpCircle, LogOut, ChevronRight } from "lucide-react";
 import { useSessionStore } from "@/lib/useSessionStore";
 
+type Item = {
+  icon: typeof Bell;
+  label: string;
+  to?: "/reminders";
+};
+
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
@@ -13,11 +19,11 @@ export const Route = createFileRoute("/profile")({
   component: ProfilePage,
 });
 
-const groups = [
+const groups: { title: string; items: Item[] }[] = [
   {
     title: "Wellness",
     items: [
-      { icon: Bell, label: "Reminders" },
+      { icon: Bell, label: "Reminders", to: "/reminders" },
       { icon: Heart, label: "Favorites" },
     ],
   },
@@ -66,18 +72,33 @@ function ProfilePage() {
               {g.title}
             </h4>
             <div className="rounded-2xl bg-card ring-1 ring-black/5 divide-y divide-border">
-              {g.items.map(({ icon: Icon, label }) => (
-                <button
-                  key={label}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
-                >
-                  <div className="size-8 rounded-lg bg-secondary grid place-items-center">
-                    <Icon className="size-4" />
-                  </div>
-                  <span className="text-sm font-medium flex-1">{label}</span>
-                  <ChevronRight className="size-4 text-muted-foreground" />
-                </button>
-              ))}
+              {g.items.map(({ icon: Icon, label, to }) => {
+                const content = (
+                  <>
+                    <div className="size-8 rounded-lg bg-secondary grid place-items-center">
+                      <Icon className="size-4" />
+                    </div>
+                    <span className="text-sm font-medium flex-1">{label}</span>
+                    <ChevronRight className="size-4 text-muted-foreground" />
+                  </>
+                );
+                return to ? (
+                  <Link
+                    key={label}
+                    to={to}
+                    className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
+                  >
+                    {content}
+                  </Link>
+                ) : (
+                  <button
+                    key={label}
+                    className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
+                  >
+                    {content}
+                  </button>
+                );
+              })}
             </div>
           </div>
         ))}
