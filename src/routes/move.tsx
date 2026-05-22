@@ -1,6 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { Play, Clock } from "lucide-react";
+import { Play } from "lucide-react";
+import { useMemo, useState } from "react";
+import { movements, type MovementCategory } from "@/lib/movements";
+import { MovementCard } from "@/components/mm/MovementCard";
+import { useSessionStore } from "@/lib/useSessionStore";
 
 export const Route = createFileRoute("/move")({
   head: () => ({
@@ -12,17 +16,23 @@ export const Route = createFileRoute("/move")({
   component: MovePage,
 });
 
-const categories = ["All", "Desk", "Morning", "Breathing", "Stretch"];
-
-const sessions = [
-  { title: "Neck & Shoulder Release", meta: "3 min", level: "Gentle", tint: "bg-primary/25" },
-  { title: "Sun Salutation Flow", meta: "8 min", level: "Easy", tint: "bg-warm/40" },
-  { title: "Box Breathing", meta: "5 min", level: "Calm", tint: "bg-accent/20" },
-  { title: "Hip Opener", meta: "6 min", level: "Gentle", tint: "bg-primary/25" },
-  { title: "Standing Reset", meta: "2 min", level: "Quick", tint: "bg-warm/40" },
+const categories: Array<"All" | MovementCategory> = [
+  "All",
+  "Walk",
+  "Stretch",
+  "Strength",
+  "Breathing",
+  "Mobility",
 ];
 
 function MovePage() {
+  const [active, setActive] = useState<(typeof categories)[number]>("All");
+  const { completedToday } = useSessionStore();
+  const filtered = useMemo(
+    () => (active === "All" ? movements : movements.filter((m) => m.category === active)),
+    [active],
+  );
+
   return (
     <AppShell>
       <header className="mb-6">
@@ -35,7 +45,9 @@ function MovePage() {
         <p className="text-xs uppercase tracking-widest text-background/60 mb-2">Featured</p>
         <h2 className="text-xl font-semibold mb-1">Morning Awakening</h2>
         <p className="text-sm text-background/70 mb-5 max-w-[260px]">
-          A 6-minute flow to wake up your body, gently.
+          {completedToday.length > 0
+            ? `${completedToday.length} session${completedToday.length > 1 ? "s" : ""} completed today. Keep flowing.`
+            : "A few minutes is all it takes to feel a shift."}
         </p>
         <button className="inline-flex items-center gap-2 h-10 px-4 rounded-full bg-primary text-primary-foreground text-sm font-medium">
           <Play className="size-4" /> Begin
@@ -43,11 +55,12 @@ function MovePage() {
       </div>
 
       <div className="flex gap-2 overflow-x-auto -mx-6 px-6 pb-2 mb-6">
-        {categories.map((c, i) => (
+        {categories.map((c) => (
           <button
             key={c}
+            onClick={() => setActive(c)}
             className={`h-9 px-4 rounded-full text-sm font-medium whitespace-nowrap ring-1 ring-black/5 ${
-              i === 0 ? "bg-foreground text-background" : "bg-card text-foreground"
+              active === c ? "bg-foreground text-background" : "bg-card text-foreground"
             }`}
           >
             {c}
@@ -56,21 +69,8 @@ function MovePage() {
       </div>
 
       <div className="space-y-3">
-        {sessions.map((s) => (
-          <div
-            key={s.title}
-            className="p-3 pr-4 rounded-2xl bg-card ring-1 ring-black/5 flex items-center gap-4"
-          >
-            <div className={`size-14 rounded-xl flex items-center justify-center ${s.tint}`}>
-              <Play className="size-5" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium">{s.title}</p>
-              <p className="text-xs text-muted-foreground flex items-center gap-2 mt-0.5">
-                <Clock className="size-3" /> {s.meta} • {s.level}
-              </p>
-            </div>
-          </div>
+        {filtered.map((m) => (
+          <MovementCard key={m.id} movement={m} />
         ))}
       </div>
     </AppShell>
