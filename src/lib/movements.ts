@@ -10,6 +10,7 @@ import {
   Sunrise,
   StretchHorizontal,
   Leaf,
+  Dumbbell,
 } from "lucide-react";
 
 export type MovementCategory = "Walk" | "Stretch" | "Strength" | "Breathing" | "Mobility";
@@ -25,6 +26,8 @@ export interface Movement {
   category: MovementCategory;
   icon: LucideIcon;
   tint: string;
+  repsType?: "pushups" | "squats";
+  reps?: number;
 }
 
 export const movements: Movement[] = [
@@ -60,6 +63,8 @@ export const movements: Movement[] = [
     category: "Strength",
     icon: Hand,
     tint: "bg-accent/20",
+    repsType: "pushups",
+    reps: 10,
   },
   {
     id: "calf-raise",
@@ -71,6 +76,19 @@ export const movements: Movement[] = [
     category: "Strength",
     icon: TrendingUp,
     tint: "bg-primary/25",
+  },
+  {
+    id: "mindful-squats",
+    title: "Mindful Squat Set",
+    description: "Twelve slow, intentional squats to wake up your legs.",
+    duration: 4,
+    xp: 45,
+    difficulty: "Easy",
+    category: "Strength",
+    icon: Dumbbell,
+    tint: "bg-warm/40",
+    repsType: "squats",
+    reps: 12,
   },
   {
     id: "deep-breathing",
