@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { Droplet, ArrowRight } from "lucide-react";
+import { Droplet, ArrowRight, Sparkles } from "lucide-react";
 import { movements } from "@/lib/movements";
 import { MovementCard } from "@/components/mm/MovementCard";
 import { useSessionStore, HYDRATION_GOAL } from "@/lib/useSessionStore";
@@ -85,17 +85,13 @@ function XpToday() {
   return (
     <div className="p-4 rounded-2xl bg-secondary/60 ring-1 ring-black/5">
       <div className="flex items-center gap-2 mb-3">
-        <SparklesIcon />
+        <Sparkles className="size-4 text-primary" />
         <span className="text-xs font-medium text-muted-foreground">XP Today</span>
       </div>
       <p className="text-2xl font-semibold">{xpToday}</p>
       <p className="text-[11px] text-muted-foreground mt-1">Every movement counts.</p>
     </div>
   );
-}
-
-function SparklesIcon() {
-  return <SparklesGlyph />;
 }
 
 function HydrationRing({ pct }: { pct: number }) {
