@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as SessionRouteImport } from './routes/session'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RemindersRouteImport } from './routes/reminders'
@@ -21,6 +22,11 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/public/hooks/send-reminders'
 
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SessionRoute = SessionRouteImport.update({
   id: '/session',
   path: '/session',
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/session': typeof SessionRoute
+  '/support': typeof SupportRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesByTo {
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/session': typeof SessionRoute
+  '/support': typeof SupportRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesById {
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/session': typeof SessionRoute
+  '/support': typeof SupportRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRouteTypes {
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
     | '/reminders'
     | '/reset-password'
     | '/session'
+    | '/support'
     | '/api/public/hooks/send-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/reminders'
     | '/reset-password'
     | '/session'
+    | '/support'
     | '/api/public/hooks/send-reminders'
   id:
     | '__root__'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/reminders'
     | '/reset-password'
     | '/session'
+    | '/support'
     | '/api/public/hooks/send-reminders'
   fileRoutesById: FileRoutesById
 }
@@ -171,11 +183,19 @@ export interface RootRouteChildren {
   RemindersRoute: typeof RemindersRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SessionRoute: typeof SessionRoute
+  SupportRoute: typeof SupportRoute
   ApiPublicHooksSendRemindersRoute: typeof ApiPublicHooksSendRemindersRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/session': {
       id: '/session'
       path: '/session'
@@ -267,6 +287,7 @@ const rootRouteChildren: RootRouteChildren = {
   RemindersRoute: RemindersRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SessionRoute: SessionRoute,
+  SupportRoute: SupportRoute,
   ApiPublicHooksSendRemindersRoute: ApiPublicHooksSendRemindersRoute,
 }
 export const routeTree = rootRouteImport
