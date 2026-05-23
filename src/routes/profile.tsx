@@ -11,7 +11,7 @@ import { useState } from "react";
 type Item = {
   icon: typeof Bell;
   label: string;
-  to?: "/reminders";
+  to?: "/reminders" | "/support";
 };
 
 export const Route = createFileRoute("/profile")({
