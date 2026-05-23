@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { Play } from "lucide-react";
 import { useMemo, useState } from "react";
 import { movements, CATEGORIES, type MovementCategory } from "@/lib/movements";
 import { MovementCard } from "@/components/mm/MovementCard";
@@ -49,14 +48,11 @@ function MovePage() {
         <div className="absolute -right-10 -top-10 size-40 rounded-full bg-primary/30 blur-2xl" />
         <p className="text-xs uppercase tracking-widest text-background/60 mb-2">Featured</p>
         <h2 className="text-xl font-semibold mb-1">Morning Awakening</h2>
-        <p className="text-sm text-background/70 mb-5 max-w-[260px]">
+        <p className="text-sm text-background/70 max-w-[260px]">
           {completedToday.length > 0
             ? `${completedToday.length} session${completedToday.length > 1 ? "s" : ""} completed today. Keep flowing.`
             : "A few minutes is all it takes to feel a shift."}
         </p>
-        <button className="inline-flex items-center gap-2 h-10 px-4 rounded-full bg-primary text-primary-foreground text-sm font-medium">
-          <Play className="size-4" /> Begin
-        </button>
       </div>
 
       <div className="flex gap-2 overflow-x-auto -mx-6 px-6 pb-2 mb-6">
