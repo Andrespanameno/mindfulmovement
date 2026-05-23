@@ -162,19 +162,19 @@ function m(
 
 export const movements: Movement[] = [
   // DESK & POSTURE RESETS
-  m("shoulder-rolls", "Shoulder Rolls", "Slow rolls to release upper-back tension.", "desk-posture", { duration: 1, xp: 15 }),
+  m("shoulder-rolls", "Shoulder Rolls", "Slow rolls to release upper-back tension.", "desk-posture", { duration: 1, xp: 15, instruction: "Roll your shoulders slowly to release tension." }),
   m("chin-tucks", "Chin Tucks", "Reset your neck after long screen time.", "desk-posture", { duration: 1, xp: 15 }),
   m("seated-spinal-twist", "Seated Spinal Twist", "A gentle twist to unwind the spine.", "desk-posture", { duration: 2, xp: 20 }),
   m("wrist-stretches", "Wrist Stretches", "Soft stretches for typing-tight wrists.", "desk-posture", { duration: 1, xp: 15 }),
   m("chest-opener", "Chest Opener Stretch", "Open the chest and counter the slouch.", "desk-posture", { duration: 2, xp: 20 }),
   m("ankle-circles", "Ankle Circles", "Wake up the ankles under your desk.", "desk-posture", { duration: 1, xp: 10 }),
-  m("neck-release", "Neck Release Flow", "Slow side-to-side neck release.", "desk-posture", { duration: 2, xp: 20, icon: StretchHorizontal }),
+  m("neck-release", "Neck Release Flow", "Slow side-to-side neck release.", "desk-posture", { duration: 2, xp: 20, icon: StretchHorizontal, instruction: "Gently tilt your head to one side and breathe." }),
   m("seated-marches", "Seated Marches", "March in place from your chair.", "desk-posture", { duration: 2, xp: 20 }),
 
   // QUICK WALKS & ENERGY BOOSTS
   m("walk-3min", "3-Minute Walk", "Step away from the screen and reset.", "quick-walks", { duration: 3, xp: 30, difficulty: "Easy" }),
   m("hallway-walk", "Hallway Walk", "A short loop to clear the head.", "quick-walks", { duration: 2, xp: 20, difficulty: "Easy" }),
-  m("march-in-place", "March in Place", "Lift the knees, swing the arms.", "quick-walks", { duration: 2, xp: 20, difficulty: "Easy" }),
+  m("march-in-place", "March in Place", "Lift the knees, swing the arms.", "quick-walks", { duration: 2, xp: 20, difficulty: "Easy", instruction: "Lift your knees gently and keep a steady rhythm." }),
   m("side-steps", "Side Steps", "Light lateral movement to wake the hips.", "quick-walks", { duration: 2, xp: 20, difficulty: "Easy" }),
   m("toe-taps", "Toe Taps", "Quick toe taps to lift your energy.", "quick-walks", { duration: 1, xp: 15 }),
   m("stair-walk", "Stair Walk", "One short flight, slow and steady.", "quick-walks", { duration: 3, xp: 30, difficulty: "Easy" }),
@@ -184,7 +184,7 @@ export const movements: Movement[] = [
 
   // STRETCH & MOBILITY
   m("hip-circles", "Hip Circles", "Slow circles to open the hips.", "stretch-mobility", { duration: 2, xp: 20 }),
-  m("overhead-reach", "Overhead Reach Flow", "Tall reaches to lengthen the spine.", "stretch-mobility", { duration: 2, xp: 20 }),
+  m("overhead-reach", "Overhead Reach Flow", "Tall reaches to lengthen the spine.", "stretch-mobility", { duration: 2, xp: 20, instruction: "Reach both arms overhead and lengthen your body." }),
   m("spinal-roll-downs", "Spinal Roll-Downs", "Roll down one vertebra at a time.", "stretch-mobility", { duration: 3, xp: 25 }),
   m("thoracic-rotations", "Thoracic Rotations", "Mid-back rotations to free the spine.", "stretch-mobility", { duration: 2, xp: 20 }),
   m("hip-opener", "Hip Opener Stretch", "A gentle stretch for tight hips.", "stretch-mobility", { duration: 3, xp: 25 }),
@@ -193,8 +193,8 @@ export const movements: Movement[] = [
   m("standing-mobility", "Standing Mobility Flow", "A smooth flow from head to toe.", "stretch-mobility", { duration: 4, xp: 40, difficulty: "Easy" }),
 
   // LOW-ENERGY & RECOVERY RESETS
-  m("deep-breathing", "Deep Breathing", "Slow your breath, return to center.", "low-energy", { duration: 2, xp: 20 }),
-  m("mindful-standing", "Mindful Standing Reset", "Stand tall, soften, breathe.", "low-energy", { duration: 1, xp: 15 }),
+  m("deep-breathing", "Deep Breathing", "Slow your breath, return to center.", "low-energy", { duration: 2, xp: 20, instruction: "Breathe in slowly, then exhale with control." }),
+  m("mindful-standing", "Mindful Standing Reset", "Stand tall, soften, breathe.", "low-energy", { duration: 1, xp: 15, instruction: "Sit or stand tall, relax your shoulders, and align your spine." }),
   m("one-min-stretch", "1-Minute Stretch", "Whatever your body asks for, gently.", "low-energy", { duration: 1, xp: 10 }),
   m("hydration-breath", "Hydration + Breath Reset", "A sip of water and three slow breaths.", "low-energy", { duration: 2, xp: 20, icon: Droplet }),
   m("seated-mobility", "Seated Mobility Flow", "Soft movement without standing up.", "low-energy", { duration: 3, xp: 25 }),
@@ -204,10 +204,10 @@ export const movements: Movement[] = [
 
   // STRENGTH SNACKS
   m("squats", "Mindful Squats", "Twelve slow, intentional squats.", "strength-snacks", { duration: 3, xp: 35, difficulty: "Easy", icon: Dumbbell, repsType: "squats", reps: 12 }),
-  m("chair-squats", "Chair Squats", "Sit-stand reps with control.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy", repsType: "squats", reps: 10 }),
-  m("wall-pushups", "Wall Push-Ups", "Ten slow wall push-ups.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy", icon: Hand, repsType: "pushups", reps: 10 }),
+  m("chair-squats", "Chair Squats", "Sit-stand reps with control.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy", repsType: "squats", reps: 10, instruction: "Sit back toward the chair, then stand tall with control." }),
+  m("wall-pushups", "Wall Push-Ups", "Ten slow wall push-ups.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy", icon: Hand, repsType: "pushups", reps: 10, instruction: "Keep your body straight and lower toward the wall with control." }),
   m("countertop-pushups", "Countertop Push-Ups", "Ten push-ups against the counter.", "strength-snacks", { duration: 3, xp: 35, difficulty: "Easy", icon: Hand, repsType: "pushups", reps: 10 }),
-  m("calf-raises", "Calf Raises", "Two slow sets, breathing through each.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
+  m("calf-raises", "Calf Raises", "Two slow sets, breathing through each.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy", instruction: "Rise onto your toes, pause briefly, then lower slowly." }),
   m("wall-sit", "Wall Sit", "A short hold — count steady breaths.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
   m("mini-lunges", "Mini Lunges", "Short, balanced lunges on each side.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy" }),
   m("step-ups", "Step-Ups", "Step up and down on a stable surface.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy" }),
@@ -223,7 +223,7 @@ export const movements: Movement[] = [
   m("baby-bounce-calf", "Baby-Bounce Calf Raises", "Soothe and strengthen at the same time.", "parent-friendly", { duration: 2, xp: 25, difficulty: "Easy" }),
 
   // BREATH & CALM
-  m("box-breathing", "Box Breathing", "Inhale 4, hold 4, exhale 4, hold 4.", "breath-calm", { duration: 3, xp: 30 }),
+  m("box-breathing", "Box Breathing", "Inhale 4, hold 4, exhale 4, hold 4.", "breath-calm", { duration: 3, xp: 30, instruction: "Follow the square: inhale, hold, exhale, hold." }),
   m("4-7-8-breathing", "4-7-8 Breathing", "Inhale 4, hold 7, exhale 8.", "breath-calm", { duration: 3, xp: 30 }),
   m("shoulder-drop-breath", "Shoulder Drop Breathing", "Inhale, exhale, soften the shoulders.", "breath-calm", { duration: 2, xp: 20 }),
   m("slow-nasal", "Slow Nasal Breathing", "Long, quiet breaths through the nose.", "breath-calm", { duration: 3, xp: 25 }),
