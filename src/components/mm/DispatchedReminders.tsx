@@ -35,7 +35,13 @@ export function DispatchedReminders() {
       seenRef.current.add(row.id);
       toast(titleFor(row.kind as Kind), {
         description: row.message,
-        duration: 6000,
+        duration: 10000,
+        action: {
+          label: "Start",
+          onClick: () => {
+            window.location.assign("/session");
+          },
+        },
       });
       await supabase
         .from("reminder_dispatches")
