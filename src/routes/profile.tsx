@@ -34,7 +34,7 @@ const groups: { title: string; items: Item[] }[] = [
   {
     title: "Account",
     items: [
-      { icon: Settings, label: "Settings" },
+      { icon: Settings, label: "Settings", to: "/settings" },
       { icon: HelpCircle, label: "Help & support", to: "/support" },
     ],
   },
