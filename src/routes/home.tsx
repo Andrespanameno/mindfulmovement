@@ -22,18 +22,36 @@ export const Route = createFileRoute("/home")({
 
 function HomePage() {
   const { ouncesToday } = useSessionStore();
+  const { profile } = useProfile();
+  const { user } = useAuth();
   const hydrationPct = Math.min(100, Math.round((ouncesToday / HYDRATION_GOAL_OZ) * 100));
   const suggestions = movements.slice(0, 3);
+
+  const displayName = profile?.full_name || user?.email?.split("@")[0] || "there";
+  const initials = (profile?.full_name || user?.email || "U")
+    .split(" ")
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
   return (
     <AppShell>
       <header className="flex items-center justify-between mb-8">
         <div>
-          <p className="text-sm text-muted-foreground">Good morning, Alex</p>
+          <p className="text-sm text-muted-foreground">Good morning, {displayName}</p>
           <h1 className="text-2xl font-semibold">Today is a fresh start</h1>
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Link to="/profile" className="size-10 rounded-full bg-secondary ring-1 ring-border" />
+          <Link
+            to="/profile"
+            className="size-10 rounded-full bg-secondary ring-1 ring-border grid place-items-center text-xs font-semibold text-foreground hover:bg-accent/20 transition-colors"
+            aria-label="Profile"
+            title="Profile"
+          >
+            {initials}
+          </Link>
         </div>
       </header>
 
