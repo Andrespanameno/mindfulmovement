@@ -4,6 +4,7 @@ import { AppShell } from "@/components/mm/AppShell";
 import { Droplet, Undo2, ArrowLeft, Bell, BellOff, Check } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useMotivationalMessage } from "@/hooks/useMotivationalMessage";
 import {
   useSessionStore,
   logHydration,
@@ -31,6 +32,9 @@ function HydrationPage() {
   const r = 86;
   const c = 2 * Math.PI * r;
   const reachedRef = useRef(ouncesToday >= HYDRATION_GOAL_OZ);
+  const { message: hydrationMsg, next: nextHydrationMsg } = useMotivationalMessage({
+    placement: "hydration_completion",
+  });
 
   const persistHydration = async (oz: number) => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -67,11 +71,12 @@ function HydrationPage() {
     if (ouncesToday >= HYDRATION_GOAL_OZ && !reachedRef.current) {
       reachedRef.current = true;
       toast.success("Daily hydration goal reached 🌿", {
-        description: "Beautifully done. Your body thanks you.",
+        description: hydrationMsg?.message ?? "Beautifully done. Your body thanks you.",
       });
+      nextHydrationMsg();
     }
     if (ouncesToday < HYDRATION_GOAL_OZ) reachedRef.current = false;
-  }, [ouncesToday]);
+  }, [ouncesToday, hydrationMsg, nextHydrationMsg]);
 
   // Gentle reminders while the page is open
   useEffect(() => {
