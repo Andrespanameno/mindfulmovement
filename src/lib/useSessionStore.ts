@@ -295,6 +295,45 @@ export function markReminderShown() {
   setState((s) => ({ ...s, lastReminderAt: Date.now() }));
 }
 
+export interface StatsSnapshot {
+  totalXp: number;
+  xpToday: number;
+  streak: number;
+  bestStreak: number;
+  lastActiveDate: string | null;
+  streakBonusDate: string | null;
+}
+
+export function getStatsSnapshot(): StatsSnapshot {
+  return {
+    totalXp: state.totalXp,
+    xpToday: state.xpToday,
+    streak: state.streak,
+    bestStreak: state.bestStreak,
+    lastActiveDate: state.lastActiveDate,
+    streakBonusDate: state.streakBonusDate,
+  };
+}
+
+export function hydrateStats(snap: Partial<StatsSnapshot>) {
+  setState((s) => ({
+    ...s,
+    totalXp: snap.totalXp ?? s.totalXp,
+    xpToday: snap.xpToday ?? s.xpToday,
+    streak: snap.streak ?? s.streak,
+    bestStreak: snap.bestStreak ?? s.bestStreak,
+    lastActiveDate: snap.lastActiveDate ?? s.lastActiveDate,
+    streakBonusDate: snap.streakBonusDate ?? s.streakBonusDate,
+  }));
+}
+
+export function subscribeToStats(listener: () => void) {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
 export function useSessionStore(): SessionState {
   const [, force] = useState(0);
   useEffect(() => {
