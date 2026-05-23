@@ -6,6 +6,7 @@ import { encouragements } from "@/lib/movements";
 import { completeMovement, uncompleteMovement, useSessionStore } from "@/lib/useSessionStore";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
+import { MovementVisual } from "./MovementVisual";
 
 interface Props {
   movement: Movement;
@@ -192,8 +193,10 @@ export function MovementCard({ movement, variant = "full" }: Props) {
       </div>
 
       <p className="text-sm text-muted-foreground text-pretty leading-relaxed mb-4">
-        {movement.description}
+        {movement.instruction ?? movement.description}
       </p>
+
+      <MovementVisual movementId={movement.id} />
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
