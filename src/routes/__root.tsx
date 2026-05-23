@@ -13,6 +13,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ReminderRunner } from "@/components/mm/ReminderRunner";
 import { AuthProvider } from "@/lib/auth-context";
 import { AuthGate } from "@/components/mm/AuthGate";
+import { StatsSync } from "@/components/mm/StatsSync";
 
 function NotFoundComponent() {
   return (
@@ -129,6 +130,7 @@ function RootComponent() {
         </AuthGate>
         <Toaster position="top-center" />
         <ReminderRunner />
+        <StatsSync />
       </AuthProvider>
     </QueryClientProvider>
   );

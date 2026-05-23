@@ -149,6 +149,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_stats: {
+        Row: {
+          best_streak: number
+          created_at: string
+          last_active_date: string | null
+          streak: number
+          streak_bonus_date: string | null
+          total_xp: number
+          updated_at: string
+          user_id: string
+          xp_today: number
+        }
+        Insert: {
+          best_streak?: number
+          created_at?: string
+          last_active_date?: string | null
+          streak?: number
+          streak_bonus_date?: string | null
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+          xp_today?: number
+        }
+        Update: {
+          best_streak?: number
+          created_at?: string
+          last_active_date?: string | null
+          streak?: number
+          streak_bonus_date?: string | null
+          total_xp?: number
+          updated_at?: string
+          user_id?: string
+          xp_today?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
