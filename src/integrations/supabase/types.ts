@@ -149,6 +149,36 @@ export type Database = {
         }
         Relationships: []
       }
+      reminder_dispatches: {
+        Row: {
+          created_at: string
+          delivered_at: string | null
+          id: string
+          kind: string
+          message: string
+          scheduled_for: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          delivered_at?: string | null
+          id?: string
+          kind: string
+          message: string
+          scheduled_for?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          delivered_at?: string | null
+          id?: string
+          kind?: string
+          message?: string
+          scheduled_for?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       reminder_settings: {
         Row: {
           breath: boolean
