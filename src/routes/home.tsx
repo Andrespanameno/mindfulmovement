@@ -7,6 +7,8 @@ import { useSessionStore, HYDRATION_GOAL_OZ } from "@/lib/useSessionStore";
 import { XPBar } from "@/components/mm/XPBar";
 import { StreakBadge } from "@/components/mm/StreakBadge";
 import { ThemeToggle } from "@/components/mm/ThemeToggle";
+import { useProfile } from "@/lib/useProfile";
+import { useAuth } from "@/lib/auth-context";
 
 export const Route = createFileRoute("/home")({
   head: () => ({
