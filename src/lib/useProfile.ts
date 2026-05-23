@@ -10,11 +10,12 @@ export interface Profile {
   lifestyle: string | null;
   wellness_goals: string[] | null;
   daily_water_goal: number;
+  preferred_categories: string[];
   onboarding_completed: boolean;
 }
 
 export type ProfileUpdate = Partial<
-  Pick<Profile, "full_name" | "fitness_level" | "work_style" | "lifestyle" | "wellness_goals" | "daily_water_goal" | "onboarding_completed">
+  Pick<Profile, "full_name" | "fitness_level" | "work_style" | "lifestyle" | "wellness_goals" | "daily_water_goal" | "preferred_categories" | "onboarding_completed">
 >;
 
 export function useProfile() {
