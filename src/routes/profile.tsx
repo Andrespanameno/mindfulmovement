@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { Bell, Heart, Settings, HelpCircle, LogOut, ChevronRight, Pencil } from "lucide-react";
+import { Bell, Settings, HelpCircle, LogOut, ChevronRight, Pencil } from "lucide-react";
 import { useSessionStore } from "@/lib/useSessionStore";
 import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
@@ -29,7 +29,6 @@ const groups: { title: string; items: Item[] }[] = [
     title: "Wellness",
     items: [
       { icon: Bell, label: "Reminders", to: "/reminders" },
-      { icon: Heart, label: "Favorites" },
     ],
   },
   {
