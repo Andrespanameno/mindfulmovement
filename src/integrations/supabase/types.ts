@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      breathing_sessions: {
+        Row: {
+          completed_at: string
+          created_at: string
+          duration_min: number
+          id: string
+          movement_id: string
+          title: string
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          duration_min?: number
+          id?: string
+          movement_id: string
+          title: string
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          duration_min?: number
+          id?: string
+          movement_id?: string
+          title?: string
+          user_id?: string
+          xp?: number
+        }
+        Relationships: []
+      }
       hydration_logs: {
         Row: {
           created_at: string

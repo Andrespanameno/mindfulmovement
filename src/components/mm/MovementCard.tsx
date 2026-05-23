@@ -41,6 +41,18 @@ export function MovementCard({ movement, variant = "full" }: Props) {
         xp: movement.xp,
       });
       if (error) console.error("[movement_sessions] insert failed:", error.message);
+
+      // Mirror to breathing_sessions table for breathing-specific aggregations
+      if (movement.category === "Breathing") {
+        const { error: bErr } = await supabase.from("breathing_sessions").insert({
+          user_id: user.id,
+          movement_id: movement.id,
+          title: movement.title,
+          duration_min: movement.duration,
+          xp: movement.xp,
+        });
+        if (bErr) console.error("[breathing_sessions] insert failed:", bErr.message);
+      }
     })();
   };
 
