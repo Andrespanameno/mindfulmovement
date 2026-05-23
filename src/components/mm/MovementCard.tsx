@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Clock, Sparkles, Check } from "lucide-react";
+import { Clock, Sparkles, Check, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 import type { Movement } from "@/lib/movements";
 import { encouragements } from "@/lib/movements";
-import { completeMovement, useSessionStore } from "@/lib/useSessionStore";
+import { completeMovement, uncompleteMovement, useSessionStore } from "@/lib/useSessionStore";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -56,6 +56,34 @@ export function MovementCard({ movement, variant = "full" }: Props) {
     })();
   };
 
+  const handleUndo = () => {
+    if (!done) return;
+    uncompleteMovement(movement);
+    toast(`Undone · -${movement.xp} XP`, { description: "No worries — marked as not done." });
+
+    void (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { error } = await supabase
+        .from("movement_sessions")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("movement_id", movement.id)
+        .gte("completed_at", new Date(new Date().setHours(0, 0, 0, 0)).toISOString());
+      if (error) console.error("[movement_sessions] delete failed:", error.message);
+
+      if (movement.category === "breath-calm") {
+        const { error: bErr } = await supabase
+          .from("breathing_sessions")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("movement_id", movement.id)
+          .gte("completed_at", new Date(new Date().setHours(0, 0, 0, 0)).toISOString());
+        if (bErr) console.error("[breathing_sessions] delete failed:", bErr.message);
+      }
+    })();
+  };
+
   if (variant === "compact") {
     return (
       <div className="p-3 pr-4 rounded-2xl bg-card ring-1 ring-black/5 flex items-center gap-4">
@@ -69,12 +97,13 @@ export function MovementCard({ movement, variant = "full" }: Props) {
           </p>
         </div>
         <button
-          onClick={handleComplete}
-          aria-label={done ? "Completed" : "Mark complete"}
+          onClick={done ? handleUndo : handleComplete}
+          aria-label={done ? "Undo completion" : "Mark complete"}
+          title={done ? "Tap to undo" : "Mark complete"}
           className={cn(
             "size-9 rounded-full flex items-center justify-center transition-all ring-1",
             done
-              ? "bg-primary text-primary-foreground ring-primary"
+              ? "bg-primary text-primary-foreground ring-primary hover:bg-primary/90"
               : "bg-background ring-black/10 hover:ring-primary/60",
             justDone && "animate-scale-in",
           )}
@@ -130,19 +159,23 @@ export function MovementCard({ movement, variant = "full" }: Props) {
           </span>
         </div>
         <button
-          onClick={handleComplete}
-          disabled={done}
+          onClick={done ? handleUndo : handleComplete}
+          aria-label={done ? "Undo completion" : "Mark complete"}
+          title={done ? "Tap to undo" : undefined}
           className={cn(
             "h-9 px-4 rounded-full text-sm font-medium inline-flex items-center gap-2 transition-all",
             done
-              ? "bg-primary/15 text-primary cursor-default"
+              ? "bg-primary/15 text-primary hover:bg-primary/25 active:scale-95 group"
               : "bg-foreground text-background hover:opacity-90 active:scale-95",
             justDone && "animate-scale-in",
           )}
         >
           {done ? (
             <>
-              <Check className="size-4" /> Done
+              <Check className="size-4 group-hover:hidden" />
+              <Undo2 className="size-4 hidden group-hover:inline" />
+              <span className="group-hover:hidden">Done</span>
+              <span className="hidden group-hover:inline">Undo</span>
             </>
           ) : (
             "Complete"
