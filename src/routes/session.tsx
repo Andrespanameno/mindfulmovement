@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Play, Pause, SkipForward, X, Check, Sparkles } from "lucide-react";
-import { toast } from "sonner";
 import { AppShell } from "@/components/mm/AppShell";
 import { buildGuidedSession, sessionCompletionMessages, type SessionStep } from "@/lib/movements";
 import { useProfile } from "@/lib/useProfile";
@@ -272,6 +271,3 @@ function SessionPage() {
     </AppShell>
   );
 }
-
-// satisfy unused-import warning for toast in some envs
-void toast;
