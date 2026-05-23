@@ -122,6 +122,7 @@ export interface Movement {
   tint: string;
   repsType?: "pushups" | "squats";
   reps?: number;
+  instruction?: string;
 }
 
 function tintFor(cat: MovementCategory): string {
@@ -140,6 +141,7 @@ function m(
     icon?: LucideIcon;
     repsType?: "pushups" | "squats";
     reps?: number;
+    instruction?: string;
   } = {},
 ): Movement {
   return {
@@ -154,6 +156,7 @@ function m(
     tint: tintFor(category),
     repsType: opts.repsType,
     reps: opts.reps,
+    instruction: opts.instruction,
   };
 }
 
