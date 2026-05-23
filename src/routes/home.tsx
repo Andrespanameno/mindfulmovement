@@ -1,8 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { Droplet, ArrowRight, Sparkles, Play } from "lucide-react";
-import { movements } from "@/lib/movements";
-import { MovementCard } from "@/components/mm/MovementCard";
 import { useSessionStore, HYDRATION_GOAL_OZ } from "@/lib/useSessionStore";
 import { XPBar } from "@/components/mm/XPBar";
 import { StreakBadge } from "@/components/mm/StreakBadge";
@@ -26,7 +24,6 @@ function HomePage() {
   const { profile } = useProfile();
   const { user } = useAuth();
   const hydrationPct = Math.min(100, Math.round((ouncesToday / HYDRATION_GOAL_OZ) * 100));
-  const suggestions = movements.slice(0, 3);
 
   const displayName = profile?.full_name || user?.email?.split("@")[0] || "there";
   const initials = (profile?.full_name || user?.email || "U")
@@ -101,15 +98,6 @@ function HomePage() {
           <ArrowRight className="size-4 text-muted-foreground shrink-0" />
         </div>
       </Link>
-
-      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
-        Suggested Movement
-      </h4>
-      <div className="space-y-3 mb-8">
-        {suggestions.map((m) => (
-          <MovementCard key={m.id} movement={m} variant="compact" />
-        ))}
-      </div>
 
       <InspirationCard placement="home_page" />
     </AppShell>
