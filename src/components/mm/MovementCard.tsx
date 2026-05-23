@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Clock, Sparkles, Check, Undo2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Clock, Sparkles, Check, Undo2, Play, Pause, Square } from "lucide-react";
 import { toast } from "sonner";
 import type { Movement } from "@/lib/movements";
 import { encouragements } from "@/lib/movements";
@@ -18,8 +18,51 @@ export function MovementCard({ movement, variant = "full" }: Props) {
   const done = completedToday.includes(movement.id);
   const Icon = movement.icon;
 
+  const totalSeconds = Math.max(1, Math.round(movement.duration * 60));
+  const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
+  const [running, setRunning] = useState(false);
+  const [started, setStarted] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (!running) return;
+    intervalRef.current = setInterval(() => {
+      setSecondsLeft((s) => {
+        if (s <= 1) {
+          if (intervalRef.current) clearInterval(intervalRef.current);
+          setRunning(false);
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [running]);
+
+  const timerReady = secondsLeft === 0;
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return `${m}:${r.toString().padStart(2, "0")}`;
+  };
+
+  const handleStart = () => {
+    setStarted(true);
+    setRunning(true);
+  };
+  const handlePause = () => setRunning(false);
+  const handleResume = () => setRunning(true);
+  const handleStop = () => {
+    setRunning(false);
+    setStarted(false);
+    setSecondsLeft(totalSeconds);
+  };
+
   const handleComplete = () => {
     if (done) return;
+    if (!timerReady) return;
     completeMovement(movement);
     setJustDone(true);
     const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
@@ -60,6 +103,9 @@ export function MovementCard({ movement, variant = "full" }: Props) {
     if (!done) return;
     uncompleteMovement(movement);
     toast(`Undone · -${movement.xp} XP`, { description: "No worries — marked as not done." });
+    setSecondsLeft(totalSeconds);
+    setStarted(false);
+    setRunning(false);
 
     void (async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -152,35 +198,68 @@ export function MovementCard({ movement, variant = "full" }: Props) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1">
-            <Clock className="size-3.5" /> {movement.duration} min
+            <Clock className="size-3.5" />
+            {started ? formatTime(secondsLeft) : `${movement.duration} min`}
           </span>
           <span className="inline-flex items-center gap-1">
             <Sparkles className="size-3.5 text-accent" /> +{movement.xp} XP
           </span>
         </div>
-        <button
-          onClick={done ? handleUndo : handleComplete}
-          aria-label={done ? "Undo completion" : "Mark complete"}
-          title={done ? "Tap to undo" : undefined}
-          className={cn(
-            "h-9 px-4 rounded-full text-sm font-medium inline-flex items-center gap-2 transition-all",
-            done
-              ? "bg-primary/15 text-primary hover:bg-primary/25 active:scale-95 group"
-              : "bg-foreground text-background hover:opacity-90 active:scale-95",
-            justDone && "animate-scale-in",
-          )}
-        >
-          {done ? (
-            <>
-              <Check className="size-4 group-hover:hidden" />
-              <Undo2 className="size-4 hidden group-hover:inline" />
-              <span className="group-hover:hidden">Done</span>
-              <span className="hidden group-hover:inline">Undo</span>
-            </>
-          ) : (
-            "Complete"
-          )}
-        </button>
+        {done ? (
+          <button
+            onClick={handleUndo}
+            aria-label="Undo completion"
+            title="Tap to undo"
+            className={cn(
+              "h-9 px-4 rounded-full text-sm font-medium inline-flex items-center gap-2 transition-all group",
+              "bg-primary/15 text-primary hover:bg-primary/25 active:scale-95",
+              justDone && "animate-scale-in",
+            )}
+          >
+            <Check className="size-4 group-hover:hidden" />
+            <Undo2 className="size-4 hidden group-hover:inline" />
+            <span className="group-hover:hidden">Done</span>
+            <span className="hidden group-hover:inline">Undo</span>
+          </button>
+        ) : !started ? (
+          <button
+            onClick={handleStart}
+            aria-label="Start timer"
+            className="h-9 px-4 rounded-full text-sm font-medium inline-flex items-center gap-2 bg-foreground text-background hover:opacity-90 active:scale-95 transition-all"
+          >
+            <Play className="size-4" /> Start
+          </button>
+        ) : !timerReady ? (
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-foreground text-background pl-3 pr-1 h-9 text-sm font-medium">
+            <span className="tabular-nums">{formatTime(secondsLeft)}</span>
+            <button
+              onClick={running ? handlePause : handleResume}
+              aria-label={running ? "Pause timer" : "Resume timer"}
+              className="size-7 rounded-full bg-background/15 hover:bg-background/25 flex items-center justify-center transition-colors"
+            >
+              {running ? <Pause className="size-3.5" /> : <Play className="size-3.5" />}
+            </button>
+            <button
+              onClick={handleStop}
+              aria-label="Stop and reset timer"
+              className="size-7 rounded-full bg-background/15 hover:bg-background/25 flex items-center justify-center transition-colors"
+            >
+              <Square className="size-3.5" />
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={handleComplete}
+            aria-label="Mark done"
+            className={cn(
+              "h-9 px-4 rounded-full text-sm font-medium inline-flex items-center gap-2 transition-all",
+              "bg-foreground text-background hover:opacity-90 active:scale-95",
+              justDone && "animate-scale-in",
+            )}
+          >
+            <Check className="size-4" /> Done
+          </button>
+        )}
       </div>
     </div>
   );
