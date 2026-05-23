@@ -334,6 +334,35 @@ export function subscribeToStats(listener: () => void) {
   };
 }
 
+export interface HistoryHydration {
+  history: Record<string, DailyEntry>;
+  totals: {
+    totalSessions: number;
+    totalMinutes: number;
+    totalPushups: number;
+    totalSquats: number;
+    totalBreathing: number;
+  };
+  todayOunces?: number;
+}
+
+export function hydrateHistory(payload: HistoryHydration) {
+  setState((s) => {
+    const t = today();
+    const dbToday = payload.history[t];
+    return {
+      ...s,
+      history: trimHistory(payload.history),
+      totalSessions: payload.totals.totalSessions,
+      totalMinutes: payload.totals.totalMinutes,
+      totalPushups: payload.totals.totalPushups,
+      totalSquats: payload.totals.totalSquats,
+      totalBreathing: payload.totals.totalBreathing,
+      ouncesToday: payload.todayOunces ?? dbToday?.ouncesLogged ?? s.ouncesToday,
+    };
+  });
+}
+
 export function useSessionStore(): SessionState {
   const [, force] = useState(0);
   useEffect(() => {
