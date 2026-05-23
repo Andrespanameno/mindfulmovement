@@ -247,6 +247,38 @@ export function completeMovement(movement: Movement) {
   });
 }
 
+export function uncompleteMovement(movement: Movement) {
+  setState((s) => {
+    if (!s.completedToday.includes(movement.id)) return s;
+    const t = today();
+    const day = ensureDay(s.history, t);
+    const pushups = movement.repsType === "pushups" ? movement.reps ?? 0 : 0;
+    const squats = movement.repsType === "squats" ? movement.reps ?? 0 : 0;
+    const isBreathing = movement.category === "breath-calm";
+    const updatedDay: DailyEntry = {
+      ...day,
+      sessions: Math.max(0, day.sessions - 1),
+      minutes: Math.max(0, day.minutes - movement.duration),
+      pushups: Math.max(0, day.pushups - pushups),
+      squats: Math.max(0, day.squats - squats),
+      breathing: Math.max(0, day.breathing - (isBreathing ? 1 : 0)),
+      xp: Math.max(0, day.xp - movement.xp),
+    };
+    return {
+      ...s,
+      completedToday: s.completedToday.filter((id) => id !== movement.id),
+      xpToday: Math.max(0, s.xpToday - movement.xp),
+      totalXp: Math.max(0, s.totalXp - movement.xp),
+      totalSessions: Math.max(0, s.totalSessions - 1),
+      totalMinutes: Math.max(0, s.totalMinutes - movement.duration),
+      totalPushups: Math.max(0, s.totalPushups - pushups),
+      totalSquats: Math.max(0, s.totalSquats - squats),
+      totalBreathing: Math.max(0, s.totalBreathing - (isBreathing ? 1 : 0)),
+      history: { ...s.history, [t]: updatedDay },
+    };
+  });
+}
+
 export function logHydration(deltaOz: number) {
   setState((s) => {
     const max = HYDRATION_GOAL_OZ + 32;
