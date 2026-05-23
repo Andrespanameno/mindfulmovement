@@ -1,8 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { Bell, Heart, Settings, HelpCircle, LogOut, ChevronRight } from "lucide-react";
+import { Bell, Heart, Settings, HelpCircle, LogOut, ChevronRight, Pencil } from "lucide-react";
 import { useSessionStore } from "@/lib/useSessionStore";
 import { useAuth } from "@/lib/auth-context";
+import { useProfile } from "@/lib/useProfile";
+import { EditProfileDialog } from "@/components/mm/EditProfileDialog";
+import { useState } from "react";
 
 type Item = {
   icon: typeof Bell;
@@ -40,9 +43,14 @@ const groups: { title: string; items: Item[] }[] = [
 function ProfilePage() {
   const { streak, totalXp, completedToday } = useSessionStore();
   const { user, signOut } = useAuth();
+  const { profile, loading, updateProfile } = useProfile();
   const navigate = useNavigate();
+  const [editOpen, setEditOpen] = useState(false);
   const displayName =
-    (user?.user_metadata?.full_name as string | undefined) ?? user?.email ?? "Friend";
+    profile?.full_name ??
+    (user?.user_metadata?.full_name as string | undefined) ??
+    user?.email ??
+    "Friend";
   const initial = displayName.charAt(0).toUpperCase();
 
   const handleSignOut = async () => {
@@ -63,6 +71,27 @@ function ProfilePage() {
         </div>
         <h1 className="text-xl font-semibold">{displayName}</h1>
         <p className="text-sm text-muted-foreground">{user?.email}</p>
+        <button
+          onClick={() => setEditOpen(true)}
+          disabled={loading || !profile}
+          className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline disabled:opacity-50"
+        >
+          <Pencil className="size-3" /> Edit profile
+        </button>
+        {profile && (profile.fitness_level || profile.work_style) && (
+          <div className="flex flex-wrap justify-center gap-1.5 mt-3">
+            {profile.fitness_level && (
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-secondary capitalize">
+                {profile.fitness_level}
+              </span>
+            )}
+            {profile.work_style && (
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-secondary capitalize">
+                {profile.work_style}
+              </span>
+            )}
+          </div>
+        )}
       </header>
 
       <div className="grid grid-cols-3 gap-3 mb-8">
@@ -122,6 +151,15 @@ function ProfilePage() {
           <LogOut className="size-4" /> Sign out
         </button>
       </div>
+
+      {profile && (
+        <EditProfileDialog
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          profile={profile}
+          onSave={updateProfile}
+        />
+      )}
     </AppShell>
   );
 }
