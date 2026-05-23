@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { AppShell } from "@/components/mm/AppShell";
 import { Droplet, Undo2, ArrowLeft, Bell, BellOff, Check } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import {
   useSessionStore,
   logHydration,
@@ -43,6 +44,7 @@ function HydrationPage() {
     toast.success(`+${oz} oz logged`, {
       description: xp > 0 ? `+${xp} XP · Small sips, big impact.` : "Keep sipping gently.",
     });
+    void persistHydration(oz);
   };
 
   useEffect(() => {
@@ -136,6 +138,7 @@ function HydrationPage() {
       <button
         onClick={() => logHydration(-8)}
         disabled={ouncesToday === 0}
+        onMouseUp={() => ouncesToday > 0 && persistHydration(-8)}
         className="w-full h-11 rounded-2xl bg-card ring-1 ring-black/5 text-sm font-medium text-muted-foreground flex items-center justify-center gap-2 mb-8 disabled:opacity-40"
       >
         <Undo2 className="size-4" /> Undo last 8 oz
