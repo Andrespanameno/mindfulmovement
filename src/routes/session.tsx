@@ -2,11 +2,12 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Play, Pause, SkipForward, X, Check, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/mm/AppShell";
-import { buildGuidedSession, sessionCompletionMessages, type SessionStep } from "@/lib/movements";
+import { buildGuidedSession, type SessionStep } from "@/lib/movements";
 import { useProfile } from "@/lib/useProfile";
 import { completeMovement } from "@/lib/useSessionStore";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { InspirationCard } from "@/components/mm/InspirationCard";
 
 export const Route = createFileRoute("/session")({
   head: () => ({
@@ -36,10 +37,6 @@ function SessionPage() {
   const [done, setDone] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const loggedRef = useRef<Set<string>>(new Set());
-  const completionMsg = useMemo(
-    () => sessionCompletionMessages[Math.floor(Math.random() * sessionCompletionMessages.length)],
-    [],
-  );
 
   // Rebuild when profile loads (if initial render had no prefs yet).
   useEffect(() => {
@@ -142,7 +139,7 @@ function SessionPage() {
             <Check className="size-10 text-primary" />
           </div>
           <h1 className="text-2xl font-semibold mb-2">Session complete</h1>
-          <p className="text-muted-foreground text-pretty max-w-sm mb-6">{completionMsg}</p>
+          <InspirationCard placement="session_completion" variant="bare" className="max-w-sm mb-6" />
           <div className="flex items-center gap-6 text-sm text-muted-foreground mb-8">
             <span>{completed} movements</span>
             <span className="size-1 rounded-full bg-muted-foreground/40" />
