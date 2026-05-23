@@ -276,14 +276,6 @@ export const encouragements = [
   "Steady rhythm, steady self.",
 ];
 
-export const sessionCompletionMessages = [
-  "You showed up for yourself.",
-  "Small actions build lasting progress.",
-  "Your body appreciates every mindful movement.",
-  "Momentum grows one reset at a time.",
-  "That small pause mattered.",
-];
-
 export interface SessionStep {
   movement: Movement;
   seconds: number; // per-step duration in seconds (60–120)
