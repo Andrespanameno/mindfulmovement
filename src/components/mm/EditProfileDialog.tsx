@@ -20,6 +20,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import type { Profile, ProfileUpdate } from "@/lib/useProfile";
+import { LIFESTYLES } from "@/lib/lifestyles";
 
 const FITNESS = ["beginner", "casual", "active", "athletic"] as const;
 const WORK_STYLES = ["desk", "hybrid", "active", "on-the-go"] as const;
@@ -46,6 +47,7 @@ export function EditProfileDialog({
   const [fullName, setFullName] = useState(profile.full_name ?? "");
   const [fitness, setFitness] = useState(profile.fitness_level ?? "");
   const [workStyle, setWorkStyle] = useState(profile.work_style ?? "");
+  const [lifestyle, setLifestyle] = useState(profile.lifestyle ?? "");
   const [goals, setGoals] = useState<string[]>(profile.wellness_goals ?? []);
   const [water, setWater] = useState<number>(profile.daily_water_goal);
   const [busy, setBusy] = useState(false);
@@ -55,6 +57,7 @@ export function EditProfileDialog({
       setFullName(profile.full_name ?? "");
       setFitness(profile.fitness_level ?? "");
       setWorkStyle(profile.work_style ?? "");
+      setLifestyle(profile.lifestyle ?? "");
       setGoals(profile.wellness_goals ?? []);
       setWater(profile.daily_water_goal);
     }
@@ -69,6 +72,7 @@ export function EditProfileDialog({
       full_name: fullName.trim() || null,
       fitness_level: fitness || null,
       work_style: workStyle || null,
+      lifestyle: lifestyle || null,
       wellness_goals: goals,
       daily_water_goal: Math.max(16, Math.min(200, Number(water) || 64)),
       onboarding_completed: true,
@@ -113,6 +117,22 @@ export function EditProfileDialog({
                 {FITNESS.map((f) => (
                   <SelectItem key={f} value={f} className="capitalize">
                     {f}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Lifestyle</Label>
+            <Select value={lifestyle} onValueChange={setLifestyle}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select your lifestyle" />
+              </SelectTrigger>
+              <SelectContent>
+                {LIFESTYLES.map((l) => (
+                  <SelectItem key={l.id} value={l.id}>
+                    {l.label}
                   </SelectItem>
                 ))}
               </SelectContent>
