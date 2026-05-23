@@ -120,6 +120,7 @@ export type Database = {
           fitness_level: string | null
           full_name: string | null
           id: string
+          lifestyle: string | null
           onboarding_completed: boolean
           updated_at: string
           wellness_goals: string[] | null
@@ -131,6 +132,7 @@ export type Database = {
           fitness_level?: string | null
           full_name?: string | null
           id: string
+          lifestyle?: string | null
           onboarding_completed?: boolean
           updated_at?: string
           wellness_goals?: string[] | null
@@ -142,6 +144,7 @@ export type Database = {
           fitness_level?: string | null
           full_name?: string | null
           id?: string
+          lifestyle?: string | null
           onboarding_completed?: boolean
           updated_at?: string
           wellness_goals?: string[] | null
