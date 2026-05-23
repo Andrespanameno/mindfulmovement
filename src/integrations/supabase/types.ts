@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      movement_sessions: {
+        Row: {
+          category: string
+          completed_at: string
+          created_at: string
+          duration_min: number
+          id: string
+          movement_id: string
+          reps: number | null
+          reps_type: string | null
+          title: string
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          category: string
+          completed_at?: string
+          created_at?: string
+          duration_min?: number
+          id?: string
+          movement_id: string
+          reps?: number | null
+          reps_type?: string | null
+          title: string
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          category?: string
+          completed_at?: string
+          created_at?: string
+          duration_min?: number
+          id?: string
+          movement_id?: string
+          reps?: number | null
+          reps_type?: string | null
+          title?: string
+          user_id?: string
+          xp?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
