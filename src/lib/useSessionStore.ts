@@ -222,7 +222,7 @@ export function completeMovement(movement: Movement) {
     const afterActivity = applyActivity(s, movement.xp);
     const t = today();
     const day = ensureDay(afterActivity.history, t);
-    const isBreathing = movement.category === "Breathing";
+    const isBreathing = movement.category === "breath-calm";
     const updated: DailyEntry = {
       ...day,
       sessions: day.sessions + 1,

@@ -5,6 +5,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
 import { LIFESTYLES, WELLNESS_GOALS } from "@/lib/lifestyles";
+import { getCategoryMeta } from "@/lib/movements";
 import {
   getReminderSettings,
   updateReminderSettings,
@@ -88,9 +89,15 @@ function OnboardingPage() {
       intervalMin: interval,
       enabled: true,
     });
+    const lifestyleDef = LIFESTYLES.find((l) => l.id === lifestyle);
+    const seededCategories =
+      profile?.preferred_categories && profile.preferred_categories.length > 0
+        ? profile.preferred_categories
+        : lifestyleDef?.defaultCategories ?? [];
     const { error } = await updateProfile({
       lifestyle,
       wellness_goals: goals,
+      preferred_categories: seededCategories,
       onboarding_completed: true,
     });
     setBusy(false);
@@ -117,6 +124,11 @@ function OnboardingPage() {
   ];
   const t = titles[step];
   const canNext = step === 0 ? !!lifestyle : true;
+
+  const lifestyleDef = LIFESTYLES.find((l) => l.id === lifestyle);
+  const seededCategoryMetas = (lifestyleDef?.defaultCategories ?? [])
+    .map((c) => getCategoryMeta(c))
+    .filter(Boolean);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex justify-center">
@@ -176,6 +188,27 @@ function OnboardingPage() {
           )}
 
           {step === 1 && (
+            <>
+              {seededCategoryMetas.length > 0 && (
+                <div className="mb-6 p-4 rounded-2xl bg-secondary/60 ring-1 ring-black/5">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                    We'll start your rotation with
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {seededCategoryMetas.map((c) => (
+                      <span
+                        key={c!.id}
+                        className="text-[11px] px-2 py-0.5 rounded-full bg-background ring-1 ring-black/5"
+                      >
+                        {c!.short}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-2">
+                    You can fine-tune this anytime from your profile.
+                  </p>
+                </div>
+              )}
             <div className="grid grid-cols-2 gap-2.5">
               {WELLNESS_GOALS.map((g) => {
                 const selected = goals.includes(g);
@@ -196,6 +229,7 @@ function OnboardingPage() {
                 );
               })}
             </div>
+            </>
           )}
 
           {step === 2 && (

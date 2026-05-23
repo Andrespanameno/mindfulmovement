@@ -122,6 +122,7 @@ export type Database = {
           id: string
           lifestyle: string | null
           onboarding_completed: boolean
+          preferred_categories: string[]
           updated_at: string
           wellness_goals: string[] | null
           work_style: string | null
@@ -134,6 +135,7 @@ export type Database = {
           id: string
           lifestyle?: string | null
           onboarding_completed?: boolean
+          preferred_categories?: string[]
           updated_at?: string
           wellness_goals?: string[] | null
           work_style?: string | null
@@ -146,6 +148,7 @@ export type Database = {
           id?: string
           lifestyle?: string | null
           onboarding_completed?: boolean
+          preferred_categories?: string[]
           updated_at?: string
           wellness_goals?: string[] | null
           work_style?: string | null

@@ -2,9 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { Play } from "lucide-react";
 import { useMemo, useState } from "react";
-import { movements, type MovementCategory } from "@/lib/movements";
+import { movements, CATEGORIES, type MovementCategory } from "@/lib/movements";
 import { MovementCard } from "@/components/mm/MovementCard";
 import { useSessionStore } from "@/lib/useSessionStore";
+import { useProfile } from "@/lib/useProfile";
 
 export const Route = createFileRoute("/move")({
   head: () => ({
@@ -16,22 +17,26 @@ export const Route = createFileRoute("/move")({
   component: MovePage,
 });
 
-const categories: Array<"All" | MovementCategory> = [
-  "All",
-  "Walk",
-  "Stretch",
-  "Strength",
-  "Breathing",
-  "Mobility",
+type Filter = "All" | MovementCategory;
+const FILTERS: { id: Filter; label: string }[] = [
+  { id: "All", label: "All" },
+  ...CATEGORIES.map((c) => ({ id: c.id as Filter, label: c.short })),
 ];
 
 function MovePage() {
-  const [active, setActive] = useState<(typeof categories)[number]>("All");
+  const [active, setActive] = useState<Filter>("All");
   const { completedToday } = useSessionStore();
-  const filtered = useMemo(
-    () => (active === "All" ? movements : movements.filter((m) => m.category === active)),
-    [active],
-  );
+  const { profile } = useProfile();
+  const prefs = profile?.preferred_categories ?? [];
+
+  const filtered = useMemo(() => {
+    if (active !== "All") return movements.filter((m) => m.category === active);
+    if (prefs.length === 0) return movements;
+    // Preferred categories first, then the rest — keeps variety without hiding anything.
+    const preferred = movements.filter((m) => prefs.includes(m.category));
+    const others = movements.filter((m) => !prefs.includes(m.category));
+    return [...preferred, ...others];
+  }, [active, prefs]);
 
   return (
     <AppShell>
@@ -55,15 +60,15 @@ function MovePage() {
       </div>
 
       <div className="flex gap-2 overflow-x-auto -mx-6 px-6 pb-2 mb-6">
-        {categories.map((c) => (
+        {FILTERS.map(({ id, label }) => (
           <button
-            key={c}
-            onClick={() => setActive(c)}
+            key={id}
+            onClick={() => setActive(id)}
             className={`h-9 px-4 rounded-full text-sm font-medium whitespace-nowrap ring-1 ring-black/5 ${
-              active === c ? "bg-foreground text-background" : "bg-card text-foreground"
+              active === id ? "bg-foreground text-background" : "bg-card text-foreground"
             }`}
           >
-            {c}
+            {label}
           </button>
         ))}
       </div>
