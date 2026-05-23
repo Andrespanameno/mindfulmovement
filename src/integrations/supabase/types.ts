@@ -149,6 +149,48 @@ export type Database = {
         }
         Relationships: []
       }
+      reminder_settings: {
+        Row: {
+          breath: boolean
+          created_at: string
+          enabled: boolean
+          end_hour: number
+          hydration: boolean
+          interval_min: number
+          movement: boolean
+          quiet_weekends: boolean
+          start_hour: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          breath?: boolean
+          created_at?: string
+          enabled?: boolean
+          end_hour?: number
+          hydration?: boolean
+          interval_min?: number
+          movement?: boolean
+          quiet_weekends?: boolean
+          start_hour?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          breath?: boolean
+          created_at?: string
+          enabled?: boolean
+          end_hour?: number
+          hydration?: boolean
+          interval_min?: number
+          movement?: boolean
+          quiet_weekends?: boolean
+          start_hour?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_stats: {
         Row: {
           best_streak: number

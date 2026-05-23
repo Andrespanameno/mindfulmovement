@@ -15,6 +15,7 @@ import { AuthProvider } from "@/lib/auth-context";
 import { AuthGate } from "@/components/mm/AuthGate";
 import { StatsSync } from "@/components/mm/StatsSync";
 import { ProgressSync } from "@/components/mm/ProgressSync";
+import { RemindersSync } from "@/components/mm/RemindersSync";
 
 function NotFoundComponent() {
   return (
@@ -133,6 +134,7 @@ function RootComponent() {
         <ReminderRunner />
         <StatsSync />
         <ProgressSync />
+        <RemindersSync />
       </AuthProvider>
     </QueryClientProvider>
   );

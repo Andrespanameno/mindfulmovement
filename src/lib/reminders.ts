@@ -73,6 +73,22 @@ export function updateReminderSettings(patch: Partial<ReminderSettings>) {
   persist();
 }
 
+export function hydrateReminderSettings(patch: Partial<ReminderSettings>) {
+  state = { ...state, ...patch };
+  hydrated = true;
+  if (typeof window !== "undefined") {
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+  listeners.forEach((l) => l());
+}
+
+export function subscribeToReminderSettings(fn: () => void): () => void {
+  listeners.add(fn);
+  return () => {
+    listeners.delete(fn);
+  };
+}
+
 export function useReminderSettings(): ReminderSettings {
   const [, force] = useState(0);
   useEffect(() => {
