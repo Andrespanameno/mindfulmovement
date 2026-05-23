@@ -21,13 +21,27 @@ function notify(title: string, body: string) {
   if (typeof window === "undefined") return;
   if ("Notification" in window && Notification.permission === "granted") {
     try {
-      new Notification(title, { body, icon: "/favicon.ico", silent: false });
+      const n = new Notification(title, { body, icon: "/favicon.ico", silent: false });
+      n.onclick = () => {
+        window.focus();
+        window.location.assign("/session");
+        n.close();
+      };
       return;
     } catch {
       /* fall through to toast */
     }
   }
-  toast(title, { description: body, duration: 6000 });
+  toast(title, {
+    description: body,
+    duration: 10000,
+    action: {
+      label: "Start",
+      onClick: () => {
+        window.location.assign("/session");
+      },
+    },
+  });
 }
 
 export function ReminderRunner() {

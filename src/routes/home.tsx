@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { Droplet, ArrowRight, Sparkles } from "lucide-react";
+import { Droplet, ArrowRight, Sparkles, Play } from "lucide-react";
 import { movements } from "@/lib/movements";
 import { MovementCard } from "@/components/mm/MovementCard";
 import { useSessionStore, HYDRATION_GOAL_OZ } from "@/lib/useSessionStore";
@@ -63,6 +63,23 @@ function HomePage() {
       <div className="mb-8">
         <XPBar />
       </div>
+
+      <Link
+        to="/session"
+        className="block p-5 rounded-3xl bg-foreground text-background mb-6 relative overflow-hidden active:scale-[0.99] transition-transform"
+      >
+        <div className="absolute -right-10 -top-10 size-40 rounded-full bg-primary/30 blur-2xl" />
+        <p className="text-xs uppercase tracking-widest text-background/60 mb-1">Guided session</p>
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <h3 className="font-semibold">Start a 5-minute reset</h3>
+            <p className="text-sm text-background/70 mt-0.5">A few gentle movements, timed for you.</p>
+          </div>
+          <span className="size-11 rounded-full bg-background text-foreground grid place-items-center shrink-0">
+            <Play className="size-4" />
+          </span>
+        </div>
+      </Link>
 
       <Link
         to="/hydration"
