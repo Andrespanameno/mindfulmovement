@@ -1,11 +1,7 @@
 import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
-import {
-  hydrateHistory,
-  HISTORY_GOAL_LOOKBACK as _unused,
-} from "@/lib/useSessionStore";
-import { HYDRATION_GOAL_OZ } from "@/lib/useSessionStore";
+import { hydrateHistory, HYDRATION_GOAL_OZ } from "@/lib/useSessionStore";
 import type { DailyEntry } from "@/lib/useSessionStore";
 
 const LOOKBACK_DAYS = 90;
