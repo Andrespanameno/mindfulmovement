@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { Play } from "lucide-react";
 import { useMemo, useState } from "react";
 import { movements, CATEGORIES, type MovementCategory } from "@/lib/movements";
 import { MovementCard } from "@/components/mm/MovementCard";
