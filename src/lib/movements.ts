@@ -276,5 +276,105 @@ export const encouragements = [
   "Steady rhythm, steady self.",
 ];
 
+export const sessionCompletionMessages = [
+  "You showed up for yourself.",
+  "Small actions build lasting progress.",
+  "Your body appreciates every mindful movement.",
+  "Momentum grows one reset at a time.",
+  "That small pause mattered.",
+];
+
+export interface SessionStep {
+  movement: Movement;
+  seconds: number; // per-step duration in seconds (60–120)
+}
+
+/**
+ * Build a 5–6 minute guided session of 3–5 short movements based on the
+ * user's preferred categories. Always includes one breath/calm step when
+ * possible. Per-step durations are clamped to 60–120s and the total is
+ * capped at 360s (6 min).
+ */
+export function buildGuidedSession(
+  preferredCategories: string[] | null | undefined,
+): SessionStep[] {
+  const prefs =
+    preferredCategories && preferredCategories.length > 0
+      ? preferredCategories
+      : ALL_CATEGORY_IDS;
+
+  const pool = movements.filter((mv) => prefs.includes(mv.category));
+  const safe = pool.length > 0 ? pool : movements;
+
+  const shuffle = <T,>(arr: T[]): T[] => {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+
+  // Try to include one breath step, even if not in prefs — keeps sessions calm.
+  const breath = movements.filter((mv) => mv.category === "breath-calm");
+  const nonBreath = safe.filter((mv) => mv.category !== "breath-calm");
+
+  const picked: Movement[] = [];
+  const seen = new Set<string>();
+
+  // Aim for variety across categories.
+  const usedCats = new Set<string>();
+  for (const mv of shuffle(nonBreath)) {
+    if (seen.has(mv.id)) continue;
+    if (usedCats.has(mv.category) && picked.length >= 2) continue;
+    picked.push(mv);
+    seen.add(mv.id);
+    usedCats.add(mv.category);
+    if (picked.length >= 3) break;
+  }
+
+  // Insert a breath step in the middle for a built-in reset.
+  if (breath.length > 0) {
+    const b = shuffle(breath)[0];
+    if (!seen.has(b.id)) {
+      picked.splice(Math.min(2, picked.length), 0, b);
+      seen.add(b.id);
+    }
+  }
+
+  // Optionally add one more for a 5-movement session.
+  for (const mv of shuffle(nonBreath)) {
+    if (picked.length >= 5) break;
+    if (seen.has(mv.id)) continue;
+    picked.push(mv);
+    seen.add(mv.id);
+  }
+
+  // Convert to timed steps, clamp to 60–120s, cap total to 360s.
+  const steps: SessionStep[] = [];
+  let total = 0;
+  const cap = 360;
+  for (const mv of picked) {
+    const raw = Math.round((mv.duration || 1) * 60);
+    let secs = Math.max(60, Math.min(120, raw));
+    if (total + secs > cap) secs = Math.max(45, cap - total);
+    if (secs < 30) break;
+    steps.push({ movement: mv, seconds: secs });
+    total += secs;
+    if (total >= cap) break;
+  }
+
+  // Guarantee at least 3 steps.
+  if (steps.length < 3) {
+    for (const mv of shuffle(safe)) {
+      if (steps.length >= 3) break;
+      if (steps.find((s) => s.movement.id === mv.id)) continue;
+      steps.push({ movement: mv, seconds: 60 });
+    }
+  }
+
+  return steps;
+}
+
 // Backwards-compatible alias used by a few legacy filters/icons.
 export { Repeat as RotateIcon };
