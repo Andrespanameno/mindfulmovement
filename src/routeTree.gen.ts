@@ -13,6 +13,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as MoveRouteImport } from './routes/move'
 import { Route as HydrationRouteImport } from './routes/hydration'
 import { Route as HomeRouteImport } from './routes/home'
@@ -37,6 +38,11 @@ const ProgressRoute = ProgressRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MoveRoute = MoveRouteImport.update({
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/hydration': typeof HydrationRoute
   '/move': typeof MoveRoute
+  '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/reminders': typeof RemindersRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/hydration': typeof HydrationRoute
   '/move': typeof MoveRoute
+  '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/reminders': typeof RemindersRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/hydration': typeof HydrationRoute
   '/move': typeof MoveRoute
+  '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/reminders': typeof RemindersRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/hydration'
     | '/move'
+    | '/onboarding'
     | '/profile'
     | '/progress'
     | '/reminders'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/hydration'
     | '/move'
+    | '/onboarding'
     | '/profile'
     | '/progress'
     | '/reminders'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/hydration'
     | '/move'
+    | '/onboarding'
     | '/profile'
     | '/progress'
     | '/reminders'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   HydrationRoute: typeof HydrationRoute
   MoveRoute: typeof MoveRoute
+  OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
   RemindersRoute: typeof RemindersRoute
@@ -176,6 +189,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/move': {
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   HydrationRoute: HydrationRoute,
   MoveRoute: MoveRoute,
+  OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
   RemindersRoute: RemindersRoute,
@@ -230,3 +251,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
