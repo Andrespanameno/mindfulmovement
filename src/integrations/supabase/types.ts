@@ -71,6 +71,36 @@ export type Database = {
         }
         Relationships: []
       }
+      motivational_messages: {
+        Row: {
+          active: boolean
+          author: string | null
+          category: string
+          created_at: string
+          id: string
+          message: string
+          placement: string
+        }
+        Insert: {
+          active?: boolean
+          author?: string | null
+          category: string
+          created_at?: string
+          id?: string
+          message: string
+          placement: string
+        }
+        Update: {
+          active?: boolean
+          author?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          message?: string
+          placement?: string
+        }
+        Relationships: []
+      }
       movement_sessions: {
         Row: {
           category: string

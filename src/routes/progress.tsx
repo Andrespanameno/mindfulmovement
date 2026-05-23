@@ -21,6 +21,7 @@ import { MilestoneGrid } from "@/components/mm/MilestoneGrid";
 import { useSessionStore } from "@/lib/useSessionStore";
 import { computeInsights, streakHistoryFromDaily } from "@/lib/progress";
 import { cn } from "@/lib/utils";
+import { InspirationCard } from "@/components/mm/InspirationCard";
 
 export const Route = createFileRoute("/progress")({
   head: () => ({
@@ -247,9 +248,7 @@ function ProgressPage() {
 
       <h3 className="text-sm font-semibold mb-3">Milestones</h3>
       <MilestoneGrid />
-      <p className="text-xs text-muted-foreground italic mt-4 text-center">
-        Small actions create big change.
-      </p>
+      <InspirationCard placement="progress_summary" variant="bare" className="mt-6" />
     </AppShell>
   );
 }
