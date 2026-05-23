@@ -43,7 +43,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
       if (error) console.error("[movement_sessions] insert failed:", error.message);
 
       // Mirror to breathing_sessions table for breathing-specific aggregations
-      if (movement.category === "Breathing") {
+      if (movement.category === "breath-calm") {
         const { error: bErr } = await supabase.from("breathing_sessions").insert({
           user_id: user.id,
           movement_id: movement.id,
