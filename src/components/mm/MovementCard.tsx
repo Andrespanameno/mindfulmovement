@@ -5,6 +5,7 @@ import type { Movement } from "@/lib/movements";
 import { encouragements } from "@/lib/movements";
 import { completeMovement, useSessionStore } from "@/lib/useSessionStore";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Props {
   movement: Movement;
@@ -24,6 +25,23 @@ export function MovementCard({ movement, variant = "full" }: Props) {
     const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
     toast.success(`+${movement.xp} XP`, { description: msg });
     setTimeout(() => setJustDone(false), 1400);
+
+    // Persist to backend (fire-and-forget; UI already updated optimistically)
+    void (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { error } = await supabase.from("movement_sessions").insert({
+        user_id: user.id,
+        movement_id: movement.id,
+        category: movement.category,
+        title: movement.title,
+        duration_min: movement.duration,
+        reps: movement.reps ?? null,
+        reps_type: movement.repsType ?? null,
+        xp: movement.xp,
+      });
+      if (error) console.error("[movement_sessions] insert failed:", error.message);
+    })();
   };
 
   if (variant === "compact") {
