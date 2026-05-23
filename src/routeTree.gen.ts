@@ -9,12 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SessionRouteImport } from './routes/session'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as MoveRouteImport } from './routes/move'
 import { Route as HydrationRouteImport } from './routes/hydration'
@@ -22,9 +25,19 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/public/hooks/send-reminders'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SessionRoute = SessionRouteImport.update({
@@ -50,6 +63,11 @@ const ProgressRoute = ProgressRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -90,12 +108,15 @@ export interface FileRoutesByFullPath {
   '/hydration': typeof HydrationRoute
   '/move': typeof MoveRoute
   '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/session': typeof SessionRoute
+  '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesByTo {
@@ -104,12 +125,15 @@ export interface FileRoutesByTo {
   '/hydration': typeof HydrationRoute
   '/move': typeof MoveRoute
   '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/session': typeof SessionRoute
+  '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesById {
@@ -119,12 +143,15 @@ export interface FileRoutesById {
   '/hydration': typeof HydrationRoute
   '/move': typeof MoveRoute
   '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
   '/reminders': typeof RemindersRoute
   '/reset-password': typeof ResetPasswordRoute
   '/session': typeof SessionRoute
+  '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRouteTypes {
@@ -135,12 +162,15 @@ export interface FileRouteTypes {
     | '/hydration'
     | '/move'
     | '/onboarding'
+    | '/privacy'
     | '/profile'
     | '/progress'
     | '/reminders'
     | '/reset-password'
     | '/session'
+    | '/settings'
     | '/support'
+    | '/terms'
     | '/api/public/hooks/send-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -149,12 +179,15 @@ export interface FileRouteTypes {
     | '/hydration'
     | '/move'
     | '/onboarding'
+    | '/privacy'
     | '/profile'
     | '/progress'
     | '/reminders'
     | '/reset-password'
     | '/session'
+    | '/settings'
     | '/support'
+    | '/terms'
     | '/api/public/hooks/send-reminders'
   id:
     | '__root__'
@@ -163,12 +196,15 @@ export interface FileRouteTypes {
     | '/hydration'
     | '/move'
     | '/onboarding'
+    | '/privacy'
     | '/profile'
     | '/progress'
     | '/reminders'
     | '/reset-password'
     | '/session'
+    | '/settings'
     | '/support'
+    | '/terms'
     | '/api/public/hooks/send-reminders'
   fileRoutesById: FileRoutesById
 }
@@ -178,22 +214,39 @@ export interface RootRouteChildren {
   HydrationRoute: typeof HydrationRoute
   MoveRoute: typeof MoveRoute
   OnboardingRoute: typeof OnboardingRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
   RemindersRoute: typeof RemindersRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SessionRoute: typeof SessionRoute
+  SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
+  TermsRoute: typeof TermsRoute
   ApiPublicHooksSendRemindersRoute: typeof ApiPublicHooksSendRemindersRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/support': {
       id: '/support'
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/session': {
@@ -229,6 +282,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -282,12 +342,15 @@ const rootRouteChildren: RootRouteChildren = {
   HydrationRoute: HydrationRoute,
   MoveRoute: MoveRoute,
   OnboardingRoute: OnboardingRoute,
+  PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
   RemindersRoute: RemindersRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SessionRoute: SessionRoute,
+  SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
+  TermsRoute: TermsRoute,
   ApiPublicHooksSendRemindersRoute: ApiPublicHooksSendRemindersRoute,
 }
 export const routeTree = rootRouteImport

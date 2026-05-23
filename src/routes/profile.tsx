@@ -11,7 +11,7 @@ import { useState } from "react";
 type Item = {
   icon: typeof Bell;
   label: string;
-  to?: "/reminders" | "/support";
+  to?: "/reminders" | "/support" | "/settings";
 };
 
 export const Route = createFileRoute("/profile")({
@@ -34,7 +34,7 @@ const groups: { title: string; items: Item[] }[] = [
   {
     title: "Account",
     items: [
-      { icon: Settings, label: "Settings" },
+      { icon: Settings, label: "Settings", to: "/settings" },
       { icon: HelpCircle, label: "Help & support", to: "/support" },
     ],
   },
