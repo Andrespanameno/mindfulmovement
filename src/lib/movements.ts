@@ -278,12 +278,3 @@ export const encouragements = [
 
 // Backwards-compatible alias used by a few legacy filters/icons.
 export { Repeat as RotateIcon };
-
-export const encouragements = [
-  "Beautifully done. Your body thanks you.",
-  "Small moves, big impact. Keep going.",
-  "That was a gift to yourself.",
-  "One mindful moment at a time.",
-  "You showed up — that's what matters.",
-  "Gentle progress, real change.",
-];
