@@ -9,6 +9,7 @@ import { StreakBadge } from "@/components/mm/StreakBadge";
 import { ThemeToggle } from "@/components/mm/ThemeToggle";
 import { useProfile } from "@/lib/useProfile";
 import { useAuth } from "@/lib/auth-context";
+import { InspirationCard } from "@/components/mm/InspirationCard";
 
 export const Route = createFileRoute("/home")({
   head: () => ({
@@ -110,13 +111,7 @@ function HomePage() {
         ))}
       </div>
 
-      <div className="pt-6 border-t border-border">
-        <p className="text-sm italic text-muted-foreground text-pretty leading-relaxed">
-          "Movement is a medicine for creating change in a person's physical, emotional, and
-          mental states."
-        </p>
-        <p className="text-xs font-medium text-muted-foreground mt-2">— Carol Welch</p>
-      </div>
+      <InspirationCard placement="home_page" />
     </AppShell>
   );
 }
