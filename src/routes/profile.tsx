@@ -5,6 +5,7 @@ import { useSessionStore } from "@/lib/useSessionStore";
 import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
 import { EditProfileDialog } from "@/components/mm/EditProfileDialog";
+import { getLifestyle } from "@/lib/lifestyles";
 import { useState } from "react";
 
 type Item = {
@@ -52,6 +53,7 @@ function ProfilePage() {
     user?.email ??
     "Friend";
   const initial = displayName.charAt(0).toUpperCase();
+  const lifestyle = getLifestyle(profile?.lifestyle);
 
   const handleSignOut = async () => {
     await signOut();
@@ -78,8 +80,13 @@ function ProfilePage() {
         >
           <Pencil className="size-3" /> Edit profile
         </button>
-        {profile && (profile.fitness_level || profile.work_style) && (
+        {profile && (lifestyle || profile.fitness_level || profile.work_style) && (
           <div className="flex flex-wrap justify-center gap-1.5 mt-3">
+            {lifestyle && (
+              <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+                <lifestyle.icon className="size-3" /> {lifestyle.label}
+              </span>
+            )}
             {profile.fitness_level && (
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-secondary capitalize">
                 {profile.fitness_level}
