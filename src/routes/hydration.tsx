@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { AppShell } from "@/components/mm/AppShell";
 import { Droplet, Undo2, ArrowLeft, Bell, BellOff, Check } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import {
   useSessionStore,
   logHydration,
@@ -31,6 +32,22 @@ function HydrationPage() {
   const c = 2 * Math.PI * r;
   const reachedRef = useRef(ouncesToday >= HYDRATION_GOAL_OZ);
 
+  const persistHydration = async (oz: number) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const { error } = await supabase.from("hydration_logs").insert({
+      user_id: user.id,
+      ounces: oz,
+    });
+    if (error) console.error("[hydration_logs] insert failed:", error.message);
+  };
+
+  const handleUndo = () => {
+    if (ouncesToday === 0) return;
+    logHydration(-8);
+    void persistHydration(-8);
+  };
+
   const add = (oz: number) => {
     const before = ouncesToday;
     const after = Math.min(HYDRATION_GOAL_OZ, before + oz);
@@ -43,6 +60,7 @@ function HydrationPage() {
     toast.success(`+${oz} oz logged`, {
       description: xp > 0 ? `+${xp} XP · Small sips, big impact.` : "Keep sipping gently.",
     });
+    void persistHydration(oz);
   };
 
   useEffect(() => {
@@ -134,7 +152,7 @@ function HydrationPage() {
       </div>
 
       <button
-        onClick={() => logHydration(-8)}
+        onClick={handleUndo}
         disabled={ouncesToday === 0}
         className="w-full h-11 rounded-2xl bg-card ring-1 ring-black/5 text-sm font-medium text-muted-foreground flex items-center justify-center gap-2 mb-8 disabled:opacity-40"
       >

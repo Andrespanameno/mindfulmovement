@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      hydration_logs: {
+        Row: {
+          created_at: string
+          id: string
+          logged_at: string
+          ounces: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logged_at?: string
+          ounces: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logged_at?: string
+          ounces?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       movement_sessions: {
         Row: {
           category: string
