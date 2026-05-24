@@ -63,7 +63,9 @@ export function DispatchedReminders() {
     })();
 
     const channel = supabase
-      .channel(`reminder-dispatches-${user.id}`)
+      .channel(`reminder-dispatches-${user.id}`, {
+        config: { private: true },
+      })
       .on(
         "postgres_changes",
         {
