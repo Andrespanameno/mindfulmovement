@@ -80,7 +80,7 @@ function HowItWorksPage() {
             Core Philosophy
           </p>
           <p className="text-lg font-semibold text-foreground italic">
-            "Micro consistent, macro results."
+            "Micro actions. Macro results."
           </p>
         </div>
       </div>
