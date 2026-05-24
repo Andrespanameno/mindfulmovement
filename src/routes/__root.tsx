@@ -7,6 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
@@ -17,6 +18,7 @@ import { StatsSync } from "@/components/mm/StatsSync";
 import { ProgressSync } from "@/components/mm/ProgressSync";
 import { RemindersSync } from "@/components/mm/RemindersSync";
 import { DispatchedReminders } from "@/components/mm/DispatchedReminders";
+import { initTheme } from "@/lib/theme";
 
 function NotFoundComponent() {
   return (
@@ -124,6 +126,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    initTheme();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
