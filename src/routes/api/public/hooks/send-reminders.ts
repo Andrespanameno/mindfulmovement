@@ -60,7 +60,16 @@ function inActiveWindow(s: {
 export const Route = createFileRoute("/api/public/hooks/send-reminders")({
   server: {
     handlers: {
-      POST: async () => {
+      POST: async ({ request }) => {
+        const expected = process.env.SUPABASE_PUBLISHABLE_KEY;
+        const incoming =
+          request.headers.get("apikey") ??
+          request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ??
+          "";
+        if (!expected || incoming !== expected) {
+          return new Response("Forbidden", { status: 403 });
+        }
+
         const now = new Date();
 
         const { data: settings, error: settingsErr } = await supabaseAdmin
