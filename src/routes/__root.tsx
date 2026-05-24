@@ -82,14 +82,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Mindful Movement — Small steps, calmer days" },
+      { title: "Mindful Movement - Micro Actions, Macro Results" },
       { name: "description", content: "A calm wellness app for busy adults. Move a little, hydrate, breathe, and feel better — one small step at a time." },
       { name: "author", content: "Mindful Movement" },
-      { property: "og:title", content: "Mindful Movement" },
-      { property: "og:description", content: "Small movement, hydration, and breathing reminders for busy adults." },
+      { property: "og:title", content: "Mindful Movement - Micro Actions, Macro Results" },
+      { property: "og:description", content: "A calm wellness app for busy adults. Move a little, hydrate, breathe, and feel better — one small step at a time." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Mindful Movement - Micro Actions, Macro Results" },
+      { name: "twitter:description", content: "A calm wellness app for busy adults. Move a little, hydrate, breathe, and feel better — one small step at a time." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/dbe8484a-78ee-4e80-b5ac-3c2c777f94ea" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/dbe8484a-78ee-4e80-b5ac-3c2c777f94ea" },
     ],
     links: [
       {
