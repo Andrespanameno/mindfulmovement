@@ -196,7 +196,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
         {movement.instruction ?? movement.description}
       </p>
 
-      <MovementVisual movementId={movement.id} />
+      <MovementVisual movementId={movement.id} running={running} />
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
