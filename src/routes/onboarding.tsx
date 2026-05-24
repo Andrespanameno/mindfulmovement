@@ -8,11 +8,12 @@ import { LIFESTYLES, WELLNESS_GOALS } from "@/lib/lifestyles";
 import { getCategoryMeta } from "@/lib/movements";
 import {
   getReminderSettings,
-  updateReminderSettings,
+  hydrateReminderSettings,
   formatHour,
   type ReminderSettings,
 } from "@/lib/reminders";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -83,12 +84,35 @@ function OnboardingPage() {
     }
     setBusy(true);
     const win = WINDOWS.find((w) => w.id === windowId)!;
-    updateReminderSettings({
-      startHour: win.start,
-      endHour: win.end,
-      intervalMin: interval,
-      enabled: true,
-    });
+    // Persist reminder settings directly to the DB so the Profile/Reminders
+    // page reflects the onboarding selections as the source of truth.
+    if (user) {
+      const current = getReminderSettings();
+      const reminderPatch = {
+        user_id: user.id,
+        enabled: true,
+        start_hour: win.start,
+        end_hour: win.end,
+        interval_min: interval,
+        movement: current.movement,
+        hydration: current.hydration,
+        breath: current.breath,
+        quiet_weekends: current.quietWeekends,
+      };
+      const { error: remErr } = await supabase
+        .from("reminder_settings")
+        .upsert(reminderPatch, { onConflict: "user_id" });
+      if (remErr) {
+        console.error("[onboarding] reminder upsert failed:", remErr.message);
+      }
+      // Keep local state in sync without triggering a redundant DB write.
+      hydrateReminderSettings({
+        enabled: true,
+        startHour: win.start,
+        endHour: win.end,
+        intervalMin: interval,
+      });
+    }
     const lifestyleDef = LIFESTYLES.find((l) => l.id === lifestyle);
     const seededCategories =
       profile?.preferred_categories && profile.preferred_categories.length > 0
