@@ -35,6 +35,7 @@ function SessionPage() {
   const [remaining, setRemaining] = useState(steps[0]?.seconds ?? 60);
   const [running, setRunning] = useState(true);
   const [done, setDone] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const loggedRef = useRef<Set<string>>(new Set());
 
@@ -92,10 +93,16 @@ function SessionPage() {
   };
 
   // Advance only after the user confirms completion of the current step.
-  const confirmAndAdvance = () => {
+  const confirmStep = () => {
     if (!current) return;
-    if (remaining > 0) return; // require timer to finish first
+    if (remaining > 0 || confirmed) return;
     logStep(current);
+    setConfirmed(true);
+  };
+
+  const advanceToNext = () => {
+    if (!current) return;
+    if (!confirmed) return;
     if (index + 1 >= steps.length) {
       setDone(true);
       setRunning(false);
@@ -104,6 +111,7 @@ function SessionPage() {
     const next = steps[index + 1];
     setIndex(index + 1);
     setRemaining(next.seconds);
+    setConfirmed(false);
     setRunning(true);
   };
 
@@ -246,13 +254,35 @@ function SessionPage() {
             </button>
           </>
         ) : (
-          <button
-            onClick={confirmAndAdvance}
-            aria-label="Mark movement done"
-            className="h-12 px-6 rounded-full bg-foreground text-background text-sm font-medium inline-flex items-center gap-2 active:scale-95 transition-transform animate-scale-in"
-          >
-            <Check className="size-4" /> Done
-          </button>
+          <>
+            <button
+              onClick={confirmStep}
+              disabled={confirmed}
+              aria-label="Mark movement done"
+              className={cn(
+                "h-12 px-6 rounded-full text-sm font-medium inline-flex items-center gap-2 active:scale-95 transition-transform animate-scale-in",
+                confirmed
+                  ? "bg-card ring-1 ring-black/5 text-muted-foreground cursor-not-allowed"
+                  : "bg-foreground text-background",
+              )}
+            >
+              <Check className="size-4" /> {confirmed ? "Done" : "Done"}
+            </button>
+            <button
+              onClick={advanceToNext}
+              disabled={!confirmed}
+              aria-label="Next movement"
+              title={confirmed ? undefined : "Tap Done first"}
+              className={cn(
+                "h-12 px-5 rounded-full text-sm font-medium inline-flex items-center gap-2 transition-transform",
+                confirmed
+                  ? "bg-foreground text-background active:scale-95 animate-scale-in"
+                  : "bg-card ring-1 ring-black/5 opacity-50 cursor-not-allowed",
+              )}
+            >
+              <SkipForward className="size-4" /> Next
+            </button>
+          </>
         )}
       </div>
 
