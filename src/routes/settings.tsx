@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { ArrowLeft, Shield, FileText, ChevronRight } from "lucide-react";
+import { ArrowLeft, Shield, FileText, ChevronRight, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -14,6 +14,7 @@ export const Route = createFileRoute("/settings")({
 
 function SettingsPage() {
   const items = [
+    { icon: Sparkles, label: "How It Works", to: "/how-it-works" },
     { icon: Shield, label: "Privacy Policy", to: "/privacy" },
     { icon: FileText, label: "Terms of Service", to: "/terms" },
   ];
