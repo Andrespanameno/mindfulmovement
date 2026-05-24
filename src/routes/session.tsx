@@ -91,8 +91,10 @@ function SessionPage() {
     })();
   };
 
-  const advance = () => {
+  // Advance only after the user confirms completion of the current step.
+  const confirmAndAdvance = () => {
     if (!current) return;
+    if (remaining > 0) return; // require timer to finish first
     logStep(current);
     if (index + 1 >= steps.length) {
       setDone(true);
@@ -102,6 +104,7 @@ function SessionPage() {
     const next = steps[index + 1];
     setIndex(index + 1);
     setRemaining(next.seconds);
+    setRunning(true);
   };
 
   // Ticker
@@ -118,15 +121,11 @@ function SessionPage() {
     };
   }, [running, done, index]);
 
-  // Auto-advance when a step's timer hits zero.
+  // Stop the ticker when a step's timer hits zero; user must tap Done to continue.
   useEffect(() => {
-    if (remaining === 0 && !done && current) {
-      advance();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [remaining]);
+    if (remaining === 0 && running) setRunning(false);
+  }, [remaining, running]);
 
-  const handleSkip = () => advance();
   const handleExit = () => navigate({ to: "/home" });
 
   if (done) {
@@ -228,21 +227,33 @@ function SessionPage() {
       </div>
 
       <div className="flex items-center justify-center gap-3">
-        <button
-          onClick={() => setRunning((r) => !r)}
-          aria-label={running ? "Pause" : "Resume"}
-          className="h-12 px-6 rounded-full bg-foreground text-background text-sm font-medium inline-flex items-center gap-2 active:scale-95 transition-transform"
-        >
-          {running ? <><Pause className="size-4" /> Pause</> : <><Play className="size-4" /> Resume</>}
-        </button>
-        <button
-          onClick={handleSkip}
-          aria-label="Skip to next"
-          title="Skip to next movement"
-          className="h-12 px-5 rounded-full bg-card ring-1 ring-black/5 text-sm font-medium inline-flex items-center gap-2 hover:bg-accent/20"
-        >
-          <SkipForward className="size-4" /> Next
-        </button>
+        {remaining > 0 ? (
+          <>
+            <button
+              onClick={() => setRunning((r) => !r)}
+              aria-label={running ? "Pause" : "Resume"}
+              className="h-12 px-6 rounded-full bg-foreground text-background text-sm font-medium inline-flex items-center gap-2 active:scale-95 transition-transform"
+            >
+              {running ? <><Pause className="size-4" /> Pause</> : <><Play className="size-4" /> Resume</>}
+            </button>
+            <button
+              disabled
+              aria-disabled="true"
+              title="Finish the timer to continue"
+              className="h-12 px-5 rounded-full bg-card ring-1 ring-black/5 text-sm font-medium inline-flex items-center gap-2 opacity-50 cursor-not-allowed"
+            >
+              <SkipForward className="size-4" /> Next
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={confirmAndAdvance}
+            aria-label="Mark movement done"
+            className="h-12 px-6 rounded-full bg-foreground text-background text-sm font-medium inline-flex items-center gap-2 active:scale-95 transition-transform animate-scale-in"
+          >
+            <Check className="size-4" /> Done
+          </button>
+        )}
       </div>
 
       {/* Upcoming preview */}
