@@ -229,5 +229,61 @@ const ENCOURAGEMENTS_EN_INDEX: Record<string, number> = {
   "Steady rhythm, steady self.": 7,
 };
 
+/** Overlay translations for DB-driven motivational messages */
+export const MESSAGE_ES: Record<string, string> = {
+  "Small actions build lasting progress.": "Las acciones pequeñas construyen progreso duradero.",
+  "A few intentional minutes can shift your whole day.": "Unos minutos intencionales pueden cambiar tu día.",
+  "Your body appreciates every mindful movement.": "Tu cuerpo agradece cada movimiento consciente.",
+  "Progress does not have to be intense to be meaningful.": "El progreso no tiene que ser intenso para ser significativo.",
+  "Today is a gentle invitation to begin again.": "Hoy es una invitación suave a empezar de nuevo.",
+  "Consistency is kinder than intensity.": "La constancia es más amable que la intensidad.",
+  "Movement is a quiet form of self-care.": "El movimiento es una forma silenciosa de cuidarte.",
+  "A calm breath is always within reach.": "Una respiración calmada siempre está al alcance.",
+  "Tiny resets create steady momentum.": "Los pequeños reinicios crean impulso constante.",
+  "Stillness counts. Motion counts. Both matter.": "La quietud cuenta. El movimiento cuenta. Ambos importan.",
+  "Hydration is a small act of devotion to yourself.": "La hidratación es un pequeño acto de devoción hacia ti.",
+  "You do not need a perfect day to make a meaningful one.": "No necesitas un día perfecto para que sea significativo.",
+  "Show up softly. That is enough.": "Preséntate con suavidad. Eso es suficiente.",
+  "You showed up for yourself today.": "Estuviste presente para ti hoy.",
+  "That small pause mattered.": "Esa pequeña pausa importó.",
+  "Momentum grows one reset at a time.": "El impulso crece un reinicio a la vez.",
+  "Your body says thank you.": "Tu cuerpo te lo agradece.",
+  "Beautifully done. Carry this calm with you.": "Muy bien hecho. Lleva esta calma contigo.",
+  "A few minutes well spent.": "Unos minutos bien invertidos.",
+  "Gentle effort is real effort.": "El esfuerzo suave es esfuerzo de verdad.",
+  "You just made the day a little kinder.": "Acabas de hacer el día un poco más amable.",
+  "That is how lasting change is built.": "Así es como se construye el cambio duradero.",
+  "Every reset is a quiet victory.": "Cada reinicio es una victoria silenciosa.",
+  "Your breath, your body, your moment.": "Tu aliento, tu cuerpo, tu momento.",
+  "You returned to yourself. That is everything.": "Regresaste a ti mismo. Eso lo es todo.",
+  "Small movement, big care.": "Movimiento pequeño, gran cuidado.",
+  "A sip is a small promise kept.": "Un sorbo es una pequeña promesa cumplida.",
+  "Your body is grateful for that glass.": "Tu cuerpo está agradecido por ese vaso.",
+  "Hydration done gently is hydration done well.": "La hidratación hecha con suavidad es hidratación bien hecha.",
+  "Steady sips, steady self.": "Sorbos constantes, serenidad constante.",
+  "Tiny refills add up to a brighter day.": "Los pequeños rellenos suman un día más brillante.",
+  "You just gave your body what it asked for.": "Acabas de darle a tu cuerpo lo que pedía.",
+  "Hydration is a quiet act of kindness to yourself.": "La hidratación es un acto silencioso de amabilidad hacia ti.",
+  "One glass closer to a softer afternoon.": "Un vaso más cerca de una tarde más suave.",
+  "Gentle hydration, gentle energy.": "Hidratación suave, energía suave.",
+  "Small sips, real care.": "Sorbos pequeños, cuidado real.",
+  "Look how far small steps have carried you.": "Mira qué lejos te han llevado los pequeños pasos.",
+  "Consistency, not intensity, built this.": "La constancia, no la intensidad, construyó esto.",
+  "Every entry here is a moment you chose yourself.": "Cada entrada aquí es un momento que elegiste tú.",
+  "Progress is the gentle sum of showing up.": "El progreso es la suma suave de presentarse.",
+  "You are building something quiet and real.": "Estás construyendo algo silencioso y real.",
+  "Your journey does not need to be loud to be meaningful.": "Tu camino no necesita ser ruidoso para ser significativo.",
+  "Small actions, steady proof.": "Acciones pequeñas, prueba constante.",
+  "A rhythm is forming, one mindful day at a time.": "Se está formando un ritmo, un día consciente a la vez.",
+  "This is what kind progress looks like.": "Así se ve el progreso amable.",
+  "Each session here is a small thank-you to your future self.": "Cada sesión aquí es un pequeño gracias a tu yo futuro.",
+  "Movement, breath, hydration — all woven into your week.": "Movimiento, respiración, hidratación — todo tejido en tu semana.",
+  "Streaks are built breath by breath.": "Las constancias se construyen aliento a aliento.",
+};
+
+export function translateMessage(msg: string): string {
+  return MESSAGE_ES[msg] ?? msg;
+}
+
 export type ContentHelpers = ReturnType<typeof useContent>;
 export type { Lang };
