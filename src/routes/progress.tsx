@@ -51,7 +51,51 @@ function ProgressPage() {
   const peakStreak = streakSeries.reduce((m, x) => Math.max(m, x.longest), 0);
   const hours = (summary.minutes / 60).toFixed(1);
   const hydrationDelta =
-    insights.thisWeek.hydrationConsistencyPct - insights.lastWeek.hydrationConsistencyPct;
+    range === "week" ? insights.weeklyConsistencyTrend : insights.monthlyConsistencyTrend;
+  const pushupGrowth = range === "week" ? insights.weekPushupGrowth : insights.monthPushupGrowth;
+  const squatGrowth = range === "week" ? insights.weekSquatGrowth : insights.monthSquatGrowth;
+  const todayKey = new Date().toISOString().slice(0, 10);
+
+  const summaries = useMemo(() => {
+    const out: string[] = [];
+    const n = summary.sessions;
+    if (n > 0) {
+      out.push(
+        t(
+          n === 1
+            ? `progress.sum.sessions_one_${range}`
+            : `progress.sum.sessions_many_${range}`,
+          { n },
+        ),
+      );
+    }
+    if (summary.minutes > 0) {
+      out.push(t(`progress.sum.hours_${range}`, { h: hours }));
+    }
+    if (pushupGrowth.to > pushupGrowth.from) {
+      out.push(t("progress.sum.pushups", { a: pushupGrowth.from, b: pushupGrowth.to }));
+    }
+    if (squatGrowth.to > squatGrowth.from) {
+      out.push(t("progress.sum.squats", { a: squatGrowth.from, b: squatGrowth.to }));
+    }
+    if (hydrationDelta > 0) {
+      out.push(t(`progress.sum.hydration_${range}`, { n: hydrationDelta }));
+    } else if (sessionsTrend > 0) {
+      out.push(t(`progress.sum.consistency_${range}`, { n: sessionsTrend }));
+    }
+    if (summary.breathing > 0) {
+      const b = summary.breathing;
+      out.push(
+        t(
+          b === 1
+            ? `progress.sum.breathing_one_${range}`
+            : `progress.sum.breathing_many_${range}`,
+          { n: b },
+        ),
+      );
+    }
+    return out;
+  }, [t, range, summary, hours, pushupGrowth, squatGrowth, hydrationDelta, sessionsTrend]);
 
   return (
     <AppShell>
@@ -75,14 +119,14 @@ function ProgressPage() {
         ))}
       </div>
 
-      {insights.summaries.length > 0 && (
+      {summaries.length > 0 && (
         <div className="p-5 rounded-3xl bg-card ring-1 ring-black/5 mb-6">
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="size-4 text-accent" />
             <h3 className="text-sm font-semibold">{t("progress.highlights")}</h3>
           </div>
           <ul className="space-y-2">
-            {insights.summaries.slice(0, 4).map((line, i) => (
+            {summaries.slice(0, 4).map((line, i) => (
               <li key={i} className="text-sm text-foreground/85 text-pretty leading-relaxed">
                 {line}
               </li>
@@ -153,7 +197,7 @@ function ProgressPage() {
         <div className="flex items-end justify-between gap-1 h-28">
           {daily.map((d, i) => {
             const h = Math.max(4, Math.round((d.minutes / maxMin) * 100));
-            const isToday = i === daily.length - 1;
+            const isToday = d.date === todayKey;
             return (
               <div
                 key={d.date}
@@ -190,7 +234,10 @@ function ProgressPage() {
         <span className="text-xs text-muted-foreground">{t("progress.last_30")}</span>
       </div>
       <div className="p-4 rounded-3xl bg-card ring-1 ring-black/5 mb-8">
-        <div className="grid grid-cols-[repeat(30,1fr)] gap-[3px] mb-3">
+        <div
+          className="grid gap-[3px] mb-3"
+          style={{ gridTemplateColumns: `repeat(${streakSeries.length}, 1fr)` }}
+        >
           {streakSeries.map((p, i) => (
             <div
               key={i}
