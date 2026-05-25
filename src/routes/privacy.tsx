@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { ArrowLeft, Shield } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/privacy")({
 });
 
 function PrivacyPage() {
+  const { t } = useI18n();
   return (
     <AppShell>
       <header className="mb-6">
@@ -21,7 +23,7 @@ function PrivacyPage() {
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-4" />
-          Back
+          {t("common.back")}
         </Link>
       </header>
 
@@ -29,54 +31,37 @@ function PrivacyPage() {
         <div className="size-14 rounded-full bg-secondary ring-1 ring-black/5 mb-3 grid place-items-center">
           <Shield className="size-6 text-muted-foreground" />
         </div>
-        <h1 className="text-xl font-semibold">Privacy Policy</h1>
+        <h1 className="text-xl font-semibold">{t("privacy.title")}</h1>
       </div>
 
       <div className="rounded-2xl bg-card ring-1 ring-black/5 p-6 space-y-5 text-sm text-muted-foreground leading-relaxed">
+        <p>{t("privacy.intro")}</p>
+        <div>
+          <h2 className="text-foreground font-medium mb-2">{t("privacy.h.collect")}</h2>
+          <p>{t("privacy.p.collect")}</p>
+        </div>
+        <div>
+          <h2 className="text-foreground font-medium mb-2">{t("privacy.h.use")}</h2>
+          <p>{t("privacy.p.use")}</p>
+        </div>
+        <div>
+          <h2 className="text-foreground font-medium mb-2">{t("privacy.h.security")}</h2>
+          <p>{t("privacy.p.security")}</p>
+        </div>
+        <div>
+          <h2 className="text-foreground font-medium mb-2">{t("privacy.h.choices")}</h2>
+          <p>{t("privacy.p.choices")}</p>
+        </div>
+        <div>
+          <h2 className="text-foreground font-medium mb-2">{t("privacy.h.changes")}</h2>
+          <p>{t("privacy.p.changes")}</p>
+        </div>
         <p>
-          This Privacy Policy describes how Mindful Movement collects, uses, and protects your personal information when you use our app.
-        </p>
-
-        <div>
-          <h2 className="text-foreground font-medium mb-2">Information We Collect</h2>
-          <p>
-            We collect information you provide directly, such as your profile details, wellness preferences, and session activity. This helps us personalize your experience and track your progress.
-          </p>
-        </div>
-
-        <div>
-          <h2 className="text-foreground font-medium mb-2">How We Use Your Information</h2>
-          <p>
-            We use your data to deliver personalized movement recommendations, track your wellness journey, send helpful reminders, and improve the app experience.
-          </p>
-        </div>
-
-        <div>
-          <h2 className="text-foreground font-medium mb-2">Data Security</h2>
-          <p>
-            We take reasonable measures to protect your information from unauthorized access, disclosure, or loss. Your data is stored securely and encrypted in transit.
-          </p>
-        </div>
-
-        <div>
-          <h2 className="text-foreground font-medium mb-2">Your Choices</h2>
-          <p>
-            You can update your profile, adjust reminder preferences, or contact us to inquire about your data at any time.
-          </p>
-        </div>
-
-        <div>
-          <h2 className="text-foreground font-medium mb-2">Changes to This Policy</h2>
-          <p>
-            We may update this Privacy Policy from time to time. Any changes will be posted within the app, and we encourage you to review it periodically.
-          </p>
-        </div>
-
-        <p>
-          If you have any questions about this Privacy Policy, please contact us at{" "}
+          {t("privacy.contact_pre")}
           <a href="mailto:test@test.com" className="font-medium text-primary hover:underline">
             test@test.com
-          </a>.
+          </a>
+          {t("privacy.contact_post")}
         </p>
       </div>
     </AppShell>
