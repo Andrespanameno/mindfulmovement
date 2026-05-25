@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
 import { useMotivationalMessage, type MessagePlacement, type MessageCategory } from "@/hooks/useMotivationalMessage";
+import { useI18n } from "@/lib/i18n";
+import { translateMessage } from "@/lib/i18n-content";
 
 interface InspirationCardProps {
   placement: MessagePlacement;
@@ -20,16 +22,18 @@ export function InspirationCard({
   className,
 }: InspirationCardProps) {
   const { message } = useMotivationalMessage({ placement, category });
+  const { lang } = useI18n();
   if (!message) return null;
 
   const showAuthor =
     message.author && message.author.trim().length > 0;
+  const displayMessage = lang === "es" ? translateMessage(message.message) : message.message;
 
   if (variant === "bare") {
     return (
       <div className={cn("text-center", className)}>
         <p className="text-sm italic text-muted-foreground text-pretty leading-relaxed">
-          "{message.message}"
+          "{displayMessage}"
         </p>
         {showAuthor && (
           <p className="text-xs font-medium text-muted-foreground mt-2">— {message.author}</p>
@@ -41,7 +45,7 @@ export function InspirationCard({
   return (
     <div className={cn("pt-6 border-t border-border", className)}>
       <p className="text-sm italic text-muted-foreground text-pretty leading-relaxed">
-        "{message.message}"
+        "{displayMessage}"
       </p>
       {showAuthor && (
         <p className="text-xs font-medium text-muted-foreground mt-2">— {message.author}</p>
