@@ -185,7 +185,7 @@ function ProgressPage() {
           icon={<Droplet className="size-4 text-primary" />}
           label={t("progress.hydration")}
           value={`${summary.hydrationConsistencyPct}%`}
-          hint={`${hydrationDelta >= 0 ? "+" : ""}${hydrationDelta}pp wk/wk`}
+          hint={`${hydrationDelta >= 0 ? "+" : ""}${hydrationDelta} ${range === "week" ? t("progress.pp_week") : t("progress.pp_month")}`}
         />
       </div>
 
