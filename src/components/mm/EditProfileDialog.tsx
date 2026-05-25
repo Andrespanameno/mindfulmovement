@@ -21,6 +21,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import type { Profile, ProfileUpdate } from "@/lib/useProfile";
 import { LIFESTYLES } from "@/lib/lifestyles";
+import { useI18n } from "@/lib/i18n";
+import { useContent } from "@/lib/i18n-content";
 
 const FITNESS = ["beginner", "casual", "active", "athletic"] as const;
 const WORK_STYLES = ["desk", "hybrid", "active", "on-the-go"] as const;
@@ -44,6 +46,8 @@ export function EditProfileDialog({
   profile: Profile;
   onSave: (patch: ProfileUpdate) => Promise<{ error: string | null }>;
 }) {
+  const { t } = useI18n();
+  const c = useContent();
   const [fullName, setFullName] = useState(profile.full_name ?? "");
   const [fitness, setFitness] = useState(profile.fitness_level ?? "");
   const [workStyle, setWorkStyle] = useState(profile.work_style ?? "");
@@ -81,7 +85,7 @@ export function EditProfileDialog({
     if (error) {
       toast.error(error);
     } else {
-      toast.success("Profile updated");
+      toast.success(t("edit.updated"));
       onOpenChange(false);
     }
   };
@@ -90,15 +94,13 @@ export function EditProfileDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Personalize Mindful Movement to fit your day.
-          </DialogDescription>
+          <DialogTitle>{t("edit.title")}</DialogTitle>
+          <DialogDescription>{t("edit.desc")}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="name">Your name</Label>
+            <Label htmlFor="name">{t("edit.name")}</Label>
             <Input
               id="name"
               value={fullName}
@@ -108,15 +110,15 @@ export function EditProfileDialog({
           </div>
 
           <div className="space-y-1.5">
-            <Label>Fitness level</Label>
+            <Label>{t("edit.fitness")}</Label>
             <Select value={fitness} onValueChange={setFitness}>
               <SelectTrigger>
-                <SelectValue placeholder="Select your level" />
+                <SelectValue placeholder={t("edit.fitness.placeholder")} />
               </SelectTrigger>
               <SelectContent>
                 {FITNESS.map((f) => (
                   <SelectItem key={f} value={f} className="capitalize">
-                    {f}
+                    {c.fitness(f)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -124,15 +126,15 @@ export function EditProfileDialog({
           </div>
 
           <div className="space-y-1.5">
-            <Label>Lifestyle</Label>
+            <Label>{t("edit.lifestyle")}</Label>
             <Select value={lifestyle} onValueChange={setLifestyle}>
               <SelectTrigger>
-                <SelectValue placeholder="Select your lifestyle" />
+                <SelectValue placeholder={t("edit.lifestyle.placeholder")} />
               </SelectTrigger>
               <SelectContent>
                 {LIFESTYLES.map((l) => (
                   <SelectItem key={l.id} value={l.id}>
-                    {l.label}
+                    {c.lifestyleLabel(l.id, l.label)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -140,15 +142,15 @@ export function EditProfileDialog({
           </div>
 
           <div className="space-y-1.5">
-            <Label>Work style</Label>
+            <Label>{t("edit.work_style")}</Label>
             <Select value={workStyle} onValueChange={setWorkStyle}>
               <SelectTrigger>
-                <SelectValue placeholder="How do you spend your day?" />
+                <SelectValue placeholder={t("edit.work_style.placeholder")} />
               </SelectTrigger>
               <SelectContent>
                 {WORK_STYLES.map((w) => (
                   <SelectItem key={w} value={w} className="capitalize">
-                    {w}
+                    {c.workStyle(w)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -156,7 +158,7 @@ export function EditProfileDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>Wellness goals</Label>
+            <Label>{t("edit.goals")}</Label>
             <div className="grid grid-cols-2 gap-2">
               {GOALS.map((g) => (
                 <label
@@ -167,14 +169,14 @@ export function EditProfileDialog({
                     checked={goals.includes(g)}
                     onCheckedChange={() => toggleGoal(g)}
                   />
-                  <span className="text-sm">{g}</span>
+                  <span className="text-sm">{c.wellnessGoal(g)}</span>
                 </label>
               ))}
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="water">Daily water goal (oz)</Label>
+            <Label htmlFor="water">{t("edit.water")}</Label>
             <Input
               id="water"
               type="number"
@@ -188,10 +190,10 @@ export function EditProfileDialog({
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={busy}>
-            Cancel
+            {t("common.cancel")}
           </Button>
           <Button onClick={handleSave} disabled={busy}>
-            {busy ? "Saving…" : "Save changes"}
+            {busy ? t("common.saving") : t("common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>
