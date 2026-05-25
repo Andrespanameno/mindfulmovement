@@ -319,6 +319,13 @@ export function logHydration(deltaOz: number) {
   });
 }
 
+export function undoLastHydration() {
+  const amount = state.lastHydrationAdd;
+  if (amount <= 0 || state.ouncesToday === 0) return;
+  logHydration(-amount);
+  setState((s) => ({ ...s, lastHydrationAdd: 0 }));
+}
+
 export function setRemindersEnabled(enabled: boolean) {
   setState((s) => ({ ...s, remindersEnabled: enabled, lastReminderAt: Date.now() }));
 }
