@@ -70,6 +70,26 @@ function HomePage() {
         </div>
       </Link>
 
+      <Link
+        to="/hydration"
+        className="block p-6 rounded-3xl bg-card ring-1 ring-black/5 mb-8"
+      >
+        <div className="flex items-center gap-6">
+          <HydrationRing pct={hydrationPct} />
+          <div className="flex-1">
+            <h3 className="font-medium flex items-center gap-2">
+              <Droplet className="size-4 text-primary" /> Hydration Goal
+            </h3>
+            <p className="text-sm text-muted-foreground text-pretty mt-1">
+              {ouncesToday >= HYDRATION_GOAL_OZ
+                ? "Goal reached. Beautifully done."
+                : `${HYDRATION_GOAL_OZ - ouncesToday} oz to reach your mark.`}
+            </p>
+          </div>
+          <ArrowRight className="size-4 text-muted-foreground shrink-0" />
+        </div>
+      </Link>
+
       <section className="grid grid-cols-2 gap-4 mb-6">
         <StreakBadge />
         <XpToday />
