@@ -70,15 +70,6 @@ function HomePage() {
         </div>
       </Link>
 
-      <section className="grid grid-cols-2 gap-4 mb-6">
-        <StreakBadge />
-        <XpToday />
-      </section>
-
-      <div className="mb-8">
-        <XPBar />
-      </div>
-
       <Link
         to="/hydration"
         className="block p-6 rounded-3xl bg-card ring-1 ring-black/5 mb-8"
@@ -98,6 +89,15 @@ function HomePage() {
           <ArrowRight className="size-4 text-muted-foreground shrink-0" />
         </div>
       </Link>
+
+      <section className="grid grid-cols-2 gap-4 mb-6">
+        <StreakBadge />
+        <XpToday />
+      </section>
+
+      <div className="mb-8">
+        <XPBar />
+      </div>
 
       <InspirationCard placement="home_page" />
     </AppShell>
