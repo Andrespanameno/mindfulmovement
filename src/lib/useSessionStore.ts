@@ -163,6 +163,40 @@ function setState(updater: (s: SessionState) => SessionState) {
   listeners.forEach((l) => l());
 }
 
+function rolloverIfNeeded() {
+  if (state.lastDate === today()) return;
+  setState((s) => ({
+    ...s,
+    xpToday: 0,
+    completedToday: [],
+    ouncesToday: 0,
+    hydrationXpToday: 0,
+    lastDate: today(),
+    lastHydrationAdd: 0,
+  }));
+}
+
+let midnightTimer: number | null = null;
+function scheduleMidnightRollover() {
+  if (typeof window === "undefined") return;
+  if (midnightTimer !== null) window.clearTimeout(midnightTimer);
+  const now = new Date();
+  const next = new Date(now);
+  next.setHours(24, 0, 5, 0); // 12:00:05 AM next day (a few seconds past midnight)
+  const ms = Math.max(1000, next.getTime() - now.getTime());
+  midnightTimer = window.setTimeout(() => {
+    rolloverIfNeeded();
+    scheduleMidnightRollover();
+  }, ms);
+}
+
+if (typeof window !== "undefined") {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") rolloverIfNeeded();
+  });
+  window.addEventListener("focus", () => rolloverIfNeeded());
+}
+
 function applyActivity(s: SessionState, xpGained: number): SessionState {
   let { streak, bestStreak, lastActiveDate, streakBonusDate, xpToday, totalXp } = s;
   const t = today();
@@ -413,6 +447,8 @@ export function useSessionStore(): SessionState {
     if (!hydrated) {
       state = read();
       hydrated = true;
+      rolloverIfNeeded();
+      scheduleMidnightRollover();
     }
     const l = () => force((n) => n + 1);
     listeners.add(l);
