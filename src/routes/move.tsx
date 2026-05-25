@@ -6,6 +6,7 @@ import { MovementCard } from "@/components/mm/MovementCard";
 import { useSessionStore } from "@/lib/useSessionStore";
 import { useProfile } from "@/lib/useProfile";
 import { useI18n } from "@/lib/i18n";
+import { useContent } from "@/lib/i18n-content";
 
 export const Route = createFileRoute("/move")({
   head: () => ({
@@ -21,6 +22,7 @@ type Filter = "All" | MovementCategory;
 
 function MovePage() {
   const { t } = useI18n();
+  const c = useContent();
   const [active, setActive] = useState<Filter>("All");
   const { completedToday } = useSessionStore();
   const { profile } = useProfile();
@@ -28,7 +30,7 @@ function MovePage() {
 
   const FILTERS: { id: Filter; label: string }[] = [
     { id: "All", label: t("move.filter.all") },
-    ...CATEGORIES.map((c) => ({ id: c.id as Filter, label: c.short })),
+    ...CATEGORIES.map((cat) => ({ id: cat.id as Filter, label: c.categoryShort(cat.id, cat.short) })),
   ];
 
   const filtered = useMemo(() => {
