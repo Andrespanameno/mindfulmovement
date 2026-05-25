@@ -33,21 +33,31 @@ function HydrationPage() {
     useSessionStore();
   const todayKey = new Date().toISOString().slice(0, 10);
   const baselineStorageKey = `mm-hydration-baseline-${todayKey}`;
+  const roundsStorageKey = `mm-hydration-rounds-${todayKey}`;
   const [bonusBaseline, setBonusBaseline] = useState<number>(() => {
     if (typeof window === "undefined") return 0;
     const raw = window.localStorage.getItem(baselineStorageKey);
+    return raw ? Math.max(0, parseInt(raw, 10) || 0) : 0;
+  });
+  const [roundsCompleted, setRoundsCompleted] = useState<number>(() => {
+    if (typeof window === "undefined") return 0;
+    const raw = window.localStorage.getItem(roundsStorageKey);
     return raw ? Math.max(0, parseInt(raw, 10) || 0) : 0;
   });
   // Clear stale baseline if ounces reset below it (e.g. daily rollover or undo)
   useEffect(() => {
     if (bonusBaseline > 0 && ouncesToday < bonusBaseline) {
       setBonusBaseline(0);
-      if (typeof window !== "undefined") window.localStorage.removeItem(baselineStorageKey);
+      setRoundsCompleted(0);
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(baselineStorageKey);
+        window.localStorage.removeItem(roundsStorageKey);
+      }
     }
-  }, [ouncesToday, bonusBaseline, baselineStorageKey]);
+  }, [ouncesToday, bonusBaseline, baselineStorageKey, roundsStorageKey]);
 
   const roundOunces = Math.max(0, ouncesToday - bonusBaseline);
-  const roundNumber = Math.floor(bonusBaseline / HYDRATION_GOAL_OZ) + 1;
+  const roundNumber = roundsCompleted + 1;
   const pct = Math.min(100, Math.round((roundOunces / HYDRATION_GOAL_OZ) * 100));
   const roundComplete = roundOunces >= HYDRATION_GOAL_OZ;
   const r = 86;
@@ -55,14 +65,17 @@ function HydrationPage() {
   const reachedRef = useRef(ouncesToday >= HYDRATION_GOAL_OZ);
 
   const startNewRound = () => {
-    const newBaseline = bonusBaseline + HYDRATION_GOAL_OZ;
+    const newBaseline = ouncesToday;
+    const newRounds = roundsCompleted + 1;
     setBonusBaseline(newBaseline);
+    setRoundsCompleted(newRounds);
     if (typeof window !== "undefined") {
       window.localStorage.setItem(baselineStorageKey, String(newBaseline));
+      window.localStorage.setItem(roundsStorageKey, String(newRounds));
     }
     reachedRef.current = false;
-    toast.success(t("hydration.keep_going_started") || "New round started", {
-      description: t("hydration.keep_going_sub") || "Keep the momentum — every sip counts.",
+    toast.success(t("hydration.keep_going_started"), {
+      description: t("hydration.keep_going_sub"),
     });
   };
 
@@ -87,12 +100,12 @@ function HydrationPage() {
   };
 
   const add = (oz: number) => {
-    const before = ouncesToday;
-    const after = Math.min(HYDRATION_GOAL_OZ, before + oz);
+    const beforeRound = Math.min(roundOunces, HYDRATION_GOAL_OZ);
+    const afterRound = Math.min(HYDRATION_GOAL_OZ, roundOunces + oz);
     const xp = Math.max(
       0,
-      Math.floor(after / 8) * HYDRATION_XP_PER_8OZ -
-        Math.floor(Math.min(before, HYDRATION_GOAL_OZ) / 8) * HYDRATION_XP_PER_8OZ,
+      Math.floor(afterRound / 8) * HYDRATION_XP_PER_8OZ -
+        Math.floor(beforeRound / 8) * HYDRATION_XP_PER_8OZ,
     );
     logHydration(oz);
     toast.success(t("hydration.toast.logged", { n: oz }), {
@@ -102,15 +115,15 @@ function HydrationPage() {
   };
 
   useEffect(() => {
-    if (ouncesToday >= HYDRATION_GOAL_OZ && !reachedRef.current) {
+    if (roundOunces >= HYDRATION_GOAL_OZ && !reachedRef.current) {
       reachedRef.current = true;
       toast.success(t("hydration.toast.goal"), {
         description: hydrationMsg?.message ?? t("hydration.toast.goal_sub"),
       });
       nextHydrationMsg();
     }
-    if (ouncesToday < HYDRATION_GOAL_OZ) reachedRef.current = false;
-  }, [ouncesToday, hydrationMsg, nextHydrationMsg]);
+    if (roundOunces < HYDRATION_GOAL_OZ) reachedRef.current = false;
+  }, [roundOunces, hydrationMsg, nextHydrationMsg]);
 
   // Gentle reminders while the page is open
   useEffect(() => {
@@ -161,7 +174,7 @@ function HydrationPage() {
             <p className="text-xs text-muted-foreground">{t("hydration.of_today", { goal: HYDRATION_GOAL_OZ })}</p>
             {bonusBaseline > 0 && (
               <p className="text-[10px] font-medium text-muted-foreground mt-0.5">
-                {(t("hydration.total_today") || "Total today")}: {ouncesToday} oz · {(t("hydration.round") || "Round")} {roundNumber}
+                {t("hydration.total_today")}: {ouncesToday} oz · {t("hydration.round")} {roundNumber}
               </p>
             )}
             {roundComplete && (
@@ -181,7 +194,7 @@ function HydrationPage() {
             onClick={startNewRound}
             className="mt-4 inline-flex items-center justify-center gap-2 h-11 px-5 rounded-2xl bg-primary text-primary-foreground text-sm font-semibold active:scale-[0.98] transition"
           >
-            <Plus className="size-4" /> {t("hydration.keep_going") || "Keep Going"}
+            <Plus className="size-4" /> {t("hydration.keep_going")}
           </button>
         )}
       </div>
