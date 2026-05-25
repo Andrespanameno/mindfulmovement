@@ -38,7 +38,8 @@ const DAY_LABELS_EN = ["S", "M", "T", "W", "T", "F", "S"];
 const DAY_LABELS_ES = ["D", "L", "M", "X", "J", "V", "S"];
 
 function ProgressPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const dayLabels = lang === "es" ? DAY_LABELS_ES : DAY_LABELS_EN;
   const session = useSessionStore();
   const insights = useMemo(() => computeInsights(session), [session]);
   const [range, setRange] = useState<"week" | "month">("week");
