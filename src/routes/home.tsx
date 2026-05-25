@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/mm/ThemeToggle";
 import { useProfile } from "@/lib/useProfile";
 import { useAuth } from "@/lib/auth-context";
 import { InspirationCard } from "@/components/mm/InspirationCard";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/home")({
   head: () => ({
@@ -23,6 +24,7 @@ function HomePage() {
   const { ouncesToday } = useSessionStore();
   const { profile } = useProfile();
   const { user } = useAuth();
+  const { t } = useI18n();
   const hydrationPct = Math.min(100, Math.round((ouncesToday / HYDRATION_GOAL_OZ) * 100));
 
   const displayName = profile?.full_name || user?.email?.split("@")[0] || "there";
@@ -37,16 +39,16 @@ function HomePage() {
     <AppShell>
       <header className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-sm text-muted-foreground">Good morning, {displayName}</p>
-          <h1 className="text-2xl font-semibold">Today is a fresh start</h1>
+          <p className="text-sm text-muted-foreground">{t("home.greeting", { name: displayName })}</p>
+          <h1 className="text-2xl font-semibold">{t("home.title")}</h1>
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Link
             to="/profile"
             className="size-10 rounded-full bg-secondary ring-1 ring-border grid place-items-center text-xs font-semibold text-foreground hover:bg-accent/20 transition-colors"
-            aria-label="Profile"
-            title="Profile"
+            aria-label={t("nav.profile")}
+            title={t("nav.profile")}
           >
             {initials}
           </Link>
@@ -58,11 +60,11 @@ function HomePage() {
         className="block p-6 rounded-3xl bg-foreground text-background mb-8 relative overflow-hidden active:scale-[0.99] transition-transform"
       >
         <div className="absolute -right-12 -top-12 size-44 rounded-full bg-primary/30 blur-2xl" />
-        <p className="text-xs uppercase tracking-widest text-background/60 mb-2">Guided session</p>
+        <p className="text-xs uppercase tracking-widest text-background/60 mb-2">{t("home.guided.eyebrow")}</p>
         <div className="flex items-center justify-between gap-4">
           <div className="min-w-0">
-            <h3 className="font-semibold">Start a 5-minute reset</h3>
-            <p className="text-sm text-background/70 mt-1">A few gentle movements, timed for you.</p>
+            <h3 className="font-semibold">{t("home.guided.title")}</h3>
+            <p className="text-sm text-background/70 mt-1">{t("home.guided.sub")}</p>
           </div>
           <span className="size-12 rounded-full bg-background text-foreground grid place-items-center shrink-0">
             <Play className="size-5" />
@@ -78,12 +80,12 @@ function HomePage() {
           <HydrationRing pct={hydrationPct} />
           <div className="flex-1">
             <h3 className="font-medium flex items-center gap-2">
-              <Droplet className="size-4 text-primary" /> Hydration Goal
+              <Droplet className="size-4 text-primary" /> {t("home.hydration.title")}
             </h3>
             <p className="text-sm text-muted-foreground text-pretty mt-1">
               {ouncesToday >= HYDRATION_GOAL_OZ
-                ? "Goal reached. Beautifully done."
-                : `${HYDRATION_GOAL_OZ - ouncesToday} oz to reach your mark.`}
+                ? t("home.hydration.reached")
+                : t("home.hydration.remaining", { n: HYDRATION_GOAL_OZ - ouncesToday })}
             </p>
           </div>
           <ArrowRight className="size-4 text-muted-foreground shrink-0" />
@@ -106,14 +108,15 @@ function HomePage() {
 
 function XpToday() {
   const { xpToday } = useSessionStore();
+  const { t } = useI18n();
   return (
     <div className="p-4 rounded-2xl bg-secondary/60 ring-1 ring-black/5">
       <div className="flex items-center gap-2 mb-3">
         <Sparkles className="size-4 text-primary" />
-        <span className="text-xs font-medium text-muted-foreground">XP Today</span>
+        <span className="text-xs font-medium text-muted-foreground">{t("home.xp_today")}</span>
       </div>
       <p className="text-2xl font-semibold">{xpToday}</p>
-      <p className="text-[11px] text-muted-foreground mt-1">Every movement counts.</p>
+      <p className="text-[11px] text-muted-foreground mt-1">{t("home.xp_tip")}</p>
     </div>
   );
 }
