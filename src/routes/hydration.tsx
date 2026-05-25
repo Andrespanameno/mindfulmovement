@@ -27,7 +27,7 @@ export const Route = createFileRoute("/hydration")({
 });
 
 function HydrationPage() {
-  const { ouncesToday, remindersEnabled, reminderIntervalMin, lastReminderAt } =
+  const { ouncesToday, lastHydrationAdd, remindersEnabled, reminderIntervalMin, lastReminderAt } =
     useSessionStore();
   const pct = Math.min(100, Math.round((ouncesToday / HYDRATION_GOAL_OZ) * 100));
   const r = 86;
