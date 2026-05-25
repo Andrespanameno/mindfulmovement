@@ -125,6 +125,11 @@ const dict: Record<string, { en: string; es: string }> = {
   "progress.milestones": { en: "Milestones", es: "Logros" },
   "progress.ready": { en: "Ready when you are", es: "Listo cuando tú lo estés" },
   "progress.from_prev": { en: "from {n} last period", es: "desde {n} en el período anterior" },
+  "progress.vs_prev": { en: "vs prev", es: "vs ant" },
+  "progress.pp_week": { en: "pp wk/wk", es: "pp sem/sem" },
+  "progress.pp_month": { en: "pp mo/mo", es: "pp mes/mes" },
+  "progress.day_label": { en: "Day {n}", es: "Día {n}" },
+  "progress.streak_label": { en: "streak {n}", es: "constancia {n}" },
 
   "progress.sum.sessions_one_week": { en: "You completed 1 mindful movement this week.", es: "Completaste 1 movimiento consciente esta semana." },
   "progress.sum.sessions_many_week": { en: "You completed {n} mindful movements this week.", es: "Completaste {n} movimientos conscientes esta semana." },
