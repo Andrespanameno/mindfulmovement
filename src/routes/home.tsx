@@ -99,15 +99,6 @@ function HomePage() {
         <XPBar />
       </div>
 
-      <div className="rounded-2xl bg-warm/40 ring-1 ring-black/5 p-6 text-center mb-6">
-        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
-          Core Philosophy
-        </p>
-        <p className="text-lg font-semibold text-foreground italic">
-          "Micro actions. Macro results."
-        </p>
-      </div>
-
       <InspirationCard placement="home_page" />
     </AppShell>
   );
