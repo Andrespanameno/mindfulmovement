@@ -89,6 +89,11 @@ const dict: Record<string, { en: string; es: string }> = {
   "hydration.toast.goal_sub": { en: "Beautifully done. Your body thanks you.", es: "Muy bien hecho. Tu cuerpo te lo agradece." },
   "hydration.toast.sip": { en: "Time for a sip 💧", es: "Es momento de un sorbo 💧" },
   "hydration.toast.sip_sub": { en: "A quick glass keeps you steady.", es: "Un vaso rápido te mantiene en equilibrio." },
+  "hydration.keep_going": { en: "Keep Going", es: "Sigue así" },
+  "hydration.keep_going_started": { en: "New round started", es: "Nueva ronda iniciada" },
+  "hydration.keep_going_sub": { en: "Keep the momentum — every sip counts.", es: "Mantén el ritmo — cada sorbo cuenta." },
+  "hydration.total_today": { en: "Total today", es: "Total de hoy" },
+  "hydration.round": { en: "Round", es: "Ronda" },
 
   "progress.title": { en: "Your Journey", es: "Tu camino" },
   "progress.sub": { en: "Small actions, real change — here's how it's adding up.", es: "Acciones pequeñas, cambios reales — así va sumando." },
