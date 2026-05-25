@@ -402,6 +402,7 @@ export function hydrateHistory(payload: HistoryHydration) {
       totalSquats: payload.totals.totalSquats,
       totalBreathing: payload.totals.totalBreathing,
       ouncesToday: payload.todayOunces ?? dbToday?.ouncesLogged ?? s.ouncesToday,
+      lastHydrationAdd: 0,
     };
   });
 }
