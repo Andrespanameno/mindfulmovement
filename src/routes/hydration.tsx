@@ -48,9 +48,9 @@ function HydrationPage() {
   };
 
   const handleUndo = () => {
-    if (ouncesToday === 0) return;
-    logHydration(-8);
-    void persistHydration(-8);
+    if (ouncesToday === 0 || lastHydrationAdd === 0) return;
+    undoLastHydration();
+    void persistHydration(-lastHydrationAdd);
   };
 
   const add = (oz: number) => {
