@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { ArrowLeft, Shield, FileText, ChevronRight, Sparkles } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+import { LanguageToggle } from "@/components/mm/LanguageToggle";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -13,10 +15,11 @@ export const Route = createFileRoute("/settings")({
 });
 
 function SettingsPage() {
+  const { t } = useI18n();
   const items = [
-    { icon: Sparkles, label: "How It Works", to: "/how-it-works" },
-    { icon: Shield, label: "Privacy Policy", to: "/privacy" },
-    { icon: FileText, label: "Terms of Service", to: "/terms" },
+    { icon: Sparkles, label: t("settings.item.how"), to: "/how-it-works" },
+    { icon: Shield, label: t("settings.item.privacy"), to: "/privacy" },
+    { icon: FileText, label: t("settings.item.terms"), to: "/terms" },
   ];
 
   return (
@@ -27,13 +30,21 @@ function SettingsPage() {
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-4" />
-          Back
+          {t("common.back")}
         </Link>
       </header>
 
       <div className="mb-8">
-        <h1 className="text-xl font-semibold">Settings</h1>
-        <p className="text-sm text-muted-foreground mt-1">Legal and app information.</p>
+        <h1 className="text-xl font-semibold">{t("settings.title")}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{t("settings.sub")}</p>
+      </div>
+
+      <div className="mb-6 rounded-2xl bg-card ring-1 ring-black/5 p-4 flex items-center gap-3">
+        <div className="flex-1">
+          <p className="text-sm font-medium">{t("settings.language.label")}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{t("settings.language.hint")}</p>
+        </div>
+        <LanguageToggle />
       </div>
 
       <div className="rounded-2xl bg-card ring-1 ring-black/5 divide-y divide-border mb-auto">
@@ -53,7 +64,7 @@ function SettingsPage() {
       </div>
 
       <p className="text-center text-xs text-muted-foreground mt-8">
-        Mindful Movement v0.1 Beta
+        {t("settings.version")}
       </p>
     </AppShell>
   );

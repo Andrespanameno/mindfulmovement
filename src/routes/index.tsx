@@ -2,6 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
+import { useI18n } from "@/lib/i18n";
+import { LanguageToggle } from "@/components/mm/LanguageToggle";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,6 +20,7 @@ type Mode = "signin" | "signup" | "forgot";
 function LoginPage() {
   const navigate = useNavigate();
   const { signIn, signUp, resetPassword } = useAuth();
+  const { t } = useI18n();
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,23 +28,11 @@ function LoginPage() {
   const [busy, setBusy] = useState(false);
 
   const titles: Record<Mode, { title: string; sub: string; cta: string }> = {
-    signin: {
-      title: "Welcome back to your center",
-      sub: "Take a deep breath. Let's start your day with intention.",
-      cta: "Enter your space",
-    },
-    signup: {
-      title: "Begin your gentle journey",
-      sub: "Small actions create big change. Create your space.",
-      cta: "Create account",
-    },
-    forgot: {
-      title: "Let's get you back in",
-      sub: "We'll send a reset link to your email.",
-      cta: "Send reset link",
-    },
+    signin: { title: t("auth.signin.title"), sub: t("auth.signin.sub"), cta: t("auth.signin.cta") },
+    signup: { title: t("auth.signup.title"), sub: t("auth.signup.sub"), cta: t("auth.signup.cta") },
+    forgot: { title: t("auth.forgot.title"), sub: t("auth.forgot.sub"), cta: t("auth.forgot.cta") },
   };
-  const t = titles[mode];
+  const tt = titles[mode];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +41,7 @@ function LoginPage() {
       if (mode === "signin") {
         const { error } = await signIn(email, password);
         if (error) {
-          toast.error(error.includes("Invalid") ? "Invalid email or password." : error);
+          toast.error(error.includes("Invalid") ? t("auth.invalid") : error);
         } else {
           navigate({ to: "/home" });
         }
@@ -59,13 +50,13 @@ function LoginPage() {
         if (error) {
           toast.error(error);
         } else {
-          toast.success("Account created. Check your email to confirm, then sign in.");
+          toast.success(t("auth.signup.success"));
           setMode("signin");
         }
       } else {
         const { error } = await resetPassword(email);
         if (error) toast.error(error);
-        else toast.success("Reset link sent. Check your email.");
+        else toast.success(t("auth.reset.success"));
       }
     } finally {
       setBusy(false);
@@ -75,21 +66,24 @@ function LoginPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex justify-center">
       <div className="w-full max-w-[480px] flex flex-col px-8 pt-20 pb-10">
-        <div className="size-12 bg-primary/25 rounded-2xl flex items-center justify-center mb-8">
-          <div className="size-4 rounded-full bg-primary" />
+        <div className="flex items-center justify-between mb-8">
+          <div className="size-12 bg-primary/25 rounded-2xl flex items-center justify-center">
+            <div className="size-4 rounded-full bg-primary" />
+          </div>
+          <LanguageToggle />
         </div>
         <h1 className="text-3xl font-semibold leading-tight text-balance mb-3">
-          {t.title}
+          {tt.title}
         </h1>
         <p className="text-base text-muted-foreground text-pretty mb-10">
-          {t.sub}
+          {tt.sub}
         </p>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           {mode === "signup" && (
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground ml-1">
-                Your name
+                {t("auth.name")}
               </label>
               <input
                 type="text"
@@ -102,7 +96,7 @@ function LoginPage() {
           )}
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-muted-foreground ml-1">
-              Email address
+              {t("auth.email")}
             </label>
             <input
               type="email"
@@ -116,7 +110,7 @@ function LoginPage() {
           {mode !== "forgot" && (
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground ml-1">
-                Password
+                {t("auth.password")}
               </label>
               <input
                 type="password"
@@ -134,7 +128,7 @@ function LoginPage() {
             disabled={busy}
             className="w-full h-12 bg-foreground text-background rounded-xl font-medium text-sm hover:opacity-90 transition"
           >
-            {busy ? "One moment…" : t.cta}
+            {busy ? t("common.one_moment") : tt.cta}
           </button>
 
           {mode === "signin" && (
@@ -143,7 +137,7 @@ function LoginPage() {
               onClick={() => setMode("forgot")}
               className="w-full text-xs text-muted-foreground hover:text-foreground transition"
             >
-              Forgot your password?
+              {t("auth.forgot_link")}
             </button>
           )}
         </form>
@@ -151,13 +145,13 @@ function LoginPage() {
         <div className="mt-auto pt-12 text-center">
           {mode === "signin" ? (
             <p className="text-sm text-muted-foreground">
-              New to Mindful Movement?{" "}
+              {t("auth.new_here")}{" "}
               <button
                 type="button"
                 onClick={() => setMode("signup")}
                 className="text-foreground font-medium"
               >
-                Begin journey
+                {t("auth.begin")}
               </button>
             </p>
           ) : (
@@ -167,7 +161,7 @@ function LoginPage() {
                 onClick={() => setMode("signin")}
                 className="text-foreground font-medium"
               >
-                Back to sign in
+                {t("auth.back_signin")}
               </button>
             </p>
           )}
