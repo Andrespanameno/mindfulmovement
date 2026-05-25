@@ -142,7 +142,7 @@ function read(): SessionState {
         ouncesToday: 0,
         hydrationXpToday: 0,
         lastDate: today(),
-        lastHydrationAdd: 1,
+        lastHydrationAdd: 0,
       };
     }
     return parsed;
