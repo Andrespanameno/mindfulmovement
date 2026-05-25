@@ -5,6 +5,7 @@ import { movements, CATEGORIES, type MovementCategory } from "@/lib/movements";
 import { MovementCard } from "@/components/mm/MovementCard";
 import { useSessionStore } from "@/lib/useSessionStore";
 import { useProfile } from "@/lib/useProfile";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/move")({
   head: () => ({
@@ -17,16 +18,18 @@ export const Route = createFileRoute("/move")({
 });
 
 type Filter = "All" | MovementCategory;
-const FILTERS: { id: Filter; label: string }[] = [
-  { id: "All", label: "All" },
-  ...CATEGORIES.map((c) => ({ id: c.id as Filter, label: c.short })),
-];
 
 function MovePage() {
+  const { t } = useI18n();
   const [active, setActive] = useState<Filter>("All");
   const { completedToday } = useSessionStore();
   const { profile } = useProfile();
   const prefs = profile?.preferred_categories ?? [];
+
+  const FILTERS: { id: Filter; label: string }[] = [
+    { id: "All", label: t("move.filter.all") },
+    ...CATEGORIES.map((c) => ({ id: c.id as Filter, label: c.short })),
+  ];
 
   const filtered = useMemo(() => {
     if (active !== "All") return movements.filter((m) => m.category === active);
@@ -40,18 +43,20 @@ function MovePage() {
   return (
     <AppShell>
       <header className="mb-6">
-        <p className="text-sm text-muted-foreground">Today's invitation</p>
-        <h1 className="text-2xl font-semibold">Move a little</h1>
+        <p className="text-sm text-muted-foreground">{t("move.eyebrow")}</p>
+        <h1 className="text-2xl font-semibold">{t("move.title")}</h1>
       </header>
 
       <div className="rounded-3xl bg-foreground text-background p-6 mb-8 relative overflow-hidden">
         <div className="absolute -right-10 -top-10 size-40 rounded-full bg-primary/30 blur-2xl" />
-        <p className="text-xs uppercase tracking-widest text-background/60 mb-2">Featured</p>
-        <h2 className="text-xl font-semibold mb-1">Morning Awakening</h2>
+        <p className="text-xs uppercase tracking-widest text-background/60 mb-2">{t("move.featured")}</p>
+        <h2 className="text-xl font-semibold mb-1">{t("move.featured.title")}</h2>
         <p className="text-sm text-background/70 max-w-[260px]">
           {completedToday.length > 0
-            ? `${completedToday.length} session${completedToday.length > 1 ? "s" : ""} completed today. Keep flowing.`
-            : "A few minutes is all it takes to feel a shift."}
+            ? completedToday.length === 1
+              ? t("move.featured.completed_one")
+              : t("move.featured.completed_many", { n: completedToday.length })
+            : t("move.featured.sub_default")}
         </p>
       </div>
 

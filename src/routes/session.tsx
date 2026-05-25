@@ -8,6 +8,7 @@ import { completeMovement } from "@/lib/useSessionStore";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { InspirationCard } from "@/components/mm/InspirationCard";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/session")({
   head: () => ({
@@ -26,6 +27,7 @@ function format(s: number) {
 }
 
 function SessionPage() {
+  const { t } = useI18n();
   const { profile } = useProfile();
   const navigate = useNavigate();
 
@@ -145,21 +147,21 @@ function SessionPage() {
           <div className="size-20 rounded-full bg-primary/20 grid place-items-center mb-6 animate-scale-in">
             <Check className="size-10 text-primary" />
           </div>
-          <h1 className="text-2xl font-semibold mb-2">Session complete</h1>
+          <h1 className="text-2xl font-semibold mb-2">{t("session.complete")}</h1>
           <InspirationCard placement="session_completion" variant="bare" className="max-w-sm mb-6" />
           <div className="flex items-center gap-6 text-sm text-muted-foreground mb-8">
-            <span>{completed} movements</span>
+            <span>{t("session.movements", { n: completed })}</span>
             <span className="size-1 rounded-full bg-muted-foreground/40" />
-            <span>{Math.round(totalSeconds / 60)} min</span>
+            <span>{t("session.min", { n: Math.round(totalSeconds / 60) })}</span>
             <span className="size-1 rounded-full bg-muted-foreground/40" />
             <span className="inline-flex items-center gap-1"><Sparkles className="size-3.5 text-accent" /> +{totalXp} XP</span>
           </div>
           <div className="flex gap-3">
             <Link to="/home" className="h-10 px-5 rounded-full bg-foreground text-background text-sm font-medium grid place-items-center">
-              Back home
+              {t("session.back_home")}
             </Link>
             <Link to="/progress" className="h-10 px-5 rounded-full bg-card ring-1 ring-black/5 text-sm font-medium grid place-items-center">
-              View progress
+              {t("session.view_progress")}
             </Link>
           </div>
         </div>
@@ -171,7 +173,7 @@ function SessionPage() {
     return (
       <AppShell>
         <div className="min-h-[60vh] grid place-items-center">
-          <p className="text-muted-foreground">Preparing your session…</p>
+          <p className="text-muted-foreground">{t("session.preparing")}</p>
         </div>
       </AppShell>
     );
@@ -183,8 +185,8 @@ function SessionPage() {
     <AppShell>
       <header className="flex items-center justify-between mb-4">
         <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">Guided session</p>
-          <h1 className="text-lg font-semibold">{format(totalSeconds - elapsed)} left</h1>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">{t("session.guided")}</p>
+          <h1 className="text-lg font-semibold">{t("session.left", { t: format(totalSeconds - elapsed) })}</h1>
         </div>
         <button
           onClick={handleExit}
@@ -203,7 +205,7 @@ function SessionPage() {
         />
       </div>
       <p className="text-xs text-muted-foreground mb-6">
-        Step {index + 1} of {steps.length}
+        {t("session.step_of", { i: index + 1, n: steps.length })}
       </p>
 
       <div className="rounded-3xl bg-card ring-1 ring-black/5 p-6 mb-6">
@@ -242,15 +244,15 @@ function SessionPage() {
               aria-label={running ? "Pause" : "Resume"}
               className="h-12 px-6 rounded-full bg-foreground text-background text-sm font-medium inline-flex items-center gap-2 active:scale-95 transition-transform"
             >
-              {running ? <><Pause className="size-4" /> Pause</> : <><Play className="size-4" /> Resume</>}
+              {running ? <><Pause className="size-4" /> {t("session.pause")}</> : <><Play className="size-4" /> {t("session.resume")}</>}
             </button>
             <button
               disabled
               aria-disabled="true"
-              title="Finish the timer to continue"
+              title={t("session.finish_first")}
               className="h-12 px-5 rounded-full bg-card ring-1 ring-black/5 text-sm font-medium inline-flex items-center gap-2 opacity-50 cursor-not-allowed"
             >
-              <SkipForward className="size-4" /> Next
+              <SkipForward className="size-4" /> {t("session.next")}
             </button>
           </>
         ) : (
@@ -266,7 +268,7 @@ function SessionPage() {
                   : "bg-foreground text-background",
               )}
             >
-              <Check className="size-4" /> {confirmed ? "Done" : "Done"}
+              <Check className="size-4" /> {t("common.done")}
             </button>
             <button
               onClick={advanceToNext}
@@ -280,7 +282,7 @@ function SessionPage() {
                   : "bg-card ring-1 ring-black/5 opacity-50 cursor-not-allowed",
               )}
             >
-              <SkipForward className="size-4" /> Next
+              <SkipForward className="size-4" /> {t("session.next")}
             </button>
           </>
         )}
@@ -289,7 +291,7 @@ function SessionPage() {
       {/* Upcoming preview */}
       {index + 1 < steps.length && (
         <div className="mt-8">
-          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Up next</p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">{t("session.up_next")}</p>
           <ul className="space-y-2">
             {steps.slice(index + 1).map((s, i) => {
               const I = s.movement.icon;

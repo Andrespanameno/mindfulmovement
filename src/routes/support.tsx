@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { ArrowLeft, HelpCircle, Mail } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/support")({
   head: () => ({
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/support")({
 });
 
 function SupportPage() {
+  const { t } = useI18n();
   return (
     <AppShell>
       <header className="mb-8">
@@ -21,7 +23,7 @@ function SupportPage() {
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-4" />
-          Back
+          {t("common.back")}
         </Link>
       </header>
 
@@ -29,8 +31,8 @@ function SupportPage() {
         <div className="size-16 rounded-full bg-secondary ring-1 ring-black/5 mb-4 grid place-items-center">
           <HelpCircle className="size-7 text-muted-foreground" />
         </div>
-        <h1 className="text-xl font-semibold">Help &amp; Support</h1>
-        <p className="text-sm text-muted-foreground mt-1">We&apos;re here for you.</p>
+        <h1 className="text-xl font-semibold">{t("support.title")}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{t("support.sub")}</p>
       </div>
 
       <div className="rounded-2xl bg-card ring-1 ring-black/5 p-6 text-center">
@@ -38,14 +40,14 @@ function SupportPage() {
           <Mail className="size-5" />
         </div>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          For customer support, please email us at{" "}
+          {t("support.body_pre")}
           <a
             href="mailto:test@test.com"
             className="font-medium text-primary hover:underline"
           >
             test@test.com
           </a>
-          , and our team will get back to you within 24–48 hours. Thank you.
+          {t("support.body_post")}
         </p>
       </div>
     </AppShell>

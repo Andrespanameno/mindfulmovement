@@ -14,6 +14,7 @@ import {
 } from "@/lib/reminders";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -27,21 +28,22 @@ export const Route = createFileRoute("/onboarding")({
 
 type Step = 0 | 1 | 2;
 
-const WINDOWS: { id: string; label: string; start: number; end: number }[] = [
-  { id: "morning", label: "Morning", start: 7, end: 12 },
-  { id: "workday", label: "Workday", start: 9, end: 17 },
-  { id: "afternoon", label: "Afternoon", start: 12, end: 18 },
-  { id: "all-day", label: "All day", start: 8, end: 20 },
+const WINDOWS: { id: string; labelKey: string; start: number; end: number }[] = [
+  { id: "morning", labelKey: "onb.window.morning", start: 7, end: 12 },
+  { id: "workday", labelKey: "onb.window.workday", start: 9, end: 17 },
+  { id: "afternoon", labelKey: "onb.window.afternoon", start: 12, end: 18 },
+  { id: "all-day", labelKey: "onb.window.all_day", start: 8, end: 20 },
 ];
 
-const INTERVALS: { value: ReminderSettings["intervalMin"]; label: string }[] = [
-  { value: 30, label: "Every 30 min" },
-  { value: 60, label: "Every hour" },
-  { value: 90, label: "Every 90 min" },
-  { value: 120, label: "Every 2 hours" },
+const INTERVALS: { value: ReminderSettings["intervalMin"]; labelKey: string }[] = [
+  { value: 30, labelKey: "onb.interval.30" },
+  { value: 60, labelKey: "onb.interval.60" },
+  { value: 90, labelKey: "onb.interval.90" },
+  { value: 120, labelKey: "onb.interval.120" },
 ];
 
 function OnboardingPage() {
+  const { t: tr } = useI18n();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { profile, loading, updateProfile } = useProfile();
@@ -78,7 +80,7 @@ function OnboardingPage() {
 
   const finish = async () => {
     if (!lifestyle) {
-      toast.error("Choose a lifestyle to continue.");
+      toast.error(tr("onb.choose_lifestyle"));
       setStep(0);
       return;
     }
@@ -129,7 +131,7 @@ function OnboardingPage() {
       toast.error(error);
       return;
     }
-    toast.success("Welcome in. Your space is ready.");
+    toast.success(tr("onb.welcome"));
     navigate({ to: "/home", replace: true });
   };
 
@@ -142,9 +144,9 @@ function OnboardingPage() {
   }
 
   const titles = [
-    { eyebrow: "Step 1 of 3", title: "What does your day look like?", sub: "Pick the lifestyle that fits best. You can change this anytime." },
-    { eyebrow: "Step 2 of 3", title: "What feels most supportive?", sub: "Choose any goals that matter to you. Skip if you'd rather explore." },
-    { eyebrow: "Step 3 of 3", title: "When should we check in?", sub: "Gentle reminders, on your schedule." },
+    { eyebrow: tr("onb.step", { n: 1 }), title: tr("onb.step1.title"), sub: tr("onb.step1.sub") },
+    { eyebrow: tr("onb.step", { n: 2 }), title: tr("onb.step2.title"), sub: tr("onb.step2.sub") },
+    { eyebrow: tr("onb.step", { n: 3 }), title: tr("onb.step3.title"), sub: tr("onb.step3.sub") },
   ];
   const t = titles[step];
   const canNext = step === 0 ? !!lifestyle : true;
@@ -216,7 +218,7 @@ function OnboardingPage() {
               {seededCategoryMetas.length > 0 && (
                 <div className="mb-6 p-4 rounded-2xl bg-secondary/60 ring-1 ring-black/5">
                   <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-                    We'll start your rotation with
+                    {tr("onb.start_rotation")}
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {seededCategoryMetas.map((c) => (
@@ -229,7 +231,7 @@ function OnboardingPage() {
                     ))}
                   </div>
                   <p className="text-[11px] text-muted-foreground mt-2">
-                    You can fine-tune this anytime from your profile.
+                    {tr("onb.tune_later")}
                   </p>
                 </div>
               )}
@@ -260,7 +262,7 @@ function OnboardingPage() {
             <div className="space-y-6">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                  Reminder window
+                  {tr("onb.reminder_window")}
                 </p>
                 <div className="grid grid-cols-2 gap-2.5">
                   {WINDOWS.map((w) => {
@@ -277,7 +279,7 @@ function OnboardingPage() {
                             : "bg-card ring-black/5",
                         )}
                       >
-                        <p className="text-sm font-medium">{w.label}</p>
+                        <p className="text-sm font-medium">{tr(w.labelKey)}</p>
                         <p className="text-[11px] text-muted-foreground mt-0.5">
                           {formatHour(w.start)} – {formatHour(w.end)}
                         </p>
@@ -289,7 +291,7 @@ function OnboardingPage() {
 
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                  How often?
+                  {tr("onb.how_often")}
                 </p>
                 <div className="grid grid-cols-2 gap-2.5">
                   {INTERVALS.map((opt) => {
@@ -306,7 +308,7 @@ function OnboardingPage() {
                             : "bg-card ring-black/5",
                         )}
                       >
-                        {opt.label}
+                      {tr(opt.labelKey)}
                       </button>
                     );
                   })}
@@ -325,7 +327,7 @@ function OnboardingPage() {
                 disabled={busy}
                 className="h-12 px-5 rounded-xl bg-secondary text-sm font-medium"
               >
-                Back
+                {tr("onb.back")}
               </button>
             )}
             {step < 2 ? (
@@ -335,7 +337,7 @@ function OnboardingPage() {
                 disabled={!canNext}
                 className="flex-1 h-12 rounded-xl bg-foreground text-background font-medium text-sm inline-flex items-center justify-center gap-2 disabled:opacity-40 transition"
               >
-                Continue <ArrowRight className="size-4" />
+                {tr("common.continue")} <ArrowRight className="size-4" />
               </button>
             ) : (
               <button
@@ -344,7 +346,7 @@ function OnboardingPage() {
                 disabled={busy}
                 className="flex-1 h-12 rounded-xl bg-foreground text-background font-medium text-sm disabled:opacity-50 transition"
               >
-                {busy ? "Saving…" : "Enter your space"}
+                {busy ? tr("common.saving") : tr("onb.enter")}
               </button>
             )}
           </div>
@@ -354,7 +356,7 @@ function OnboardingPage() {
               onClick={next}
               className="w-full mt-3 text-xs text-muted-foreground hover:text-foreground transition"
             >
-              Skip for now
+              {tr("common.skip")}
             </button>
           )}
         </div>
