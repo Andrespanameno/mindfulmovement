@@ -312,6 +312,7 @@ export function logHydration(deltaOz: number) {
       hydrationXpToday: s.hydrationXpToday + xpDelta,
       hydrationGoalReachedDates: reached,
       history: trimHistory({ ...s.history, [t]: updatedDay }),
+      lastHydrationAdd: deltaOz > 0 ? deltaOz : s.lastHydrationAdd,
     };
     if (xpDelta <= 0) return base;
     return applyActivity(base, xpDelta);
