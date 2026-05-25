@@ -8,6 +8,7 @@ import { useMotivationalMessage } from "@/hooks/useMotivationalMessage";
 import {
   useSessionStore,
   logHydration,
+  undoLastHydration,
   setRemindersEnabled,
   markReminderShown,
   HYDRATION_GOAL_OZ,
