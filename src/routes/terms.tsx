@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { ArrowLeft, FileText } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/terms")({
   head: () => ({
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/terms")({
 });
 
 function TermsPage() {
+  const { t } = useI18n();
   return (
     <AppShell>
       <header className="mb-6">
@@ -21,7 +23,7 @@ function TermsPage() {
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-4" />
-          Back
+          {t("common.back")}
         </Link>
       </header>
 
@@ -29,51 +31,33 @@ function TermsPage() {
         <div className="size-14 rounded-full bg-secondary ring-1 ring-black/5 mb-3 grid place-items-center">
           <FileText className="size-6 text-muted-foreground" />
         </div>
-        <h1 className="text-xl font-semibold">Terms of Service</h1>
+        <h1 className="text-xl font-semibold">{t("terms.title")}</h1>
       </div>
 
       <div className="rounded-2xl bg-card ring-1 ring-black/5 p-6 space-y-5 text-sm text-muted-foreground leading-relaxed">
+        <p>{t("terms.intro")}</p>
+        <div>
+          <h2 className="text-foreground font-medium mb-2">{t("terms.h.use")}</h2>
+          <p>{t("terms.p.use")}</p>
+        </div>
+        <div>
+          <h2 className="text-foreground font-medium mb-2">{t("terms.h.account")}</h2>
+          <p>{t("terms.p.account")}</p>
+        </div>
+        <div>
+          <h2 className="text-foreground font-medium mb-2">{t("terms.h.ip")}</h2>
+          <p>{t("terms.p.ip")}</p>
+        </div>
+        <div>
+          <h2 className="text-foreground font-medium mb-2">{t("terms.h.liability")}</h2>
+          <p>{t("terms.p.liability")}</p>
+        </div>
+        <div>
+          <h2 className="text-foreground font-medium mb-2">{t("terms.h.changes")}</h2>
+          <p>{t("terms.p.changes")}</p>
+        </div>
         <p>
-          By using the Mindful Movement app, you agree to these Terms of Service. Please read them carefully before continuing.
-        </p>
-
-        <div>
-          <h2 className="text-foreground font-medium mb-2">Use of the App</h2>
-          <p>
-            Mindful Movement is designed to support your wellness journey with gentle movement reminders, hydration tracking, and progress insights. It is not a substitute for professional medical advice, diagnosis, or treatment.
-          </p>
-        </div>
-
-        <div>
-          <h2 className="text-foreground font-medium mb-2">Your Account</h2>
-          <p>
-            You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. Please notify us immediately of any unauthorized use.
-          </p>
-        </div>
-
-        <div>
-          <h2 className="text-foreground font-medium mb-2">Content and Intellectual Property</h2>
-          <p>
-            All content within the app, including text, graphics, and software, is the property of Mindful Movement or its licensors and is protected by applicable intellectual property laws.
-          </p>
-        </div>
-
-        <div>
-          <h2 className="text-foreground font-medium mb-2">Limitation of Liability</h2>
-          <p>
-            To the fullest extent permitted by law, Mindful Movement shall not be liable for any indirect, incidental, or consequential damages arising from your use of the app.
-          </p>
-        </div>
-
-        <div>
-          <h2 className="text-foreground font-medium mb-2">Changes to These Terms</h2>
-          <p>
-            We may modify these Terms of Service at any time. Continued use of the app after changes constitutes your acceptance of the revised terms.
-          </p>
-        </div>
-
-        <p>
-          If you have any questions about these Terms, please contact us at{" "}
+          {t("terms.contact_pre")}
           <a href="mailto:test@test.com" className="font-medium text-primary hover:underline">
             test@test.com
           </a>.
