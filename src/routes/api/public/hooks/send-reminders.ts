@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { isDispatchSlotUTC } from "@/lib/reminders";
 
 const MOVEMENT = [
   "Time for a quick movement reset?",
@@ -86,7 +87,9 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
           );
         }
 
-        const candidates = (settings ?? []).filter((s) => inActiveWindow(s, now));
+        const candidates = (settings ?? []).filter(
+          (s) => inActiveWindow(s, now) && isDispatchSlotUTC(s, now),
+        );
         if (candidates.length === 0) {
           return Response.json({ ok: true, dispatched: 0, considered: 0 });
         }
