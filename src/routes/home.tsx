@@ -35,7 +35,7 @@ function HomePage() {
 
   return (
     <AppShell>
-      <header className="flex items-center justify-between mb-8">
+      <header className="flex items-center justify-between mb-6">
         <div>
           <p className="text-sm text-muted-foreground">Good morning, {displayName}</p>
           <h1 className="text-2xl font-semibold">Today is a fresh start</h1>
@@ -53,6 +53,23 @@ function HomePage() {
         </div>
       </header>
 
+      <Link
+        to="/session"
+        className="block p-6 rounded-3xl bg-foreground text-background mb-8 relative overflow-hidden active:scale-[0.99] transition-transform"
+      >
+        <div className="absolute -right-12 -top-12 size-44 rounded-full bg-primary/30 blur-2xl" />
+        <p className="text-xs uppercase tracking-widest text-background/60 mb-2">Guided session</p>
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <h3 className="font-semibold">Start a 5-minute reset</h3>
+            <p className="text-sm text-background/70 mt-1">A few gentle movements, timed for you.</p>
+          </div>
+          <span className="size-12 rounded-full bg-background text-foreground grid place-items-center shrink-0">
+            <Play className="size-5" />
+          </span>
+        </div>
+      </Link>
+
       <section className="grid grid-cols-2 gap-4 mb-6">
         <StreakBadge />
         <XpToday />
@@ -61,23 +78,6 @@ function HomePage() {
       <div className="mb-8">
         <XPBar />
       </div>
-
-      <Link
-        to="/session"
-        className="block p-5 rounded-3xl bg-foreground text-background mb-6 relative overflow-hidden active:scale-[0.99] transition-transform"
-      >
-        <div className="absolute -right-10 -top-10 size-40 rounded-full bg-primary/30 blur-2xl" />
-        <p className="text-xs uppercase tracking-widest text-background/60 mb-1">Guided session</p>
-        <div className="flex items-center justify-between gap-4">
-          <div className="min-w-0">
-            <h3 className="font-semibold">Start a 5-minute reset</h3>
-            <p className="text-sm text-background/70 mt-0.5">A few gentle movements, timed for you.</p>
-          </div>
-          <span className="size-11 rounded-full bg-background text-foreground grid place-items-center shrink-0">
-            <Play className="size-4" />
-          </span>
-        </div>
-      </Link>
 
       <Link
         to="/hydration"
