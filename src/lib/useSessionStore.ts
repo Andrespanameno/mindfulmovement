@@ -125,6 +125,7 @@ const initial: SessionState = {
   totalSquats: seedTotals.squats,
   totalBreathing: seedTotals.breathing,
   history: seededHistory,
+  lastHydrationAdd: 0,
 };
 
 function read(): SessionState {
