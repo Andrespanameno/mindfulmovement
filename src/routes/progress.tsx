@@ -34,10 +34,12 @@ export const Route = createFileRoute("/progress")({
   component: ProgressPage,
 });
 
-const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
+const DAY_LABELS_EN = ["S", "M", "T", "W", "T", "F", "S"];
+const DAY_LABELS_ES = ["D", "L", "M", "X", "J", "V", "S"];
 
 function ProgressPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const dayLabels = lang === "es" ? DAY_LABELS_ES : DAY_LABELS_EN;
   const session = useSessionStore();
   const insights = useMemo(() => computeInsights(session), [session]);
   const [range, setRange] = useState<"week" | "month">("week");
@@ -183,7 +185,7 @@ function ProgressPage() {
           icon={<Droplet className="size-4 text-primary" />}
           label={t("progress.hydration")}
           value={`${summary.hydrationConsistencyPct}%`}
-          hint={`${hydrationDelta >= 0 ? "+" : ""}${hydrationDelta}pp wk/wk`}
+          hint={`${hydrationDelta >= 0 ? "+" : ""}${hydrationDelta} ${range === "week" ? t("progress.pp_week") : t("progress.pp_month")}`}
         />
       </div>
 
@@ -221,7 +223,7 @@ function ProgressPage() {
               const date = new Date(d.date);
               return (
                 <span key={d.date} className="flex-1 text-center text-[10px] text-muted-foreground">
-                  {DAY_LABELS[date.getDay()]}
+                  {dayLabels[date.getDay()]}
                 </span>
               );
             })}
@@ -251,7 +253,7 @@ function ProgressPage() {
                       ? "bg-primary/60"
                       : "bg-primary",
               )}
-              title={`Day ${i + 1}: streak ${p.current}`}
+              title={`${t("progress.day_label", { n: i + 1 })} · ${t("progress.streak_label", { n: p.current })}`}
             />
           ))}
         </div>
@@ -326,6 +328,7 @@ function Stat({
   trend?: number;
   prev?: number;
 }) {
+  const { t } = useI18n();
   const showTrend = typeof trend === "number" && Number.isFinite(trend);
   const showDelta = typeof prev === "number" && typeof value === "number";
   const TrendIcon = showTrend
@@ -351,12 +354,12 @@ function Stat({
         >
           <TrendIcon className="size-3" />
           {trend! > 0 ? "+" : ""}
-          {trend}% vs prev
+          {trend}% {t("progress.vs_prev")}
         </p>
       )}
       {!showTrend && showDelta && (
         <p className="text-[11px] text-muted-foreground mt-1">
-          {prev === 0 && value === 0 ? "Ready when you are" : `from ${prev} last ${"period"}`}
+          {prev === 0 && value === 0 ? t("progress.ready") : t("progress.from_prev", { n: prev })}
         </p>
       )}
       {hint && !showTrend && !showDelta && (
