@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import {
   useReminderSettings,
-  isWithinActiveWindow,
+  isDispatchSlot,
   pickReminder,
 } from "@/lib/reminders";
 
@@ -49,11 +49,13 @@ export function ReminderRunner() {
 
   useEffect(() => {
     const tick = () => {
-      if (!isWithinActiveWindow(settings)) return;
-      const now = Date.now();
+      const nowDate = new Date();
+      if (!isDispatchSlot(settings, nowDate)) return;
+      const now = nowDate.getTime();
       const last = readLast();
+      // Guard against duplicate fires within the same interval block.
       const intervalMs = settings.intervalMin * 60 * 1000;
-      if (now - last < intervalMs - 30 * 1000) return;
+      if (now - last < intervalMs - 90 * 1000) return;
       const r = pickReminder(settings);
       if (!r) return;
       writeLast(now);

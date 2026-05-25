@@ -133,6 +133,75 @@ export function isWithinActiveWindow(s: ReminderSettings, d = new Date()): boole
   return h >= s.startHour || h < s.endHour;
 }
 
+/**
+ * Returns true if `d` falls on a scheduled dispatch slot for the user's
+ * interval. Dispatch slots are tuned to give the user time to complete a
+ * 5–6 minute session before the next interval ends:
+ *   - 30 min  → fire at :30 every active hour
+ *   - 60 min  → fire at :55 every active hour (near end of hour)
+ *   - 90 min  → fire at the next full hour after startHour, then +90m
+ *               (i.e. (startHour+1):00, +1:30, +3:00, +4:30…)
+ *   - 120 min → fire at :55 every other active hour, anchored at startHour
+ */
+export function isDispatchSlot(s: ReminderSettings, d = new Date()): boolean {
+  if (!isWithinActiveWindow(s, d)) return false;
+  const h = d.getHours();
+  const m = d.getMinutes();
+  switch (s.intervalMin) {
+    case 30:
+      return m === 30;
+    case 60:
+      return m === 55;
+    case 90: {
+      const base = s.startHour + 1; // next full hour after window begins
+      const minutesFromBase = (h - base) * 60 + m;
+      return minutesFromBase >= 0 && minutesFromBase % 90 === 0;
+    }
+    case 120:
+      return m === 55 && ((h - s.startHour) % 2 === 0);
+    default:
+      return false;
+  }
+}
+
+/** Server-side variant that uses UTC hours/minutes (the cron path). */
+export function isDispatchSlotUTC(
+  s: {
+    enabled: boolean;
+    start_hour: number;
+    end_hour: number;
+    interval_min: number;
+    quiet_weekends: boolean;
+  },
+  d: Date,
+): boolean {
+  if (!s.enabled) return false;
+  const day = d.getUTCDay();
+  if (s.quiet_weekends && (day === 0 || day === 6)) return false;
+  const h = d.getUTCHours();
+  const inWindow =
+    s.start_hour <= s.end_hour
+      ? h >= s.start_hour && h < s.end_hour
+      : h >= s.start_hour || h < s.end_hour;
+  if (!inWindow) return false;
+  const m = d.getUTCMinutes();
+  switch (s.interval_min) {
+    case 30:
+      return m === 30;
+    case 60:
+      return m === 55;
+    case 90: {
+      const base = s.start_hour + 1;
+      const minutesFromBase = (h - base) * 60 + m;
+      return minutesFromBase >= 0 && minutesFromBase % 90 === 0;
+    }
+    case 120:
+      return m === 55 && ((h - s.start_hour) % 2 === 0);
+    default:
+      return false;
+  }
+}
+
 export function formatHour(h: number): string {
   const period = h >= 12 ? "PM" : "AM";
   const hr = h % 12 === 0 ? 12 : h % 12;
