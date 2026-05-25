@@ -318,8 +318,7 @@ export function uncompleteMovement(movement: Movement) {
 
 export function logHydration(deltaOz: number) {
   setState((s) => {
-    const max = HYDRATION_GOAL_OZ + 32;
-    const nextOz = Math.max(0, Math.min(max, s.ouncesToday + deltaOz));
+    const nextOz = Math.max(0, s.ouncesToday + deltaOz);
     if (nextOz === s.ouncesToday) return s;
     const cappedPrev = Math.min(s.ouncesToday, HYDRATION_GOAL_OZ);
     const cappedNext = Math.min(nextOz, HYDRATION_GOAL_OZ);
