@@ -190,7 +190,7 @@ function ProgressPage() {
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold">{t("progress.movement_minutes")}</h3>
         <span className="text-xs text-muted-foreground">
-          {range === "week" ? t("progress.last_7") : t("progress.last_30")}
+          {range === "week" ? t("progress.this_week") : t("progress.this_month")}
         </span>
       </div>
       <div className="p-4 rounded-3xl bg-card ring-1 ring-black/5 mb-8">
@@ -231,7 +231,7 @@ function ProgressPage() {
 
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold">{t("progress.streak_history")}</h3>
-        <span className="text-xs text-muted-foreground">{t("progress.last_30")}</span>
+        <span className="text-xs text-muted-foreground">{t("progress.this_month")}</span>
       </div>
       <div className="p-4 rounded-3xl bg-card ring-1 ring-black/5 mb-8">
         <div
