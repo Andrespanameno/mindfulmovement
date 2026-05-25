@@ -126,6 +126,17 @@ const dict: Record<string, { en: string; es: string }> = {
   "progress.ready": { en: "Ready when you are", es: "Listo cuando tú lo estés" },
   "progress.from_prev": { en: "from {n} last period", es: "desde {n} en el período anterior" },
 
+  "progress.sum.sessions_week": { en: "You completed {n} mindful movement{s} this week.", es: "Completaste {n} movimiento{s} consciente{s} esta semana." },
+  "progress.sum.sessions_month": { en: "You completed {n} mindful movement{s} this month.", es: "Completaste {n} movimiento{s} consciente{s} este mes." },
+  "progress.sum.hours_week": { en: "You accumulated {h} hours of intentional movement this week.", es: "Acumulaste {h} horas de movimiento intencional esta semana." },
+  "progress.sum.hours_month": { en: "You accumulated {h} hours of intentional movement this month.", es: "Acumulaste {h} horas de movimiento intencional este mes." },
+  "progress.sum.pushups": { en: "Your pushups improved from {a} to {b}.", es: "Tus flexiones mejoraron de {a} a {b}." },
+  "progress.sum.squats": { en: "Your squats improved from {a} to {b}.", es: "Tus sentadillas mejoraron de {a} a {b}." },
+  "progress.sum.hydration": { en: "Your hydration consistency improved this week (+{n} points).", es: "Tu constancia de hidratación mejoró esta semana (+{n} puntos)." },
+  "progress.sum.consistency": { en: "Your consistency improved this week (+{n}%).", es: "Tu constancia mejoró esta semana (+{n}%)." },
+  "progress.sum.breathing_week": { en: "You took {n} mindful breathing session{s} this week.", es: "Hiciste {n} sesión{s} de respiración consciente esta semana." },
+  "progress.sum.breathing_month": { en: "You took {n} mindful breathing session{s} this month.", es: "Hiciste {n} sesión{s} de respiración consciente este mes." },
+
   "profile.edit": { en: "Edit profile", es: "Editar perfil" },
   "profile.day_streak": { en: "Day streak", es: "Racha diaria" },
   "profile.total_xp": { en: "Total XP", es: "XP total" },
