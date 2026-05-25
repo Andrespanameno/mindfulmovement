@@ -8,6 +8,7 @@ import { useMotivationalMessage } from "@/hooks/useMotivationalMessage";
 import {
   useSessionStore,
   logHydration,
+  undoLastHydration,
   setRemindersEnabled,
   markReminderShown,
   HYDRATION_GOAL_OZ,
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/hydration")({
 });
 
 function HydrationPage() {
-  const { ouncesToday, remindersEnabled, reminderIntervalMin, lastReminderAt } =
+  const { ouncesToday, lastHydrationAdd, remindersEnabled, reminderIntervalMin, lastReminderAt } =
     useSessionStore();
   const pct = Math.min(100, Math.round((ouncesToday / HYDRATION_GOAL_OZ) * 100));
   const r = 86;
@@ -47,9 +48,9 @@ function HydrationPage() {
   };
 
   const handleUndo = () => {
-    if (ouncesToday === 0) return;
-    logHydration(-8);
-    void persistHydration(-8);
+    if (ouncesToday === 0 || lastHydrationAdd === 0) return;
+    undoLastHydration();
+    void persistHydration(-lastHydrationAdd);
   };
 
   const add = (oz: number) => {
@@ -158,10 +159,10 @@ function HydrationPage() {
 
       <button
         onClick={handleUndo}
-        disabled={ouncesToday === 0}
+        disabled={ouncesToday === 0 || lastHydrationAdd === 0}
         className="w-full h-11 rounded-2xl bg-card ring-1 ring-black/5 text-sm font-medium text-muted-foreground flex items-center justify-center gap-2 mb-8 disabled:opacity-40"
       >
-        <Undo2 className="size-4" /> Undo last 8 oz
+        <Undo2 className="size-4" /> Undo last {lastHydrationAdd || 8} oz
       </button>
 
       <div className="grid grid-cols-8 gap-1.5 mb-8">

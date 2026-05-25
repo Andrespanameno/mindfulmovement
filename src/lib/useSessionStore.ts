@@ -42,6 +42,7 @@ export interface SessionState {
   totalSquats: number;
   totalBreathing: number;
   history: Record<string, DailyEntry>;
+  lastHydrationAdd: number;
 }
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -124,6 +125,7 @@ const initial: SessionState = {
   totalSquats: seedTotals.squats,
   totalBreathing: seedTotals.breathing,
   history: seededHistory,
+  lastHydrationAdd: 0,
 };
 
 function read(): SessionState {
@@ -140,6 +142,7 @@ function read(): SessionState {
         ouncesToday: 0,
         hydrationXpToday: 0,
         lastDate: today(),
+        lastHydrationAdd: 0,
       };
     }
     return parsed;
@@ -309,10 +312,18 @@ export function logHydration(deltaOz: number) {
       hydrationXpToday: s.hydrationXpToday + xpDelta,
       hydrationGoalReachedDates: reached,
       history: trimHistory({ ...s.history, [t]: updatedDay }),
+      lastHydrationAdd: deltaOz > 0 ? deltaOz : s.lastHydrationAdd,
     };
     if (xpDelta <= 0) return base;
     return applyActivity(base, xpDelta);
   });
+}
+
+export function undoLastHydration() {
+  const amount = state.lastHydrationAdd;
+  if (amount <= 0 || state.ouncesToday === 0) return;
+  logHydration(-amount);
+  setState((s) => ({ ...s, lastHydrationAdd: 0 }));
 }
 
 export function setRemindersEnabled(enabled: boolean) {
@@ -391,6 +402,7 @@ export function hydrateHistory(payload: HistoryHydration) {
       totalSquats: payload.totals.totalSquats,
       totalBreathing: payload.totals.totalBreathing,
       ouncesToday: payload.todayOunces ?? dbToday?.ouncesLogged ?? s.ouncesToday,
+      lastHydrationAdd: 0,
     };
   });
 }
