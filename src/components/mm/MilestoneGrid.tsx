@@ -24,9 +24,9 @@ function computeActiveDayStreaks(history: Record<string, { sessions: number }>) 
       run = 0;
     }
   }
-  if (lastActive === today || lastActive === yesterday) {
+  if (lastActive && (lastActive === today || lastActive === yesterday)) {
     // walk backward to count current streak
-    let d = new Date(lastActive);
+    const d = new Date(lastActive);
     while (true) {
       const k = d.toISOString().slice(0, 10);
       if ((history[k]?.sessions ?? 0) > 0) {
