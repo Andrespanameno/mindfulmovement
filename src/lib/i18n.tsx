@@ -387,6 +387,12 @@ function readInitialLang(): Lang {
   return stored === "es" ? "es" : "en";
 }
 
+function hasStoredLang(): boolean {
+  if (typeof window === "undefined") return false;
+  const stored = window.localStorage.getItem(STORAGE_KEY);
+  return stored === "es" || stored === "en";
+}
+
 export function I18nProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const [lang, setLangState] = useState<Lang>("en");
@@ -406,7 +412,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         .maybeSingle();
       if (cancelled) return;
       const remote = (data as { language?: string } | null)?.language;
-      if (remote === "es" || remote === "en") {
+      const localChoice = hasStoredLang() ? readInitialLang() : null;
+      // If the user explicitly picked a language locally (e.g. on the
+      // login screen) and it differs from the stored profile value, the
+      // local choice wins and we sync it up to the profile. Otherwise
+      // adopt the remote preference.
+      if (localChoice && (remote === "es" || remote === "en") && remote !== localChoice) {
+        void supabase.from("profiles").update({ language: localChoice }).eq("id", user.id);
+        return;
+      }
+      if (!localChoice && (remote === "es" || remote === "en")) {
         setLangState(remote);
         try {
           window.localStorage.setItem(STORAGE_KEY, remote);
