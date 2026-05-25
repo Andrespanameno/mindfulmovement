@@ -9,6 +9,7 @@ import {
   formatHour,
   type ReminderSettings,
 } from "@/lib/reminders";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/reminders")({
   head: () => ({
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/reminders")({
 const INTERVAL_OPTIONS: ReminderSettings["intervalMin"][] = [30, 60, 90, 120];
 
 function RemindersPage() {
+  const { t } = useI18n();
   const s = useReminderSettings();
   const [permission, setPermission] = useState<NotificationPermission | "unsupported">(
     "default",
@@ -42,7 +44,7 @@ function RemindersPage() {
     const result = await Notification.requestPermission();
     setPermission(result);
     if (result === "granted") {
-      toast.success("Notifications on", { description: "We'll nudge you gently." });
+      toast.success(t("reminders.notifs_on"), { description: t("reminders.notifs_on_sub") });
     }
   };
 
@@ -55,12 +57,12 @@ function RemindersPage() {
         >
           <ArrowLeft className="size-4" />
         </Link>
-        <h1 className="text-base font-semibold">Reminders</h1>
+        <h1 className="text-base font-semibold">{t("reminders.title")}</h1>
         <div className="size-10" />
       </header>
 
       <p className="text-sm text-muted-foreground mb-6 text-pretty">
-        Soft nudges to move, hydrate, and breathe — only when it fits your day.
+        {t("reminders.intro")}
       </p>
 
       <button
@@ -75,9 +77,9 @@ function RemindersPage() {
           {s.enabled ? <Bell className="size-4" /> : <BellOff className="size-4" />}
         </div>
         <div className="flex-1 text-left">
-          <p className="text-sm font-medium">Gentle reminders</p>
+          <p className="text-sm font-medium">{t("reminders.gentle")}</p>
           <p className="text-xs text-muted-foreground">
-            {s.enabled ? "Active during your hours" : "All reminders paused"}
+            {s.enabled ? t("reminders.active_hours_status") : t("reminders.paused_status")}
           </p>
         </div>
         <Toggle on={s.enabled} />
@@ -88,32 +90,32 @@ function RemindersPage() {
           onClick={requestPermission}
           className="w-full p-4 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary text-sm font-medium mb-6 text-left"
         >
-          Enable browser notifications →
+          {t("reminders.enable_browser")}
           <span className="block text-xs text-primary/70 font-normal mt-1">
-            Otherwise reminders show as soft in-app toasts.
+            {t("reminders.enable_browser_sub")}
           </span>
         </button>
       )}
 
-      <Section title="Active hours">
+      <Section title={t("reminders.active_hours")}>
         <div className="p-4 rounded-2xl bg-card ring-1 ring-black/5 space-y-4">
           <HourPicker
-            label="Start"
+            label={t("reminders.start")}
             value={s.startHour}
             onChange={(v) => updateReminderSettings({ startHour: v })}
           />
           <HourPicker
-            label="End"
+            label={t("reminders.end")}
             value={s.endHour}
             onChange={(v) => updateReminderSettings({ endHour: v })}
           />
           <p className="text-xs text-muted-foreground">
-            Quiet outside {formatHour(s.startHour)} – {formatHour(s.endHour)}.
+            {t("reminders.quiet_outside", { a: formatHour(s.startHour), b: formatHour(s.endHour) })}
           </p>
         </div>
       </Section>
 
-      <Section title="Frequency">
+      <Section title={t("reminders.frequency")}>
         <div className="grid grid-cols-4 gap-2">
           {INTERVAL_OPTIONS.map((min) => {
             const active = s.intervalMin === min;
@@ -129,7 +131,7 @@ function RemindersPage() {
               >
                 <span className="text-base leading-none">{min < 60 ? `${min}m` : `${min / 60}h`}</span>
                 <span className={`text-[10px] mt-1 ${active ? "opacity-80" : "text-muted-foreground"}`}>
-                  {min === 60 ? "hourly" : "interval"}
+                  {min === 60 ? t("reminders.hourly") : t("reminders.interval_label")}
                 </span>
               </button>
             );
@@ -137,47 +139,47 @@ function RemindersPage() {
         </div>
       </Section>
 
-      <Section title="What to nudge">
+      <Section title={t("reminders.what_nudge")}>
         <div className="rounded-2xl bg-card ring-1 ring-black/5 divide-y divide-border">
           <NudgeRow
             icon={<Sparkles className="size-4 text-primary" />}
-            label="Movement"
-            description="Stand, stretch, walk."
+            label={t("reminders.movement")}
+            description={t("reminders.movement_desc")}
             on={s.movement}
             onToggle={() => updateReminderSettings({ movement: !s.movement })}
           />
           <NudgeRow
             icon={<Droplet className="size-4 text-primary" />}
-            label="Hydration"
-            description="Sip-by-sip check-ins."
+            label={t("reminders.hydration")}
+            description={t("reminders.hydration_desc")}
             on={s.hydration}
             onToggle={() => updateReminderSettings({ hydration: !s.hydration })}
           />
           <NudgeRow
             icon={<Wind className="size-4 text-accent" />}
-            label="Breathing"
-            description="A few intentional breaths."
+            label={t("reminders.breathing")}
+            description={t("reminders.breathing_desc")}
             on={s.breath}
             onToggle={() => updateReminderSettings({ breath: !s.breath })}
           />
         </div>
       </Section>
 
-      <Section title="Quiet times">
+      <Section title={t("reminders.quiet_times")}>
         <button
           onClick={() => updateReminderSettings({ quietWeekends: !s.quietWeekends })}
           className="w-full p-4 rounded-2xl bg-card ring-1 ring-black/5 flex items-center gap-3"
         >
           <div className="flex-1 text-left">
-            <p className="text-sm font-medium">Quiet on weekends</p>
-            <p className="text-xs text-muted-foreground">No nudges Sat & Sun.</p>
+            <p className="text-sm font-medium">{t("reminders.quiet_weekends")}</p>
+            <p className="text-xs text-muted-foreground">{t("reminders.no_nudges_weekend")}</p>
           </div>
           <Toggle on={s.quietWeekends} />
         </button>
       </Section>
 
       <p className="text-xs text-muted-foreground italic text-center mt-2">
-        Supportive, never demanding.
+        {t("reminders.footer")}
       </p>
     </AppShell>
   );

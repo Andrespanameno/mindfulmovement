@@ -5,6 +5,7 @@ import { Droplet, Undo2, ArrowLeft, Bell, BellOff, Check } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useMotivationalMessage } from "@/hooks/useMotivationalMessage";
+import { useI18n } from "@/lib/i18n";
 import {
   useSessionStore,
   logHydration,
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/hydration")({
 });
 
 function HydrationPage() {
+  const { t } = useI18n();
   const { ouncesToday, lastHydrationAdd, remindersEnabled, reminderIntervalMin, lastReminderAt } =
     useSessionStore();
   const pct = Math.min(100, Math.round((ouncesToday / HYDRATION_GOAL_OZ) * 100));
@@ -62,8 +64,8 @@ function HydrationPage() {
         Math.floor(Math.min(before, HYDRATION_GOAL_OZ) / 8) * HYDRATION_XP_PER_8OZ,
     );
     logHydration(oz);
-    toast.success(`+${oz} oz logged`, {
-      description: xp > 0 ? `+${xp} XP · Small sips, big impact.` : "Keep sipping gently.",
+    toast.success(t("hydration.toast.logged", { n: oz }), {
+      description: xp > 0 ? t("hydration.toast.xp", { xp }) : t("hydration.toast.keep"),
     });
     void persistHydration(oz);
   };
@@ -71,8 +73,8 @@ function HydrationPage() {
   useEffect(() => {
     if (ouncesToday >= HYDRATION_GOAL_OZ && !reachedRef.current) {
       reachedRef.current = true;
-      toast.success("Daily hydration goal reached 🌿", {
-        description: hydrationMsg?.message ?? "Beautifully done. Your body thanks you.",
+      toast.success(t("hydration.toast.goal"), {
+        description: hydrationMsg?.message ?? t("hydration.toast.goal_sub"),
       });
       nextHydrationMsg();
     }
@@ -86,7 +88,7 @@ function HydrationPage() {
       const last = lastReminderAt ?? 0;
       const due = Date.now() - last >= reminderIntervalMin * 60 * 1000;
       if (due && ouncesToday < HYDRATION_GOAL_OZ) {
-        toast("Time for a sip 💧", { description: "A quick glass keeps you steady." });
+        toast(t("hydration.toast.sip"), { description: t("hydration.toast.sip_sub") });
         markReminderShown();
       }
     }, 30 * 1000);
@@ -102,7 +104,7 @@ function HydrationPage() {
         >
           <ArrowLeft className="size-4" />
         </Link>
-        <h1 className="text-base font-semibold">Hydration</h1>
+        <h1 className="text-base font-semibold">{t("hydration.title")}</h1>
         <div className="size-10" />
       </header>
 
@@ -125,23 +127,23 @@ function HydrationPage() {
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <Droplet className="size-5 text-primary mb-1" />
             <p className="text-4xl font-semibold tabular-nums">{ouncesToday}</p>
-            <p className="text-xs text-muted-foreground">of {HYDRATION_GOAL_OZ} oz today</p>
+            <p className="text-xs text-muted-foreground">{t("hydration.of_today", { goal: HYDRATION_GOAL_OZ })}</p>
             {pct >= 100 && (
               <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-medium text-primary">
-                <Check className="size-3" /> Goal complete
+                <Check className="size-3" /> {t("hydration.goal_complete")}
               </span>
             )}
           </div>
         </div>
         <p className="text-sm text-muted-foreground text-pretty">
           {pct >= 100
-            ? "Goal reached. Beautifully done."
-            : `${HYDRATION_GOAL_OZ - ouncesToday} oz to go · small sips, steady progress.`}
+            ? t("home.hydration.reached")
+            : t("hydration.to_go", { n: HYDRATION_GOAL_OZ - ouncesToday })}
         </p>
       </div>
 
       <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-        Quick add
+        {t("hydration.quick_add")}
       </h3>
       <div className="grid grid-cols-3 gap-3 mb-4">
         {QUICK_ADDS_OZ.map((oz) => (
@@ -162,7 +164,7 @@ function HydrationPage() {
         disabled={ouncesToday === 0 || lastHydrationAdd === 0}
         className="w-full h-11 rounded-2xl bg-card ring-1 ring-black/5 text-sm font-medium text-muted-foreground flex items-center justify-center gap-2 mb-8 disabled:opacity-40"
       >
-        <Undo2 className="size-4" /> Undo last {lastHydrationAdd || 8} oz
+        <Undo2 className="size-4" /> {t("hydration.undo", { n: lastHydrationAdd || 8 })}
       </button>
 
       <div className="grid grid-cols-8 gap-1.5 mb-8">
@@ -192,11 +194,11 @@ function HydrationPage() {
           {remindersEnabled ? <Bell className="size-4" /> : <BellOff className="size-4" />}
         </div>
         <div className="flex-1">
-          <p className="text-sm font-medium">Hydration reminders</p>
+          <p className="text-sm font-medium">{t("hydration.reminders_label")}</p>
           <p className="text-xs text-muted-foreground">
             {remindersEnabled
-              ? `Gentle nudge every ${reminderIntervalMin} min while open`
-              : "Off — turn on to get a gentle nudge"}
+              ? t("hydration.reminders_on", { n: reminderIntervalMin })
+              : t("hydration.reminders_off")}
           </p>
         </div>
         <span
@@ -204,7 +206,7 @@ function HydrationPage() {
             remindersEnabled ? "text-primary" : "text-muted-foreground"
           }`}
         >
-          {remindersEnabled ? "On" : "Off"}
+          {remindersEnabled ? t("common.on") : t("common.off")}
         </span>
       </button>
     </AppShell>

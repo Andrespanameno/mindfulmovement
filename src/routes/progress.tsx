@@ -22,6 +22,7 @@ import { useSessionStore } from "@/lib/useSessionStore";
 import { computeInsights, streakHistoryFromDaily } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 import { InspirationCard } from "@/components/mm/InspirationCard";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/progress")({
   head: () => ({
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/progress")({
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 
 function ProgressPage() {
+  const { t } = useI18n();
   const session = useSessionStore();
   const insights = useMemo(() => computeInsights(session), [session]);
   const [range, setRange] = useState<"week" | "month">("week");
@@ -54,10 +56,8 @@ function ProgressPage() {
   return (
     <AppShell>
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold">Your Journey</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Small actions, real change — here's how it's adding up.
-        </p>
+        <h1 className="text-2xl font-semibold">{t("progress.title")}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{t("progress.sub")}</p>
       </header>
 
       <div className="flex p-1 bg-secondary/60 rounded-full mb-6 text-xs font-medium">
@@ -70,7 +70,7 @@ function ProgressPage() {
               range === r ? "bg-background shadow-sm text-foreground" : "text-muted-foreground",
             )}
           >
-            This {r}
+            {r === "week" ? t("progress.this_week") : t("progress.this_month")}
           </button>
         ))}
       </div>
@@ -79,7 +79,7 @@ function ProgressPage() {
         <div className="p-5 rounded-3xl bg-card ring-1 ring-black/5 mb-6">
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="size-4 text-accent" />
-            <h3 className="text-sm font-semibold">Highlights</h3>
+            <h3 className="text-sm font-semibold">{t("progress.highlights")}</h3>
           </div>
           <ul className="space-y-2">
             {insights.summaries.slice(0, 4).map((line, i) => (
@@ -98,55 +98,55 @@ function ProgressPage() {
       <div className="grid grid-cols-2 gap-3 mb-6">
         <StreakBadge />
         <Stat
-          label="Active days"
+          label={t("progress.active_days")}
           value={`${summary.activeDays}/${summary.totalDays}`}
-          hint="You showed up."
+          hint={t("progress.active_days_hint")}
         />
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-8">
         <Stat
           icon={<Activity className="size-4 text-primary" />}
-          label="Sessions"
+          label={t("progress.sessions")}
           value={summary.sessions}
           trend={sessionsTrend}
         />
         <Stat
           icon={<Clock className="size-4 text-primary" />}
-          label="Minutes moved"
+          label={t("progress.minutes")}
           value={summary.minutes}
-          hint={`${hours} hrs this ${range}`}
+          hint={range === "week" ? t("progress.minutes_hint_week", { h: hours }) : t("progress.minutes_hint_month", { h: hours })}
         />
         <Stat
           icon={<Hand className="size-4 text-accent" />}
-          label="Pushups"
+          label={t("progress.pushups")}
           value={summary.pushups}
           prev={prev.pushups}
         />
         <Stat
           icon={<Dumbbell className="size-4 text-accent" />}
-          label="Squats"
+          label={t("progress.squats")}
           value={summary.squats}
           prev={prev.squats}
         />
         <Stat
           icon={<Wind className="size-4 text-accent" />}
-          label="Breathing"
+          label={t("progress.breathing")}
           value={summary.breathing}
           prev={prev.breathing}
         />
         <Stat
           icon={<Droplet className="size-4 text-primary" />}
-          label="Hydration"
+          label={t("progress.hydration")}
           value={`${summary.hydrationConsistencyPct}%`}
           hint={`${hydrationDelta >= 0 ? "+" : ""}${hydrationDelta}pp wk/wk`}
         />
       </div>
 
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold">Movement minutes</h3>
+        <h3 className="text-sm font-semibold">{t("progress.movement_minutes")}</h3>
         <span className="text-xs text-muted-foreground">
-          {range === "week" ? "Last 7 days" : "Last 30 days"}
+          {range === "week" ? t("progress.last_7") : t("progress.last_30")}
         </span>
       </div>
       <div className="p-4 rounded-3xl bg-card ring-1 ring-black/5 mb-8">
@@ -186,8 +186,8 @@ function ProgressPage() {
       </div>
 
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold">Streak history</h3>
-        <span className="text-xs text-muted-foreground">Last 30 days</span>
+        <h3 className="text-sm font-semibold">{t("progress.streak_history")}</h3>
+        <span className="text-xs text-muted-foreground">{t("progress.last_30")}</span>
       </div>
       <div className="p-4 rounded-3xl bg-card ring-1 ring-black/5 mb-8">
         <div className="grid grid-cols-[repeat(30,1fr)] gap-[3px] mb-3">
@@ -210,43 +210,42 @@ function ProgressPage() {
         </div>
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1">
-            <Flame className="size-3 text-accent" /> Current {session.streak} · Best{" "}
-            {session.bestStreak}
+            <Flame className="size-3 text-accent" /> {t("progress.current_best", { c: session.streak, b: session.bestStreak })}
           </span>
-          <span>Peak run: {peakStreak} days</span>
+          <span>{t("progress.peak", { n: peakStreak })}</span>
         </div>
       </div>
 
       <div className="p-5 rounded-3xl bg-card ring-1 ring-black/5 space-y-4 mb-8">
-        <h3 className="text-sm font-semibold">Lifetime totals</h3>
+        <h3 className="text-sm font-semibold">{t("progress.lifetime")}</h3>
         <Row
           icon={<Activity className="size-4 text-primary" />}
-          label="Movement sessions"
+          label={t("progress.total_sessions")}
           value={String(session.totalSessions)}
         />
         <Row
           icon={<Clock className="size-4 text-primary" />}
-          label="Movement minutes"
+          label={t("progress.total_minutes")}
           value={`${session.totalMinutes} (${(session.totalMinutes / 60).toFixed(1)} hrs)`}
         />
         <Row
           icon={<Hand className="size-4 text-accent" />}
-          label="Total pushups"
+          label={t("progress.total_pushups")}
           value={String(session.totalPushups)}
         />
         <Row
           icon={<Dumbbell className="size-4 text-accent" />}
-          label="Total squats"
+          label={t("progress.total_squats")}
           value={String(session.totalSquats)}
         />
         <Row
           icon={<Wind className="size-4 text-accent" />}
-          label="Breathing sessions"
+          label={t("progress.total_breathing")}
           value={String(session.totalBreathing)}
         />
       </div>
 
-      <h3 className="text-sm font-semibold mb-3">Milestones</h3>
+      <h3 className="text-sm font-semibold mb-3">{t("progress.milestones")}</h3>
       <MilestoneGrid />
       <InspirationCard placement="progress_summary" variant="bare" className="mt-6" />
     </AppShell>
