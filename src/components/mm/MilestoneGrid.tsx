@@ -2,6 +2,8 @@ import { useSessionStore } from "@/lib/useSessionStore";
 import { milestones } from "@/lib/xp";
 import { cn } from "@/lib/utils";
 import { Check, Lock } from "lucide-react";
+import { useContent } from "@/lib/i18n-content";
+import { useI18n } from "@/lib/i18n";
 
 function computeActiveDayStreaks(history: Record<string, { sessions: number }>) {
   const keys = Object.keys(history).sort();
@@ -40,6 +42,9 @@ function computeActiveDayStreaks(history: Record<string, { sessions: number }>) 
 
 export function MilestoneGrid() {
   const s = useSessionStore();
+  const c = useContent();
+  const { lang } = useI18n();
+  const achievedLabel = lang === "es" ? "Logrado" : "Achieved";
   const derived = computeActiveDayStreaks(s.history);
   const bestStreak = Math.max(s.bestStreak, derived.best);
   const streak = Math.max(s.streak, derived.current);
@@ -49,6 +54,8 @@ export function MilestoneGrid() {
       {milestones.map((m) => {
         const done = m.achieved(stateForMilestones);
         const Icon = done ? m.icon : Lock;
+        const label = c.milestoneLabel(m.id, m.label);
+        const desc = c.milestoneDesc(m.id, m.description);
         return (
           <div
             key={m.id}
@@ -58,7 +65,7 @@ export function MilestoneGrid() {
                 ? "bg-card ring-primary/30"
                 : "bg-card/60 ring-black/5 opacity-60",
             )}
-            title={m.description}
+            title={desc}
           >
             <div className="flex items-start justify-between">
               <div
@@ -76,14 +83,14 @@ export function MilestoneGrid() {
               )}
             </div>
             <div>
-              <p className="text-xs font-medium leading-tight">{m.label}</p>
+              <p className="text-xs font-medium leading-tight">{label}</p>
               <p
                 className={cn(
                   "text-[10px] mt-0.5 leading-tight",
                   done ? "text-primary font-medium" : "text-muted-foreground",
                 )}
               >
-                {done ? "Achieved" : m.description}
+                {done ? achievedLabel : desc}
               </p>
             </div>
             </div>
