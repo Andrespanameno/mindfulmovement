@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AppShell } from "@/components/mm/AppShell";
-import { Droplet, Undo2, ArrowLeft, Bell, BellOff, Check } from "lucide-react";
+import { Droplet, Undo2, ArrowLeft, Bell, BellOff, Check, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useMotivationalMessage } from "@/hooks/useMotivationalMessage";
@@ -31,10 +31,41 @@ function HydrationPage() {
   const { t } = useI18n();
   const { ouncesToday, lastHydrationAdd, remindersEnabled, reminderIntervalMin, lastReminderAt } =
     useSessionStore();
-  const pct = Math.min(100, Math.round((ouncesToday / HYDRATION_GOAL_OZ) * 100));
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const baselineStorageKey = `mm-hydration-baseline-${todayKey}`;
+  const [bonusBaseline, setBonusBaseline] = useState<number>(() => {
+    if (typeof window === "undefined") return 0;
+    const raw = window.localStorage.getItem(baselineStorageKey);
+    return raw ? Math.max(0, parseInt(raw, 10) || 0) : 0;
+  });
+  // Clear stale baseline if ounces reset below it (e.g. daily rollover or undo)
+  useEffect(() => {
+    if (bonusBaseline > 0 && ouncesToday < bonusBaseline) {
+      setBonusBaseline(0);
+      if (typeof window !== "undefined") window.localStorage.removeItem(baselineStorageKey);
+    }
+  }, [ouncesToday, bonusBaseline, baselineStorageKey]);
+
+  const roundOunces = Math.max(0, ouncesToday - bonusBaseline);
+  const roundNumber = Math.floor(bonusBaseline / HYDRATION_GOAL_OZ) + 1;
+  const pct = Math.min(100, Math.round((roundOunces / HYDRATION_GOAL_OZ) * 100));
+  const roundComplete = roundOunces >= HYDRATION_GOAL_OZ;
   const r = 86;
   const c = 2 * Math.PI * r;
   const reachedRef = useRef(ouncesToday >= HYDRATION_GOAL_OZ);
+
+  const startNewRound = () => {
+    const newBaseline = bonusBaseline + HYDRATION_GOAL_OZ;
+    setBonusBaseline(newBaseline);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(baselineStorageKey, String(newBaseline));
+    }
+    reachedRef.current = false;
+    toast.success(t("hydration.keep_going_started") || "New round started", {
+      description: t("hydration.keep_going_sub") || "Keep the momentum — every sip counts.",
+    });
+  };
+
   const { message: hydrationMsg, next: nextHydrationMsg } = useMotivationalMessage({
     placement: "hydration_completion",
   });
@@ -126,9 +157,14 @@ function HydrationPage() {
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <Droplet className="size-5 text-primary mb-1" />
-            <p className="text-4xl font-semibold tabular-nums">{ouncesToday}</p>
+            <p className="text-4xl font-semibold tabular-nums">{roundOunces}</p>
             <p className="text-xs text-muted-foreground">{t("hydration.of_today", { goal: HYDRATION_GOAL_OZ })}</p>
-            {pct >= 100 && (
+            {bonusBaseline > 0 && (
+              <p className="text-[10px] font-medium text-muted-foreground mt-0.5">
+                {(t("hydration.total_today") || "Total today")}: {ouncesToday} oz · {(t("hydration.round") || "Round")} {roundNumber}
+              </p>
+            )}
+            {roundComplete && (
               <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-medium text-primary">
                 <Check className="size-3" /> {t("hydration.goal_complete")}
               </span>
@@ -136,10 +172,18 @@ function HydrationPage() {
           </div>
         </div>
         <p className="text-sm text-muted-foreground text-pretty">
-          {pct >= 100
+          {roundComplete
             ? t("home.hydration.reached")
-            : t("hydration.to_go", { n: HYDRATION_GOAL_OZ - ouncesToday })}
+            : t("hydration.to_go", { n: HYDRATION_GOAL_OZ - roundOunces })}
         </p>
+        {roundComplete && (
+          <button
+            onClick={startNewRound}
+            className="mt-4 inline-flex items-center justify-center gap-2 h-11 px-5 rounded-2xl bg-primary text-primary-foreground text-sm font-semibold active:scale-[0.98] transition"
+          >
+            <Plus className="size-4" /> {t("hydration.keep_going") || "Keep Going"}
+          </button>
+        )}
       </div>
 
       <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
@@ -169,7 +213,7 @@ function HydrationPage() {
 
       <div className="grid grid-cols-8 gap-1.5 mb-8">
         {Array.from({ length: 8 }).map((_, i) => {
-          const filled = ouncesToday >= (i + 1) * 8;
+          const filled = roundOunces >= (i + 1) * 8;
           return (
             <div
               key={i}
