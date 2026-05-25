@@ -6,11 +6,12 @@ import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
 import { EditProfileDialog } from "@/components/mm/EditProfileDialog";
 import { getLifestyle } from "@/lib/lifestyles";
+import { useContent } from "@/lib/i18n-content";
 import { useState } from "react";
 
 type Item = {
   icon: typeof Bell;
-  label: string;
+  labelKey: string;
   to?: "/reminders" | "/support" | "/settings";
 };
 
@@ -24,18 +25,16 @@ export const Route = createFileRoute("/profile")({
   component: ProfilePage,
 });
 
-const groups: { title: string; items: Item[] }[] = [
+const groups: { titleKey: string; items: Item[] }[] = [
   {
-    title: "Wellness",
-    items: [
-      { icon: Bell, label: "Reminders", to: "/reminders" },
-    ],
+    titleKey: "profile.group.wellness",
+    items: [{ icon: Bell, labelKey: "profile.menu.reminders", to: "/reminders" }],
   },
   {
-    title: "Account",
+    titleKey: "profile.group.account",
     items: [
-      { icon: Settings, label: "Settings", to: "/settings" },
-      { icon: HelpCircle, label: "Help & support", to: "/support" },
+      { icon: Settings, labelKey: "profile.menu.settings", to: "/settings" },
+      { icon: HelpCircle, labelKey: "profile.menu.support", to: "/support" },
     ],
   },
 ];
@@ -44,6 +43,7 @@ function ProfilePage() {
   const { streak, totalXp, completedToday } = useSessionStore();
   const { user, signOut } = useAuth();
   const { profile, loading, updateProfile } = useProfile();
+  const c = useContent();
   const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);
   const displayName =
@@ -60,9 +60,9 @@ function ProfilePage() {
   };
 
   const stats = [
-    { label: "Day streak", value: String(streak) },
-    { label: "Total XP", value: totalXp >= 1000 ? `${(totalXp / 1000).toFixed(1)}k` : String(totalXp) },
-    { label: "Today", value: String(completedToday.length) },
+    { label: c.t("profile.day_streak"), value: String(streak) },
+    { label: c.t("profile.total_xp"), value: totalXp >= 1000 ? `${(totalXp / 1000).toFixed(1)}k` : String(totalXp) },
+    { label: c.t("profile.today"), value: String(completedToday.length) },
   ];
   return (
     <AppShell>
@@ -77,23 +77,23 @@ function ProfilePage() {
           disabled={loading || !profile}
           className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline disabled:opacity-50"
         >
-          <Pencil className="size-3" /> Edit profile
+          <Pencil className="size-3" /> {c.t("profile.edit")}
         </button>
         {profile && (lifestyle || profile.fitness_level || profile.work_style) && (
           <div className="flex flex-wrap justify-center gap-1.5 mt-3">
             {lifestyle && (
               <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                <lifestyle.icon className="size-3" /> {lifestyle.label}
+                <lifestyle.icon className="size-3" /> {c.lifestyleLabel(lifestyle.id, lifestyle.label)}
               </span>
             )}
             {profile.fitness_level && (
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-secondary capitalize">
-                {profile.fitness_level}
+                {c.fitness(profile.fitness_level)}
               </span>
             )}
             {profile.work_style && (
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-secondary capitalize">
-                {profile.work_style}
+                {c.workStyle(profile.work_style)}
               </span>
             )}
           </div>
@@ -114,12 +114,13 @@ function ProfilePage() {
 
       <div className="space-y-6">
         {groups.map((g) => (
-          <div key={g.title}>
+          <div key={g.titleKey}>
             <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 ml-1">
-              {g.title}
+              {c.t(g.titleKey)}
             </h4>
             <div className="rounded-2xl bg-card ring-1 ring-black/5 divide-y divide-border">
-              {g.items.map(({ icon: Icon, label, to }) => {
+              {g.items.map(({ icon: Icon, labelKey, to }) => {
+                const label = c.t(labelKey);
                 const content = (
                   <>
                     <div className="size-8 rounded-lg bg-secondary grid place-items-center">
@@ -131,7 +132,7 @@ function ProfilePage() {
                 );
                 return to ? (
                   <Link
-                    key={label}
+                    key={labelKey}
                     to={to}
                     className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
                   >
@@ -139,7 +140,7 @@ function ProfilePage() {
                   </Link>
                 ) : (
                   <button
-                    key={label}
+                    key={labelKey}
                     className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
                   >
                     {content}
@@ -154,7 +155,7 @@ function ProfilePage() {
           onClick={handleSignOut}
           className="w-full h-12 rounded-2xl bg-card ring-1 ring-black/5 flex items-center justify-center gap-2 text-sm font-medium text-muted-foreground"
         >
-          <LogOut className="size-4" /> Sign out
+          <LogOut className="size-4" /> {c.t("profile.signout")}
         </button>
       </div>
 
