@@ -328,6 +328,7 @@ function Stat({
   trend?: number;
   prev?: number;
 }) {
+  const { t } = useI18n();
   const showTrend = typeof trend === "number" && Number.isFinite(trend);
   const showDelta = typeof prev === "number" && typeof value === "number";
   const TrendIcon = showTrend
@@ -353,12 +354,12 @@ function Stat({
         >
           <TrendIcon className="size-3" />
           {trend! > 0 ? "+" : ""}
-          {trend}% vs prev
+          {trend}% {t("progress.vs_prev")}
         </p>
       )}
       {!showTrend && showDelta && (
         <p className="text-[11px] text-muted-foreground mt-1">
-          {prev === 0 && value === 0 ? "Ready when you are" : `from ${prev} last ${"period"}`}
+          {prev === 0 && value === 0 ? t("progress.ready") : t("progress.from_prev", { n: prev })}
         </p>
       )}
       {hint && !showTrend && !showDelta && (
