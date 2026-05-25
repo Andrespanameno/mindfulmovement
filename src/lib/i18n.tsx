@@ -144,7 +144,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "progress.sum.breathing_many_month": { en: "You took {n} mindful breathing sessions this month.", es: "Hiciste {n} sesiones de respiración consciente este mes." },
 
   "profile.edit": { en: "Edit profile", es: "Editar perfil" },
-  "profile.day_streak": { en: "Day streak", es: "Racha diaria" },
+  "profile.day_streak": { en: "Streak", es: "Constancia" },
   "profile.total_xp": { en: "Total XP", es: "XP total" },
   "profile.today": { en: "Today", es: "Hoy" },
   "profile.group.wellness": { en: "Wellness", es: "Bienestar" },
@@ -153,9 +153,113 @@ const dict: Record<string, { en: string; es: string }> = {
   "profile.menu.settings": { en: "Settings", es: "Ajustes" },
   "profile.menu.support": { en: "Help & support", es: "Ayuda y soporte" },
   "profile.signout": { en: "Sign out", es: "Cerrar sesión" },
-  "profile.streak": { en: "Streak", es: "Racha" },
+  "profile.streak": { en: "Streak", es: "Constancia" },
   "profile.days": { en: "days", es: "días" },
   "profile.best": { en: "Best: {n} days", es: "Mejor: {n} días" },
+
+  "xp.level": { en: "Level {n}", es: "Nivel {n}" },
+  "xp.to_next": { en: "{a} / {b} XP to Level {n}", es: "{a} / {b} XP hasta el nivel {n}" },
+
+  "mv.cat_label": { en: "Category", es: "Categoría" },
+  "mv.start": { en: "Start", es: "Empezar" },
+  "mv.done": { en: "Done", es: "Hecho" },
+  "mv.undo": { en: "Undo", es: "Deshacer" },
+  "mv.min_short": { en: "min", es: "min" },
+  "mv.toast.undone": { en: "Undone · -{xp} XP", es: "Deshecho · -{xp} XP" },
+  "mv.toast.undone_sub": { en: "No worries — marked as not done.", es: "Sin problema — marcado como no hecho." },
+  "mv.toast.xp": { en: "+{xp} XP", es: "+{xp} XP" },
+
+  "edit.cancel": { en: "Cancel", es: "Cancelar" },
+  "edit.save": { en: "Save changes", es: "Guardar cambios" },
+  "edit.saving": { en: "Saving…", es: "Guardando…" },
+
+  "how.title": { en: "How It Works", es: "Cómo funciona" },
+  "how.intro": {
+    en: "Mindful Movement helps busy adults build healthier daily habits through small intentional movement sessions that fit naturally into real life.",
+    es: "Mindful Movement ayuda a personas ocupadas a crear hábitos diarios más saludables con pequeñas sesiones de movimiento intencional que encajan de forma natural en la vida real.",
+  },
+  "how.schedule": {
+    en: "Set your preferred reminder schedule and complete short guided movement resets throughout the day based on your lifestyle and routine.",
+    es: "Configura tus recordatorios y completa breves reinicios de movimiento guiado a lo largo del día según tu estilo de vida y rutina.",
+  },
+  "how.combines": { en: "The app combines:", es: "La app combina:" },
+  "how.feature.micro": { en: "Micro workouts", es: "Micro entrenamientos" },
+  "how.feature.mobility": { en: "Mobility", es: "Movilidad" },
+  "how.feature.posture": { en: "Posture resets", es: "Reinicios de postura" },
+  "how.feature.breathing": { en: "Breathing exercises", es: "Ejercicios de respiración" },
+  "how.feature.hydration": { en: "Hydration reminders", es: "Recordatorios de hidratación" },
+  "how.feature.prompts": { en: "Mindful wellness prompts", es: "Avisos de bienestar consciente" },
+  "how.track": {
+    en: "Track your consistency, movement, hydration, breathing, and progress over time — one small action at a time.",
+    es: "Sigue tu constancia, movimiento, hidratación, respiración y progreso a lo largo del tiempo — una pequeña acción a la vez.",
+  },
+  "how.philosophy_label": { en: "Core Philosophy", es: "Filosofía central" },
+  "how.philosophy": { en: "\"Micro actions. Macro results.\"", es: "\"Acciones micro. Resultados macro.\"" },
+
+  "privacy.title": { en: "Privacy Policy", es: "Política de privacidad" },
+  "privacy.intro": {
+    en: "This Privacy Policy describes how Mindful Movement collects, uses, and protects your personal information when you use our app.",
+    es: "Esta Política de Privacidad describe cómo Mindful Movement recopila, utiliza y protege tu información personal cuando usas la app.",
+  },
+  "privacy.h.collect": { en: "Information We Collect", es: "Información que recopilamos" },
+  "privacy.p.collect": {
+    en: "We collect information you provide directly, such as your profile details, wellness preferences, and session activity. This helps us personalize your experience and track your progress.",
+    es: "Recopilamos la información que nos das directamente, como datos de tu perfil, preferencias de bienestar y actividad de sesiones. Esto nos ayuda a personalizar tu experiencia y seguir tu progreso.",
+  },
+  "privacy.h.use": { en: "How We Use Your Information", es: "Cómo usamos tu información" },
+  "privacy.p.use": {
+    en: "We use your data to deliver personalized movement recommendations, track your wellness journey, send helpful reminders, and improve the app experience.",
+    es: "Usamos tus datos para ofrecer recomendaciones de movimiento personalizadas, seguir tu camino de bienestar, enviar recordatorios útiles y mejorar la app.",
+  },
+  "privacy.h.security": { en: "Data Security", es: "Seguridad de los datos" },
+  "privacy.p.security": {
+    en: "We take reasonable measures to protect your information from unauthorized access, disclosure, or loss. Your data is stored securely and encrypted in transit.",
+    es: "Tomamos medidas razonables para proteger tu información frente a accesos no autorizados, divulgación o pérdida. Tus datos se almacenan de forma segura y se cifran en tránsito.",
+  },
+  "privacy.h.choices": { en: "Your Choices", es: "Tus opciones" },
+  "privacy.p.choices": {
+    en: "You can update your profile, adjust reminder preferences, or contact us to inquire about your data at any time.",
+    es: "Puedes actualizar tu perfil, ajustar los recordatorios o contactarnos para consultar sobre tus datos en cualquier momento.",
+  },
+  "privacy.h.changes": { en: "Changes to This Policy", es: "Cambios en esta política" },
+  "privacy.p.changes": {
+    en: "We may update this Privacy Policy from time to time. Any changes will be posted within the app, and we encourage you to review it periodically.",
+    es: "Podemos actualizar esta Política de Privacidad de vez en cuando. Publicaremos cualquier cambio dentro de la app y te animamos a revisarla periódicamente.",
+  },
+  "privacy.contact_pre": { en: "If you have any questions about this Privacy Policy, please contact us at ", es: "Si tienes preguntas sobre esta Política de Privacidad, contáctanos en " },
+  "privacy.contact_post": { en: ".", es: "." },
+
+  "terms.title": { en: "Terms of Service", es: "Términos de servicio" },
+  "terms.intro": {
+    en: "By using the Mindful Movement app, you agree to these Terms of Service. Please read them carefully before continuing.",
+    es: "Al usar la app Mindful Movement, aceptas estos Términos de Servicio. Léelos con atención antes de continuar.",
+  },
+  "terms.h.use": { en: "Use of the App", es: "Uso de la app" },
+  "terms.p.use": {
+    en: "Mindful Movement is designed to support your wellness journey with gentle movement reminders, hydration tracking, and progress insights. It is not a substitute for professional medical advice, diagnosis, or treatment.",
+    es: "Mindful Movement está diseñada para acompañar tu camino de bienestar con recordatorios suaves de movimiento, seguimiento de hidratación y resúmenes de progreso. No sustituye consejo médico profesional, diagnóstico o tratamiento.",
+  },
+  "terms.h.account": { en: "Your Account", es: "Tu cuenta" },
+  "terms.p.account": {
+    en: "You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. Please notify us immediately of any unauthorized use.",
+    es: "Eres responsable de mantener la confidencialidad de tus credenciales y de toda la actividad bajo tu cuenta. Avísanos de inmediato si detectas un uso no autorizado.",
+  },
+  "terms.h.ip": { en: "Content and Intellectual Property", es: "Contenido y propiedad intelectual" },
+  "terms.p.ip": {
+    en: "All content within the app, including text, graphics, and software, is the property of Mindful Movement or its licensors and is protected by applicable intellectual property laws.",
+    es: "Todo el contenido de la app, incluidos textos, gráficos y software, es propiedad de Mindful Movement o sus licenciantes y está protegido por las leyes de propiedad intelectual aplicables.",
+  },
+  "terms.h.liability": { en: "Limitation of Liability", es: "Limitación de responsabilidad" },
+  "terms.p.liability": {
+    en: "To the fullest extent permitted by law, Mindful Movement shall not be liable for any indirect, incidental, or consequential damages arising from your use of the app.",
+    es: "En la medida máxima permitida por la ley, Mindful Movement no será responsable de daños indirectos, incidentales o consecuentes derivados del uso de la app.",
+  },
+  "terms.h.changes": { en: "Changes to These Terms", es: "Cambios a estos términos" },
+  "terms.p.changes": {
+    en: "We may modify these Terms of Service at any time. Continued use of the app after changes constitutes your acceptance of the revised terms.",
+    es: "Podemos modificar estos Términos de Servicio en cualquier momento. El uso continuado de la app tras los cambios implica tu aceptación de los términos revisados.",
+  },
+  "terms.contact_pre": { en: "If you have any questions about these Terms, please contact us at ", es: "Si tienes preguntas sobre estos Términos, contáctanos en " },
 
   "settings.title": { en: "Settings", es: "Ajustes" },
   "settings.sub": { en: "Legal and app information.", es: "Información legal y de la app." },
