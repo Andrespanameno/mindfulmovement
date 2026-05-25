@@ -4,14 +4,63 @@ function dayKey(d: Date) {
   return d.toISOString().slice(0, 10);
 }
 
-function range(daysBack: number, endOffset = 0): string[] {
+function daysBetween(start: Date, end: Date): string[] {
   const out: string[] = [];
-  for (let i = daysBack - 1; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i - endOffset);
+  const d = new Date(start);
+  d.setHours(0, 0, 0, 0);
+  const stop = new Date(end);
+  stop.setHours(0, 0, 0, 0);
+  while (d <= stop) {
     out.push(dayKey(d));
+    d.setDate(d.getDate() + 1);
   }
   return out;
+}
+
+// Monday as the start of the week
+function startOfWeek(date: Date): Date {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  const day = d.getDay(); // 0=Sun..6=Sat
+  const diff = (day + 6) % 7; // days since Monday
+  d.setDate(d.getDate() - diff);
+  return d;
+}
+
+function endOfWeek(date: Date): Date {
+  const s = startOfWeek(date);
+  s.setDate(s.getDate() + 6);
+  return s;
+}
+
+function startOfMonth(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+function endOfMonth(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+}
+
+export function currentWeekDays(now: Date = new Date()): string[] {
+  return daysBetween(startOfWeek(now), endOfWeek(now));
+}
+
+export function currentMonthDays(now: Date = new Date()): string[] {
+  return daysBetween(startOfMonth(now), endOfMonth(now));
+}
+
+export function previousWeekDays(now: Date = new Date()): string[] {
+  const s = startOfWeek(now);
+  s.setDate(s.getDate() - 7);
+  const e = new Date(s);
+  e.setDate(s.getDate() + 6);
+  return daysBetween(s, e);
+}
+
+export function previousMonthDays(now: Date = new Date()): string[] {
+  const s = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const e = new Date(now.getFullYear(), now.getMonth(), 0);
+  return daysBetween(s, e);
 }
 
 function sumWindow(s: SessionState, days: string[]) {
@@ -77,11 +126,13 @@ export interface ProgressInsights {
   weeklyMinutesTrend: number; // %
   weeklyConsistencyTrend: number; // pp change
   monthlySessionsTrend: number;
+  monthlyConsistencyTrend: number;
   daily7: DailyEntry[];
   daily30: DailyEntry[];
-  pushupGrowth: { from: number; to: number };
-  squatGrowth: { from: number; to: number };
-  summaries: string[];
+  weekPushupGrowth: { from: number; to: number };
+  weekSquatGrowth: { from: number; to: number };
+  monthPushupGrowth: { from: number; to: number };
+  monthSquatGrowth: { from: number; to: number };
 }
 
 function pct(curr: number, prev: number): number {
@@ -107,10 +158,11 @@ function dailySeries(s: SessionState, days: string[]): DailyEntry[] {
 }
 
 export function computeInsights(s: SessionState): ProgressInsights {
-  const week = range(7);
-  const prevWeek = range(7, 7);
-  const month = range(30);
-  const prevMonth = range(30, 30);
+  const now = new Date();
+  const week = currentWeekDays(now);
+  const prevWeek = previousWeekDays(now);
+  const month = currentMonthDays(now);
+  const prevMonth = previousMonthDays(now);
 
   const thisWeek = buildSummary(s, week);
   const lastWeek = buildSummary(s, prevWeek);
@@ -121,42 +173,14 @@ export function computeInsights(s: SessionState): ProgressInsights {
   const weeklyMinutesTrend = pct(thisWeek.minutes, lastWeek.minutes);
   const weeklyConsistencyTrend =
     thisWeek.hydrationConsistencyPct - lastWeek.hydrationConsistencyPct;
+  const monthlyConsistencyTrend =
+    thisMonth.hydrationConsistencyPct - lastMonth.hydrationConsistencyPct;
   const monthlySessionsTrend = pct(thisMonth.sessions, lastMonth.sessions);
 
-  const pushupGrowth = { from: lastWeek.pushups, to: thisWeek.pushups };
-  const squatGrowth = { from: lastWeek.squats, to: thisWeek.squats };
-
-  const hours = (thisMonth.minutes / 60).toFixed(1);
-  const summaries: string[] = [];
-
-  summaries.push(
-    `You completed ${thisMonth.sessions} mindful movement${thisMonth.sessions === 1 ? "" : "s"} this month.`,
-  );
-  if (thisMonth.minutes > 0) {
-    summaries.push(`You accumulated ${hours} hours of intentional movement.`);
-  }
-  if (pushupGrowth.to > pushupGrowth.from && pushupGrowth.from >= 0) {
-    summaries.push(
-      `Your pushups improved from ${pushupGrowth.from} to ${pushupGrowth.to}.`,
-    );
-  }
-  if (squatGrowth.to > squatGrowth.from && squatGrowth.from >= 0) {
-    summaries.push(
-      `Your squats improved from ${squatGrowth.from} to ${squatGrowth.to}.`,
-    );
-  }
-  if (weeklyConsistencyTrend > 0) {
-    summaries.push(
-      `Your hydration consistency improved this week (+${weeklyConsistencyTrend} points).`,
-    );
-  } else if (weeklySessionsTrend > 0) {
-    summaries.push(`Your consistency improved this week (+${weeklySessionsTrend}%).`);
-  }
-  if (thisWeek.breathing > 0) {
-    summaries.push(
-      `You took ${thisWeek.breathing} mindful breathing session${thisWeek.breathing === 1 ? "" : "s"} this week.`,
-    );
-  }
+  const weekPushupGrowth = { from: lastWeek.pushups, to: thisWeek.pushups };
+  const weekSquatGrowth = { from: lastWeek.squats, to: thisWeek.squats };
+  const monthPushupGrowth = { from: lastMonth.pushups, to: thisMonth.pushups };
+  const monthSquatGrowth = { from: lastMonth.squats, to: thisMonth.squats };
 
   return {
     thisWeek,
@@ -167,11 +191,13 @@ export function computeInsights(s: SessionState): ProgressInsights {
     weeklyMinutesTrend,
     weeklyConsistencyTrend,
     monthlySessionsTrend,
+    monthlyConsistencyTrend,
     daily7: dailySeries(s, week),
     daily30: dailySeries(s, month),
-    pushupGrowth,
-    squatGrowth,
-    summaries,
+    weekPushupGrowth,
+    weekSquatGrowth,
+    monthPushupGrowth,
+    monthSquatGrowth,
   };
 }
 
