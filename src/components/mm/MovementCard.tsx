@@ -7,6 +7,8 @@ import { completeMovement, uncompleteMovement, useSessionStore } from "@/lib/use
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { MovementVisual } from "./MovementVisual";
+import { useI18n } from "@/lib/i18n";
+import { useContent } from "@/lib/i18n-content";
 
 interface Props {
   movement: Movement;
@@ -15,9 +17,16 @@ interface Props {
 
 export function MovementCard({ movement, variant = "full" }: Props) {
   const { completedToday } = useSessionStore();
+  const { t } = useI18n();
+  const c = useContent();
   const [justDone, setJustDone] = useState(false);
   const done = completedToday.includes(movement.id);
   const Icon = movement.icon;
+  const title = c.movementTitle(movement.id, movement.title);
+  const desc = c.movementDesc(movement.id, movement.description);
+  const instr = c.movementInstr(movement.id, movement.instruction) ?? desc;
+  const difficulty = c.difficulty(movement.difficulty);
+  const categoryLabel = c.categoryLabel(movement.category, movement.category);
 
   const totalSeconds = Math.max(1, Math.round(movement.duration * 60));
   const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
@@ -66,8 +75,8 @@ export function MovementCard({ movement, variant = "full" }: Props) {
     if (!timerReady) return;
     completeMovement(movement);
     setJustDone(true);
-    const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
-    toast.success(`+${movement.xp} XP`, { description: msg });
+    const rawMsg = encouragements[Math.floor(Math.random() * encouragements.length)];
+    toast.success(t("mv.toast.xp", { xp: movement.xp }), { description: c.encouragement(rawMsg) });
     setTimeout(() => setJustDone(false), 1400);
 
     // Persist to backend (fire-and-forget; UI already updated optimistically)
@@ -103,7 +112,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
   const handleUndo = () => {
     if (!done) return;
     uncompleteMovement(movement);
-    toast(`Undone · -${movement.xp} XP`, { description: "No worries — marked as not done." });
+    toast(t("mv.toast.undone", { xp: movement.xp }), { description: t("mv.toast.undone_sub") });
     setSecondsLeft(totalSeconds);
     setStarted(false);
     setRunning(false);
@@ -138,9 +147,9 @@ export function MovementCard({ movement, variant = "full" }: Props) {
           <Icon className="size-5" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium truncate">{movement.title}</p>
+          <p className="text-sm font-medium truncate">{title}</p>
           <p className="text-xs text-muted-foreground flex items-center gap-2 mt-0.5">
-            <Clock className="size-3" /> {movement.duration} min • {movement.difficulty}
+            <Clock className="size-3" /> {movement.duration} {t("mv.min_short")} • {difficulty}
           </p>
         </div>
         <button
@@ -181,19 +190,19 @@ export function MovementCard({ movement, variant = "full" }: Props) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-              {movement.category}
+              {categoryLabel}
             </span>
             <span className="size-1 rounded-full bg-muted-foreground/40" />
             <span className="text-[10px] font-medium text-muted-foreground">
-              {movement.difficulty}
+              {difficulty}
             </span>
           </div>
-          <h3 className="font-medium leading-snug">{movement.title}</h3>
+          <h3 className="font-medium leading-snug">{title}</h3>
         </div>
       </div>
 
       <p className="text-sm text-muted-foreground text-pretty leading-relaxed mb-4">
-        {movement.instruction ?? movement.description}
+        {instr}
       </p>
 
       <MovementVisual movementId={movement.id} running={running} />
@@ -202,7 +211,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1">
             <Clock className="size-3.5" />
-            {started ? formatTime(secondsLeft) : `${movement.duration} min`}
+            {started ? formatTime(secondsLeft) : `${movement.duration} ${t("mv.min_short")}`}
           </span>
           <span className="inline-flex items-center gap-1">
             <Sparkles className="size-3.5 text-accent" /> +{movement.xp} XP
@@ -221,8 +230,8 @@ export function MovementCard({ movement, variant = "full" }: Props) {
           >
             <Check className="size-4 group-hover:hidden" />
             <Undo2 className="size-4 hidden group-hover:inline" />
-            <span className="group-hover:hidden">Done</span>
-            <span className="hidden group-hover:inline">Undo</span>
+            <span className="group-hover:hidden">{t("mv.done")}</span>
+            <span className="hidden group-hover:inline">{t("mv.undo")}</span>
           </button>
         ) : !started ? (
           <button
@@ -230,7 +239,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
             aria-label="Start timer"
             className="h-9 px-4 rounded-full text-sm font-medium inline-flex items-center gap-2 bg-foreground text-background hover:opacity-90 active:scale-95 transition-all"
           >
-            <Play className="size-4" /> Start
+            <Play className="size-4" /> {t("mv.start")}
           </button>
         ) : !timerReady ? (
           <div className="inline-flex items-center gap-1.5 rounded-full bg-foreground text-background pl-3 pr-1 h-9 text-sm font-medium">
@@ -260,7 +269,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
               justDone && "animate-scale-in",
             )}
           >
-            <Check className="size-4" /> Done
+            <Check className="size-4" /> {t("mv.done")}
           </button>
         )}
       </div>
