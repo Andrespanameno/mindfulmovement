@@ -12,6 +12,7 @@ export interface Profile {
   daily_water_goal: number;
   preferred_categories: string[];
   onboarding_completed: boolean;
+  language: string;
 }
 
 export type ProfileUpdate = Partial<

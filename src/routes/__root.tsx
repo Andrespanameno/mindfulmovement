@@ -14,6 +14,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ReminderRunner } from "@/components/mm/ReminderRunner";
 import { AuthProvider } from "@/lib/auth-context";
 import { AuthGate } from "@/components/mm/AuthGate";
+import { I18nProvider } from "@/lib/i18n";
 import { StatsSync } from "@/components/mm/StatsSync";
 import { ProgressSync } from "@/components/mm/ProgressSync";
 import { RemindersSync } from "@/components/mm/RemindersSync";
@@ -142,15 +143,17 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <AuthGate>
-          <Outlet />
-        </AuthGate>
-        <Toaster position="top-center" />
-        <ReminderRunner />
-        <StatsSync />
-        <ProgressSync />
-        <RemindersSync />
-        <DispatchedReminders />
+        <I18nProvider>
+          <AuthGate>
+            <Outlet />
+          </AuthGate>
+          <Toaster position="top-center" />
+          <ReminderRunner />
+          <StatsSync />
+          <ProgressSync />
+          <RemindersSync />
+          <DispatchedReminders />
+        </I18nProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
