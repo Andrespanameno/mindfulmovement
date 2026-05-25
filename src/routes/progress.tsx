@@ -223,7 +223,7 @@ function ProgressPage() {
               const date = new Date(d.date);
               return (
                 <span key={d.date} className="flex-1 text-center text-[10px] text-muted-foreground">
-                  {DAY_LABELS[date.getDay()]}
+                  {dayLabels[date.getDay()]}
                 </span>
               );
             })}
