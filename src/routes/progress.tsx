@@ -34,7 +34,8 @@ export const Route = createFileRoute("/progress")({
   component: ProgressPage,
 });
 
-const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
+const DAY_LABELS_EN = ["S", "M", "T", "W", "T", "F", "S"];
+const DAY_LABELS_ES = ["D", "L", "M", "X", "J", "V", "S"];
 
 function ProgressPage() {
   const { t } = useI18n();
