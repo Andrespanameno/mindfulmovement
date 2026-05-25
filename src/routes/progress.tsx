@@ -253,7 +253,7 @@ function ProgressPage() {
                       ? "bg-primary/60"
                       : "bg-primary",
               )}
-              title={`Day ${i + 1}: streak ${p.current}`}
+              title={`${t("progress.day_label", { n: i + 1 })} · ${t("progress.streak_label", { n: p.current })}`}
             />
           ))}
         </div>
