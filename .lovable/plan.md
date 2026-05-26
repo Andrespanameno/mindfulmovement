@@ -1,16 +1,14 @@
-## Add app icon for home screen installs
+## Plan: Add Lottie animation to 4-7-8 breathing exercise
 
-I'll wire up your 512×512 logo so iOS and Android use it when adding the app to the home screen.
+**Steps**
 
-### Steps
-1. Save the uploaded PNG to `public/icon-512.png` and generate a `public/icon-192.png` (resized copy) and `public/apple-touch-icon.png` (180×180 for iOS).
-2. Create `public/manifest.json` with app name "Mindful Movement", `display: "standalone"`, theme/background colors matching the app, and both icon sizes.
-3. Update `src/routes/__root.tsx` `head()` to add:
-   - `<link rel="manifest" href="/manifest.json">`
-   - `<link rel="apple-touch-icon" href="/apple-touch-icon.png">`
-   - `<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">`
+1. Install `lottie-react` via `bun add lottie-react`.
+2. Copy the upload to `src/assets/lottie/4-7-8-breathing.json`.
+3. Update `src/components/mm/MovementVisual.tsx`:
+   - Import `Lottie` from `lottie-react` and the JSON file.
+   - Remove the `if (movementId === "4-7-8-breathing") return null;` early-return.
+   - Add a branch that renders the Lottie animation for `4-7-8-breathing` inside the existing wrapper (same `rounded-2xl bg-background/60 ring-1 ring-black/5 px-4 py-3 mb-4` + ~h-32 sizing so layout doesn't shift).
+   - Pass `loop` and `autoplay={running}` so the animation pauses when the session timer is paused, matching the existing `BreathingCircle` behavior.
+4. Leave `box-breathing` and all other breath visuals untouched (waiting on the separate box-breathing file you mentioned earlier).
 
-### Notes
-- No service worker / PWA plugin — manifest-only is enough for installability and avoids preview issues.
-- Existing users who already added the app will need to **remove and re-add** it to pick up the new icon (iOS/Android cache the icon at install time).
-- After I implement, you'll need to click **Publish → Update** for the published link to serve the new icon.
+No other files change; no logic outside the visual component is touched.
