@@ -53,7 +53,9 @@ const dict: Record<string, { en: string; es: string }> = {
   "auth.signup.success": { en: "Account created. Check your email to confirm, then sign in.", es: "Cuenta creada. Revisa tu correo para confirmar y luego inicia sesión." },
   "auth.reset.success": { en: "Reset link sent. Check your email.", es: "Enlace enviado. Revisa tu correo." },
 
-  "home.greeting": { en: "Good morning, {name}", es: "Buenos días, {name}" },
+  "home.greeting.morning": { en: "Good morning, {name}", es: "Buenos días, {name}" },
+  "home.greeting.afternoon": { en: "Good afternoon, {name}", es: "Buenas tardes, {name}" },
+  "home.greeting.evening": { en: "Good evening, {name}", es: "Buenas noches, {name}" },
   "home.title": { en: "Today is a fresh start", es: "Hoy es un nuevo comienzo" },
   "home.guided.eyebrow": { en: "Guided session", es: "Sesión guiada" },
   "home.guided.title": { en: "Start a 5-minute reset", es: "Comienza un reinicio de 5 minutos" },
