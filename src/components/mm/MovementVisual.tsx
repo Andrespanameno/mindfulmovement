@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils";
 import { movements } from "@/lib/movements";
 import Lottie from "lottie-react";
+import type { LottieRefCurrentProps } from "lottie-react";
+import { useEffect, useRef } from "react";
 import breathing478 from "@/assets/lottie/4-7-8-breathing.json";
 import boxBreathing from "@/assets/lottie/box-breathing.json";
 
@@ -37,9 +39,17 @@ export function MovementVisual({ movementId, running = false, className }: Props
 }
 
 function LottieBreath({ data, running }: { data: unknown; running: boolean }) {
+  const ref = useRef<LottieRefCurrentProps>(null);
+  useEffect(() => {
+    const api = ref.current;
+    if (!api) return;
+    if (running) api.play();
+    else api.pause();
+  }, [running]);
   return (
     <div className="flex items-center justify-center py-2 h-32">
       <Lottie
+        lottieRef={ref}
         animationData={data}
         loop
         autoplay={running}
