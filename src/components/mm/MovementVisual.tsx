@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
 import { movements } from "@/lib/movements";
+import Lottie from "lottie-react";
+import breathing478 from "@/assets/lottie/4-7-8-breathing.json";
 
 interface Props {
   movementId: string;
@@ -15,8 +17,6 @@ export function MovementVisual({ movementId, running = false, className }: Props
   const movement = movements.find((m) => m.id === movementId);
   if (movement?.category !== "breath-calm") return null;
 
-  if (movementId === "4-7-8-breathing") return null;
-
   return (
     <div
       className={cn(
@@ -24,7 +24,26 @@ export function MovementVisual({ movementId, running = false, className }: Props
         className,
       )}
     >
-      {movementId === "box-breathing" ? <BoxBreathing /> : <BreathingCircle running={running} />}
+      {movementId === "box-breathing" ? (
+        <BoxBreathing />
+      ) : movementId === "4-7-8-breathing" ? (
+        <LottieBreath data={breathing478} running={running} />
+      ) : (
+        <BreathingCircle running={running} />
+      )}
+    </div>
+  );
+}
+
+function LottieBreath({ data, running }: { data: unknown; running: boolean }) {
+  return (
+    <div className="flex items-center justify-center py-2 h-32">
+      <Lottie
+        animationData={data}
+        loop
+        autoplay={running}
+        style={{ height: "100%", width: "auto" }}
+      />
     </div>
   );
 }
