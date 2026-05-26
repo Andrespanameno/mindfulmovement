@@ -46,7 +46,7 @@ function HomePage() {
     <AppShell>
       <header className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-sm text-muted-foreground">{t("home.greeting", { name: displayName })}</p>
+          <p className="text-sm text-muted-foreground">{t(getGreetingKey(), { name: displayName })}</p>
           <h1 className="text-2xl font-semibold">{t("home.title")}</h1>
         </div>
         <div className="flex items-center gap-2">
