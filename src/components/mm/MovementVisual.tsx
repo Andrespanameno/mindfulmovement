@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { movements } from "@/lib/movements";
 import Lottie from "lottie-react";
 import breathing478 from "@/assets/lottie/4-7-8-breathing.json";
+import boxBreathing from "@/assets/lottie/box-breathing.json";
 
 interface Props {
   movementId: string;
@@ -25,7 +26,7 @@ export function MovementVisual({ movementId, running = false, className }: Props
       )}
     >
       {movementId === "box-breathing" ? (
-        <BoxBreathing />
+        <LottieBreath data={boxBreathing} running={running} />
       ) : movementId === "4-7-8-breathing" ? (
         <LottieBreath data={breathing478} running={running} />
       ) : (
