@@ -10,6 +10,13 @@ import { useAuth } from "@/lib/auth-context";
 import { InspirationCard } from "@/components/mm/InspirationCard";
 import { useI18n } from "@/lib/i18n";
 
+function getGreetingKey() {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) return "home.greeting.morning";
+  if (hour >= 12 && hour < 17) return "home.greeting.afternoon";
+  return "home.greeting.evening";
+}
+
 export const Route = createFileRoute("/home")({
   head: () => ({
     meta: [
