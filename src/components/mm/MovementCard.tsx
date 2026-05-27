@@ -7,6 +7,7 @@ import { completeMovement, uncompleteMovement, useSessionStore } from "@/lib/use
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { MovementVisual } from "./MovementVisual";
+import { getMovementImage } from "@/lib/movementImages";
 import { useI18n } from "@/lib/i18n";
 import { useContent } from "@/lib/i18n-content";
 
@@ -27,6 +28,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
   const instr = c.movementInstr(movement.id, movement.instruction) ?? desc;
   const difficulty = c.difficulty(movement.difficulty);
   const categoryLabel = c.categoryLabel(movement.category, movement.category);
+  const imageUrl = getMovementImage(movement.id);
 
   const totalSeconds = Math.max(1, Math.round(movement.duration * 60));
   const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
@@ -204,6 +206,17 @@ export function MovementCard({ movement, variant = "full" }: Props) {
       <p className="text-sm text-muted-foreground text-pretty leading-relaxed mb-4">
         {instr}
       </p>
+
+      {imageUrl && (
+        <div className="mb-4 rounded-2xl overflow-hidden bg-background/60 ring-1 ring-black/5 flex items-center justify-center">
+          <img
+            src={imageUrl}
+            alt={title}
+            loading="lazy"
+            className="w-full h-48 sm:h-56 object-contain"
+          />
+        </div>
+      )}
 
       <MovementVisual movementId={movement.id} running={running} />
 
