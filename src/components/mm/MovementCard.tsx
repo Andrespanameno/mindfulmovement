@@ -29,6 +29,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
   const difficulty = c.difficulty(movement.difficulty);
   const categoryLabel = c.categoryLabel(movement.category, movement.category);
   const imageUrl = getMovementImage(movement.id);
+  const [imgFailed, setImgFailed] = useState(false);
 
   const totalSeconds = Math.max(1, Math.round(movement.duration * 60));
   const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
@@ -207,12 +208,13 @@ export function MovementCard({ movement, variant = "full" }: Props) {
         {instr}
       </p>
 
-      {imageUrl && (
+      {imageUrl && !imgFailed && (
         <div className="mb-4 rounded-2xl overflow-hidden bg-background/60 ring-1 ring-black/5 flex items-center justify-center">
           <img
             src={imageUrl}
             alt={title}
             loading="lazy"
+            onError={() => setImgFailed(true)}
             className="w-full h-48 sm:h-56 object-contain"
           />
         </div>
