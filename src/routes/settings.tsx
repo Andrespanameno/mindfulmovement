@@ -151,7 +151,7 @@ function SettingsPage() {
           <div className="size-8 rounded-lg bg-destructive/10 grid place-items-center">
             <Trash2 className="size-4" />
           </div>
-          <span className="text-sm font-medium flex-1">Delete account</span>
+          <span className="text-sm font-medium flex-1">{t("settings.delete_account")}</span>
         </button>
       </div>
 
