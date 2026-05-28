@@ -100,6 +100,7 @@ function HydrationPage() {
   };
 
   const add = (oz: number) => {
+    if (roundComplete) return;
     const beforeRound = Math.min(roundOunces, HYDRATION_GOAL_OZ);
     const afterRound = Math.min(HYDRATION_GOAL_OZ, roundOunces + oz);
     const xp = Math.max(
@@ -207,7 +208,8 @@ function HydrationPage() {
           <button
             key={oz}
             onClick={() => add(oz)}
-            className="h-20 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary font-semibold flex flex-col items-center justify-center gap-1 active:scale-[0.97] transition"
+            disabled={roundComplete}
+            className="h-20 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary font-semibold flex flex-col items-center justify-center gap-1 active:scale-[0.97] transition disabled:opacity-40 disabled:active:scale-100 disabled:cursor-not-allowed"
           >
             <Droplet className="size-4" />
             <span className="text-lg leading-none">{oz}</span>
