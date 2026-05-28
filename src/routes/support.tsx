@@ -42,11 +42,11 @@ function SupportPage() {
         <p className="text-sm text-muted-foreground leading-relaxed">
           {t("support.body_pre")}
           <a
-            href="mailto:test@test.com"
-            className="font-medium text-primary hover:underline"
-          >
-            test@test.com
-          </a>
+          href="mailto:andrespanameno89@gmail.com"
+          className="font-medium text-primary hover:underline"
+        >
+          andrespanameno89@gmail.com
+        </a>
           {t("support.body_post")}
         </p>
       </div>
