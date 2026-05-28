@@ -232,6 +232,35 @@ function SessionPage() {
           </div>
         </div>
 
+        {/* Visual reference for the current movement */}
+        {current.movement.category === "breath-calm" ? (
+          <MovementVisual movementId={current.movement.id} running={running} />
+        ) : (
+          (() => {
+            const imageUrl = getMovementImage(current.movement.id);
+            return (
+              <div className="mb-6 rounded-2xl overflow-hidden bg-background/60 ring-1 ring-black/5 flex items-center justify-center min-h-40 sm:min-h-48">
+                {imageUrl && !imgFailed ? (
+                  <img
+                    src={imageUrl}
+                    alt={current.movement.title}
+                    loading="lazy"
+                    onError={() => setImgFailed(true)}
+                    className="w-full h-40 sm:h-48 object-contain"
+                  />
+                ) : (
+                  <div className="h-40 sm:h-48 w-full flex flex-col items-center justify-center gap-2 text-muted-foreground/80 px-4">
+                    <div className={cn("size-12 rounded-2xl flex items-center justify-center", current.movement.tint)}>
+                      <Icon className="size-5" />
+                    </div>
+                    <p className="text-xs font-medium text-center">{current.movement.title}</p>
+                  </div>
+                )}
+              </div>
+            );
+          })()
+        )}
+
         {/* Big timer */}
         <div className="flex flex-col items-center py-4">
           <div className="text-5xl font-semibold tabular-nums mb-3">{format(remaining)}</div>
