@@ -43,34 +43,22 @@ const STEPS: Step[] = [
   },
 ];
 
-function storageKey(userId: string) {
-  return `mm-tutorial-seen:${userId}`;
-}
-
 export function FirstTimeTutorial() {
   const { user } = useAuth();
-  const { profile } = useProfile();
+  const { profile, updateProfile } = useProfile();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
 
   useEffect(() => {
     if (!user || !profile?.onboarding_completed) return;
-    try {
-      if (localStorage.getItem(storageKey(user.id))) return;
-    } catch {
-      return;
-    }
+    if (profile.tutorial_seen) return;
     setOpen(true);
     setStep(0);
-  }, [user, profile?.onboarding_completed]);
+  }, [user, profile?.onboarding_completed, profile?.tutorial_seen]);
 
-  const close = () => {
+  const close = async () => {
     if (user) {
-      try {
-        localStorage.setItem(storageKey(user.id), "1");
-      } catch {
-        /* ignore */
-      }
+      await updateProfile({ tutorial_seen: true });
     }
     setOpen(false);
   };
