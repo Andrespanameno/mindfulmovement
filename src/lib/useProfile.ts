@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useSyncExternalStore } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 
@@ -19,32 +19,62 @@ export type ProfileUpdate = Partial<
   Pick<Profile, "full_name" | "fitness_level" | "work_style" | "lifestyle" | "wellness_goals" | "daily_water_goal" | "preferred_categories" | "onboarding_completed">
 >;
 
+// Shared module-level store so every useProfile() consumer (AuthGate,
+// onboarding, home, etc.) sees the same profile state. Without this,
+// onboarding's local updateProfile() does not propagate to AuthGate, which
+// then re-reads stale onboarding_completed=false and bounces the user back
+// to /onboarding after they finish the final step.
+type State = {
+  profile: Profile | null;
+  loading: boolean;
+  error: string | null;
+  userId: string | null;
+};
+
+let state: State = { profile: null, loading: true, error: null, userId: null };
+const listeners = new Set<() => void>();
+
+function setState(patch: Partial<State>) {
+  state = { ...state, ...patch };
+  listeners.forEach((l) => l());
+}
+
+function subscribe(cb: () => void) {
+  listeners.add(cb);
+  return () => listeners.delete(cb);
+}
+
+async function loadFor(userId: string | null) {
+  if (!userId) {
+    setState({ profile: null, loading: false, error: null, userId: null });
+    return;
+  }
+  setState({ loading: true, userId });
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
+    .maybeSingle();
+  if (error) setState({ error: error.message, loading: false });
+  else setState({ profile: data as Profile | null, loading: false, error: null });
+}
+
 export function useProfile() {
   const { user } = useAuth();
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const load = useCallback(async () => {
-    if (!user) {
-      setProfile(null);
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .maybeSingle();
-    if (error) setError(error.message);
-    else setProfile(data as Profile | null);
-    setLoading(false);
-  }, [user]);
+  const snapshot = useSyncExternalStore(
+    subscribe,
+    () => state,
+    () => state,
+  );
 
   useEffect(() => {
-    load();
-  }, [load]);
+    const uid = user?.id ?? null;
+    if (state.userId !== uid) {
+      loadFor(uid);
+    }
+  }, [user]);
+
+  const reload = useCallback(() => loadFor(user?.id ?? null), [user]);
 
   const updateProfile = useCallback(
     async (patch: ProfileUpdate) => {
@@ -56,11 +86,17 @@ export function useProfile() {
         .select()
         .maybeSingle();
       if (error) return { error: error.message };
-      setProfile(data as Profile);
+      setState({ profile: data as Profile });
       return { error: null };
     },
     [user],
   );
 
-  return { profile, loading, error, reload: load, updateProfile };
+  return {
+    profile: snapshot.profile,
+    loading: snapshot.loading,
+    error: snapshot.error,
+    reload,
+    updateProfile,
+  };
 }
