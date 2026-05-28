@@ -9,6 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { InspirationCard } from "@/components/mm/InspirationCard";
 import { useI18n } from "@/lib/i18n";
+import { MovementVisual } from "@/components/mm/MovementVisual";
+import { getMovementImage } from "@/lib/movementImages";
 
 export const Route = createFileRoute("/session")({
   head: () => ({
@@ -40,6 +42,12 @@ function SessionPage() {
   const [confirmed, setConfirmed] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const loggedRef = useRef<Set<string>>(new Set());
+  const [imgFailed, setImgFailed] = useState(false);
+
+  // Reset image error state when the current step changes
+  useEffect(() => {
+    setImgFailed(false);
+  }, [index]);
 
   // Rebuild when profile loads (if initial render had no prefs yet).
   useEffect(() => {
@@ -223,6 +231,35 @@ function SessionPage() {
             </p>
           </div>
         </div>
+
+        {/* Visual reference for the current movement */}
+        {current.movement.category === "breath-calm" ? (
+          <MovementVisual movementId={current.movement.id} running={running} />
+        ) : (
+          (() => {
+            const imageUrl = getMovementImage(current.movement.id);
+            return (
+              <div className="mb-6 rounded-2xl overflow-hidden bg-background/60 ring-1 ring-black/5 flex items-center justify-center min-h-40 sm:min-h-48">
+                {imageUrl && !imgFailed ? (
+                  <img
+                    src={imageUrl}
+                    alt={current.movement.title}
+                    loading="lazy"
+                    onError={() => setImgFailed(true)}
+                    className="w-full h-40 sm:h-48 object-contain"
+                  />
+                ) : (
+                  <div className="h-40 sm:h-48 w-full flex flex-col items-center justify-center gap-2 text-muted-foreground/80 px-4">
+                    <div className={cn("size-12 rounded-2xl flex items-center justify-center", current.movement.tint)}>
+                      <Icon className="size-5" />
+                    </div>
+                    <p className="text-xs font-medium text-center">{current.movement.title}</p>
+                  </div>
+                )}
+              </div>
+            );
+          })()
+        )}
 
         {/* Big timer */}
         <div className="flex flex-col items-center py-4">
