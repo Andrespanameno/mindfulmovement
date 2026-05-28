@@ -31,6 +31,10 @@ export function MovementCard({ movement, variant = "full" }: Props) {
   const imageUrl = getMovementImage(movement.id);
   const [imgFailed, setImgFailed] = useState(false);
 
+  useEffect(() => {
+    setImgFailed(false);
+  }, [movement.id, imageUrl]);
+
   const totalSeconds = Math.max(1, Math.round(movement.duration * 60));
   const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
   const [running, setRunning] = useState(false);
@@ -208,8 +212,8 @@ export function MovementCard({ movement, variant = "full" }: Props) {
         {instr}
       </p>
 
-      {imageUrl && !imgFailed && (
-        <div className="mb-4 rounded-2xl overflow-hidden bg-background/60 ring-1 ring-black/5 flex items-center justify-center">
+      <div className="mb-4 rounded-2xl overflow-hidden bg-background/60 ring-1 ring-black/5 flex items-center justify-center min-h-48 sm:min-h-56">
+        {imageUrl && !imgFailed ? (
           <img
             src={imageUrl}
             alt={title}
@@ -217,8 +221,15 @@ export function MovementCard({ movement, variant = "full" }: Props) {
             onError={() => setImgFailed(true)}
             className="w-full h-48 sm:h-56 object-contain"
           />
-        </div>
-      )}
+        ) : (
+          <div className="h-48 sm:h-56 w-full flex flex-col items-center justify-center gap-2 text-muted-foreground/80 px-4">
+            <div className={cn("size-12 rounded-2xl flex items-center justify-center", movement.tint)}>
+              <Icon className="size-5" />
+            </div>
+            <p className="text-xs font-medium text-center">{title}</p>
+          </div>
+        )}
+      </div>
 
       <MovementVisual movementId={movement.id} running={running} />
 
