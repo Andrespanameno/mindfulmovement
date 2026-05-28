@@ -55,11 +55,11 @@ function SettingsPage() {
       } catch {
         // ignore
       }
-      toast.success("Account deleted");
+      toast.success(t("settings.delete_success"));
       navigate({ to: "/", replace: true });
     } catch (err) {
       const message = err instanceof Error ? err.message : "Something went wrong";
-      toast.error(`Could not delete account: ${message}`);
+      toast.error(t("settings.delete_error", { message }));
       setDeleting(false);
       setConfirmOpen(false);
     }
