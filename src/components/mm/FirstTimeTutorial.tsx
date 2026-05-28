@@ -57,10 +57,15 @@ export function FirstTimeTutorial() {
   }, [user, profile?.onboarding_completed, profile?.tutorial_seen]);
 
   const close = async () => {
-    if (user) {
-      await updateProfile({ tutorial_seen: true });
-    }
+    // Close immediately so a slow/failed backend write never traps the user.
     setOpen(false);
+    if (user) {
+      try {
+        await updateProfile({ tutorial_seen: true });
+      } catch (err) {
+        console.error("[tutorial] failed to persist tutorial_seen", err);
+      }
+    }
   };
 
   if (!open) return null;

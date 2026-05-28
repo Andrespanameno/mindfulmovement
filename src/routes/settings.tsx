@@ -67,7 +67,14 @@ function SettingsPage() {
 
   const handleReplayTutorial = async () => {
     setReplaying(true);
-    await updateProfile({ tutorial_seen: false });
+    try {
+      await updateProfile({ tutorial_seen: false });
+    } catch (err) {
+      console.error("[settings] replay tutorial failed", err);
+      toast.error("Could not reset the tour. Please try again.");
+      setReplaying(false);
+      return;
+    }
     setReplaying(false);
     navigate({ to: "/home", replace: true });
   };
