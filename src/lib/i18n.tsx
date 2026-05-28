@@ -28,6 +28,43 @@ const dict: Record<string, { en: string; es: string }> = {
   "common.one_moment": { en: "One moment…", es: "Un momento…" },
   "common.language": { en: "Language", es: "Idioma" },
 
+  "tutorial.aria": { en: "Welcome tour", es: "Recorrido de bienvenida" },
+  "tutorial.skip_aria": { en: "Skip tour", es: "Omitir recorrido" },
+  "tutorial.skip": { en: "Skip", es: "Omitir" },
+  "tutorial.next": { en: "Next", es: "Siguiente" },
+  "tutorial.got_it": { en: "Got it", es: "Entendido" },
+  "tutorial.step_of": { en: "{a} of {b}", es: "{a} de {b}" },
+  "tutorial.guided.title": { en: "Guided sessions", es: "Sesiones guiadas" },
+  "tutorial.guided.body": {
+    en: "Your guided sessions help you reset, move, and recharge in just a few minutes throughout the day.",
+    es: "Tus sesiones guiadas te ayudan a reiniciar, moverte y recargar energías en pocos minutos a lo largo del día.",
+  },
+  "tutorial.xp.title": { en: "XP & leveling", es: "XP y niveles" },
+  "tutorial.xp.body": {
+    en: "Completing movements earns XP. Levels are a gentle reflection of your consistency over time.",
+    es: "Completar movimientos te da XP. Los niveles son un reflejo suave de tu constancia con el tiempo.",
+  },
+  "tutorial.hydration.title": { en: "Hydration goal", es: "Meta de hidratación" },
+  "tutorial.hydration.body": {
+    en: "Log water through the day to build a steady hydration habit, sip by sip.",
+    es: "Registra el agua durante el día para crear un hábito constante de hidratación, sorbo a sorbo.",
+  },
+  "tutorial.move.title": { en: "Movement tab", es: "Pestaña de movimiento" },
+  "tutorial.move.body": {
+    en: "Tap here to explore all movements, stretches, breathing exercises, and resets.",
+    es: "Toca aquí para explorar todos los movimientos, estiramientos, ejercicios de respiración y reinicios.",
+  },
+  "tutorial.progress.title": { en: "Progress tab", es: "Pestaña de progreso" },
+  "tutorial.progress.body": {
+    en: "Track your weekly and monthly progress: consistency, movement, hydration, and milestones.",
+    es: "Sigue tu progreso semanal y mensual: constancia, movimiento, hidratación y logros.",
+  },
+  "tutorial.profile.title": { en: "Profile", es: "Perfil" },
+  "tutorial.profile.body": {
+    en: "Manage your preferences, reminders, language, and settings anytime.",
+    es: "Gestiona tus preferencias, recordatorios, idioma y ajustes cuando quieras.",
+  },
+
   "nav.home": { en: "Home", es: "Inicio" },
   "nav.move": { en: "Move", es: "Mover" },
   "nav.progress": { en: "Progress", es: "Progreso" },
