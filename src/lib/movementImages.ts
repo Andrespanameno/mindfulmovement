@@ -6,7 +6,7 @@
 import { movements } from "@/lib/movements";
 
 const modules = import.meta.glob(
-  "@/assets/movements/*.{png,jpg,jpeg,webp,avif}",
+  "../assets/movements/*.{png,jpg,jpeg,webp,avif}",
   { eager: true, query: "?url", import: "default" },
 ) as Record<string, string>;
 
