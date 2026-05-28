@@ -9,6 +9,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { InspirationCard } from "@/components/mm/InspirationCard";
 import { useI18n } from "@/lib/i18n";
+import { MovementVisual } from "@/components/mm/MovementVisual";
+import { getMovementImage } from "@/lib/movementImages";
+import { useState as useReactState } from "react";
 
 export const Route = createFileRoute("/session")({
   head: () => ({
@@ -40,6 +43,12 @@ function SessionPage() {
   const [confirmed, setConfirmed] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const loggedRef = useRef<Set<string>>(new Set());
+  const [imgFailed, setImgFailed] = useState(false);
+
+  // Reset image error state when the current step changes
+  useEffect(() => {
+    setImgFailed(false);
+  }, [index]);
 
   // Rebuild when profile loads (if initial render had no prefs yet).
   useEffect(() => {
