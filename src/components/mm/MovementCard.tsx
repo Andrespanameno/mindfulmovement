@@ -31,6 +31,17 @@ export function MovementCard({ movement, variant = "full" }: Props) {
   const imageUrl = getMovementImage(movement.id);
   const [imgFailed, setImgFailed] = useState(false);
 
+  // Breathing movements that show only the animated visual, no static image
+  const BREATHING_NO_IMAGE = [
+    "box-breathing",
+    "4-7-8-breathing",
+    "shoulder-drop-breath",
+    "slow-nasal",
+    "tension-release-breath",
+    "mindful-breath-reset",
+  ];
+  const showImage = !BREATHING_NO_IMAGE.includes(movement.id);
+
   useEffect(() => {
     setImgFailed(false);
   }, [movement.id, imageUrl]);
