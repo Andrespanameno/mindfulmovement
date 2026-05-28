@@ -123,7 +123,19 @@ function SettingsPage() {
         {t("settings.version")}
       </p>
 
-      <div className="mt-6">
+      <div className="mt-6 space-y-3">
+        <button
+          type="button"
+          disabled={replaying}
+          onClick={handleReplayTutorial}
+          className="w-full rounded-2xl bg-card ring-1 ring-black/5 px-4 py-3.5 flex items-center gap-3 text-left hover:bg-secondary/40 transition-colors"
+        >
+          <div className="size-8 rounded-lg bg-secondary grid place-items-center">
+            <RotateCcw className="size-4" />
+          </div>
+          <span className="text-sm font-medium flex-1">{replaying ? "Preparing…" : "Replay welcome tour"}</span>
+        </button>
+
         <button
           type="button"
           onClick={() => setConfirmOpen(true)}
