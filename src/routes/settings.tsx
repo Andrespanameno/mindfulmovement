@@ -65,6 +65,13 @@ function SettingsPage() {
     }
   };
 
+  const handleReplayTutorial = async () => {
+    setReplaying(true);
+    await updateProfile({ tutorial_seen: false });
+    setReplaying(false);
+    navigate({ to: "/home", replace: true });
+  };
+
   const items = [
     { icon: Sparkles, label: t("settings.item.how"), to: "/how-it-works" },
     { icon: Shield, label: t("settings.item.privacy"), to: "/privacy" },
