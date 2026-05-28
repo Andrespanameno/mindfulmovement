@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/mm/ThemeToggle";
 import { useProfile } from "@/lib/useProfile";
 import { useAuth } from "@/lib/auth-context";
 import { InspirationCard } from "@/components/mm/InspirationCard";
+import { FirstTimeTutorial } from "@/components/mm/FirstTimeTutorial";
 import { useI18n } from "@/lib/i18n";
 
 function getGreetingKey() {
@@ -109,6 +110,7 @@ function HomePage() {
       </div>
 
       <InspirationCard placement="home_page" />
+      <FirstTimeTutorial />
     </AppShell>
   );
 }
