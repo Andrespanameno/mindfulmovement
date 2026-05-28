@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { ArrowLeft, Shield, FileText, ChevronRight, Sparkles, Trash2 } from "lucide-react";
+import { ArrowLeft, Shield, FileText, ChevronRight, Sparkles, Trash2, RotateCcw } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { useProfile } from "@/lib/useProfile";
 import { LanguageToggle } from "@/components/mm/LanguageToggle";
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
