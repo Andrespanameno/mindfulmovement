@@ -71,7 +71,7 @@ function SettingsPage() {
       await updateProfile({ tutorial_seen: false });
     } catch (err) {
       console.error("[settings] replay tutorial failed", err);
-      toast.error("Could not reset the tour. Please try again.");
+      toast.error(t("settings.replay_error"));
       setReplaying(false);
       return;
     }
