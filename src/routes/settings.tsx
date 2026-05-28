@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { ArrowLeft, Shield, FileText, ChevronRight, Sparkles, Trash2 } from "lucide-react";
+import { ArrowLeft, Shield, FileText, ChevronRight, Sparkles, Trash2, RotateCcw } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { useProfile } from "@/lib/useProfile";
 import { LanguageToggle } from "@/components/mm/LanguageToggle";
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
@@ -33,9 +34,11 @@ export const Route = createFileRoute("/settings")({
 function SettingsPage() {
   const { t } = useI18n();
   const navigate = useNavigate();
+  const { updateProfile } = useProfile();
   const runDelete = useServerFn(deleteAccount);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [replaying, setReplaying] = useState(false);
 
   const handleDelete = async () => {
     setDeleting(true);
@@ -60,6 +63,13 @@ function SettingsPage() {
       setDeleting(false);
       setConfirmOpen(false);
     }
+  };
+
+  const handleReplayTutorial = async () => {
+    setReplaying(true);
+    await updateProfile({ tutorial_seen: false });
+    setReplaying(false);
+    navigate({ to: "/home", replace: true });
   };
 
   const items = [
@@ -113,7 +123,19 @@ function SettingsPage() {
         {t("settings.version")}
       </p>
 
-      <div className="mt-6">
+      <div className="mt-6 space-y-3">
+        <button
+          type="button"
+          disabled={replaying}
+          onClick={handleReplayTutorial}
+          className="w-full rounded-2xl bg-card ring-1 ring-black/5 px-4 py-3.5 flex items-center gap-3 text-left hover:bg-secondary/40 transition-colors"
+        >
+          <div className="size-8 rounded-lg bg-secondary grid place-items-center">
+            <RotateCcw className="size-4" />
+          </div>
+          <span className="text-sm font-medium flex-1">{replaying ? "Preparing…" : "Replay welcome tour"}</span>
+        </button>
+
         <button
           type="button"
           onClick={() => setConfirmOpen(true)}

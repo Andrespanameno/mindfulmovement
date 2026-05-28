@@ -12,11 +12,12 @@ export interface Profile {
   daily_water_goal: number;
   preferred_categories: string[];
   onboarding_completed: boolean;
+  tutorial_seen: boolean;
   language: string;
 }
 
 export type ProfileUpdate = Partial<
-  Pick<Profile, "full_name" | "fitness_level" | "work_style" | "lifestyle" | "wellness_goals" | "daily_water_goal" | "preferred_categories" | "onboarding_completed">
+  Pick<Profile, "full_name" | "fitness_level" | "work_style" | "lifestyle" | "wellness_goals" | "daily_water_goal" | "preferred_categories" | "onboarding_completed" | "tutorial_seen">
 >;
 
 // Shared module-level store so every useProfile() consumer (AuthGate,
