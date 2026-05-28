@@ -100,6 +100,7 @@ function HydrationPage() {
   };
 
   const add = (oz: number) => {
+    if (roundComplete) return;
     const beforeRound = Math.min(roundOunces, HYDRATION_GOAL_OZ);
     const afterRound = Math.min(HYDRATION_GOAL_OZ, roundOunces + oz);
     const xp = Math.max(
