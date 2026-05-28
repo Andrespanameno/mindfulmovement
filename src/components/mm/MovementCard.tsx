@@ -31,6 +31,17 @@ export function MovementCard({ movement, variant = "full" }: Props) {
   const imageUrl = getMovementImage(movement.id);
   const [imgFailed, setImgFailed] = useState(false);
 
+  // Breathing movements that show only the animated visual, no static image
+  const BREATHING_NO_IMAGE = [
+    "box-breathing",
+    "4-7-8-breathing",
+    "shoulder-drop-breath",
+    "slow-nasal",
+    "tension-release-breath",
+    "mindful-breath-reset",
+  ];
+  const showImage = !BREATHING_NO_IMAGE.includes(movement.id);
+
   useEffect(() => {
     setImgFailed(false);
   }, [movement.id, imageUrl]);
@@ -212,24 +223,26 @@ export function MovementCard({ movement, variant = "full" }: Props) {
         {instr}
       </p>
 
-      <div className="mb-4 rounded-2xl overflow-hidden bg-background/60 ring-1 ring-black/5 flex items-center justify-center min-h-48 sm:min-h-56">
-        {imageUrl && !imgFailed ? (
-          <img
-            src={imageUrl}
-            alt={title}
-            loading="lazy"
-            onError={() => setImgFailed(true)}
-            className="w-full h-48 sm:h-56 object-contain"
-          />
-        ) : (
-          <div className="h-48 sm:h-56 w-full flex flex-col items-center justify-center gap-2 text-muted-foreground/80 px-4">
-            <div className={cn("size-12 rounded-2xl flex items-center justify-center", movement.tint)}>
-              <Icon className="size-5" />
+      {showImage && (
+        <div className="mb-4 rounded-2xl overflow-hidden bg-background/60 ring-1 ring-black/5 flex items-center justify-center min-h-48 sm:min-h-56">
+          {imageUrl && !imgFailed ? (
+            <img
+              src={imageUrl}
+              alt={title}
+              loading="lazy"
+              onError={() => setImgFailed(true)}
+              className="w-full h-48 sm:h-56 object-contain"
+            />
+          ) : (
+            <div className="h-48 sm:h-56 w-full flex flex-col items-center justify-center gap-2 text-muted-foreground/80 px-4">
+              <div className={cn("size-12 rounded-2xl flex items-center justify-center", movement.tint)}>
+                <Icon className="size-5" />
+              </div>
+              <p className="text-xs font-medium text-center">{title}</p>
             </div>
-            <p className="text-xs font-medium text-center">{title}</p>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       <MovementVisual movementId={movement.id} running={running} />
 
