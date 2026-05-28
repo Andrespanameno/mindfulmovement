@@ -34,9 +34,11 @@ export const Route = createFileRoute("/settings")({
 function SettingsPage() {
   const { t } = useI18n();
   const navigate = useNavigate();
+  const { updateProfile } = useProfile();
   const runDelete = useServerFn(deleteAccount);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [replaying, setReplaying] = useState(false);
 
   const handleDelete = async () => {
     setDeleting(true);
