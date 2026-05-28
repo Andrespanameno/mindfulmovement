@@ -1,14 +1,14 @@
 import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
-import { hydrateHistory, HYDRATION_GOAL_OZ } from "@/lib/useSessionStore";
+import { hydrateHistory, HYDRATION_GOAL_OZ, localDateKey } from "@/lib/useSessionStore";
 import type { DailyEntry } from "@/lib/useSessionStore";
 
 const LOOKBACK_DAYS = 90;
 
 function dateKey(d: Date | string) {
   const dt = typeof d === "string" ? new Date(d) : d;
-  return dt.toISOString().slice(0, 10);
+  return localDateKey(dt);
 }
 
 function emptyDay(date: string): DailyEntry {

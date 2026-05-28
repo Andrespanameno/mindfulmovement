@@ -45,17 +45,24 @@ export interface SessionState {
   lastHydrationAdd: number;
 }
 
-const today = () => new Date().toISOString().slice(0, 10);
+function localDateKey(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+const today = () => localDateKey(new Date());
 const yesterday = () => {
   const d = new Date();
   d.setDate(d.getDate() - 1);
-  return d.toISOString().slice(0, 10);
+  return localDateKey(d);
 };
 const daysAgo = (n: number) => {
   const d = new Date();
   d.setDate(d.getDate() - n);
-  return d.toISOString().slice(0, 10);
+  return localDateKey(d);
 };
+export { localDateKey };
 
 function seedHistory(): Record<string, DailyEntry> {
   const h: Record<string, DailyEntry> = {};
