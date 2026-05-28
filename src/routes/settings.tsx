@@ -158,14 +158,13 @@ function SettingsPage() {
       <AlertDialog open={confirmOpen} onOpenChange={(o) => !deleting && setConfirmOpen(o)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+            <AlertDialogTitle>{t("settings.delete_confirm_title")}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently remove your profile, progress, hydration history,
-              streaks, XP, and saved data. This action cannot be undone.
+              {t("settings.delete_confirm_desc")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleting}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               disabled={deleting}
               onClick={(e) => {
@@ -174,7 +173,7 @@ function SettingsPage() {
               }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {deleting ? "Deleting…" : "Delete account"}
+              {deleting ? t("settings.deleting") : t("settings.delete_action")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
