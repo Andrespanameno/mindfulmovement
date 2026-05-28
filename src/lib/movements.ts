@@ -293,10 +293,13 @@ export interface SessionStep {
 export function buildGuidedSession(
   preferredCategories: string[] | null | undefined,
 ): SessionStep[] {
-  const prefs =
-    preferredCategories && preferredCategories.length > 0
-      ? preferredCategories
-      : ALL_CATEGORY_IDS;
+  const hasPrefs = !!(preferredCategories && preferredCategories.length > 0);
+  // When the user has no explicit preferences, fall back to every category
+  // EXCEPT parent-friendly — those movements only make sense for users whose
+  // lifestyle includes parenting (their lifestyle preset will include it).
+  const prefs = hasPrefs
+    ? preferredCategories!
+    : ALL_CATEGORY_IDS.filter((c) => c !== "parent-friendly");
 
   const pool = movements.filter((mv) => prefs.includes(mv.category));
   const safe = pool.length > 0 ? pool : movements;
