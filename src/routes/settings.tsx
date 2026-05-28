@@ -55,11 +55,11 @@ function SettingsPage() {
       } catch {
         // ignore
       }
-      toast.success("Account deleted");
+      toast.success(t("settings.delete_success"));
       navigate({ to: "/", replace: true });
     } catch (err) {
       const message = err instanceof Error ? err.message : "Something went wrong";
-      toast.error(`Could not delete account: ${message}`);
+      toast.error(t("settings.delete_error", { message }));
       setDeleting(false);
       setConfirmOpen(false);
     }
@@ -71,7 +71,7 @@ function SettingsPage() {
       await updateProfile({ tutorial_seen: false });
     } catch (err) {
       console.error("[settings] replay tutorial failed", err);
-      toast.error("Could not reset the tour. Please try again.");
+      toast.error(t("settings.replay_error"));
       setReplaying(false);
       return;
     }
@@ -140,7 +140,7 @@ function SettingsPage() {
           <div className="size-8 rounded-lg bg-secondary grid place-items-center">
             <RotateCcw className="size-4" />
           </div>
-          <span className="text-sm font-medium flex-1">{replaying ? "Preparing…" : "Replay welcome tour"}</span>
+          <span className="text-sm font-medium flex-1">{replaying ? t("settings.replay_preparing") : t("settings.replay_tour")}</span>
         </button>
 
         <button
@@ -151,21 +151,20 @@ function SettingsPage() {
           <div className="size-8 rounded-lg bg-destructive/10 grid place-items-center">
             <Trash2 className="size-4" />
           </div>
-          <span className="text-sm font-medium flex-1">Delete account</span>
+          <span className="text-sm font-medium flex-1">{t("settings.delete_account")}</span>
         </button>
       </div>
 
       <AlertDialog open={confirmOpen} onOpenChange={(o) => !deleting && setConfirmOpen(o)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+            <AlertDialogTitle>{t("settings.delete_confirm_title")}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently remove your profile, progress, hydration history,
-              streaks, XP, and saved data. This action cannot be undone.
+              {t("settings.delete_confirm_desc")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleting}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               disabled={deleting}
               onClick={(e) => {
@@ -174,7 +173,7 @@ function SettingsPage() {
               }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {deleting ? "Deleting…" : "Delete account"}
+              {deleting ? t("settings.deleting") : t("settings.delete_action")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
