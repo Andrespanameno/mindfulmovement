@@ -140,7 +140,7 @@ function SettingsPage() {
           <div className="size-8 rounded-lg bg-secondary grid place-items-center">
             <RotateCcw className="size-4" />
           </div>
-          <span className="text-sm font-medium flex-1">{replaying ? "Preparing…" : "Replay welcome tour"}</span>
+          <span className="text-sm font-medium flex-1">{replaying ? t("settings.replay_preparing") : t("settings.replay_tour")}</span>
         </button>
 
         <button
