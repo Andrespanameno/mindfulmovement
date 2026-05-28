@@ -15,6 +15,7 @@ import {
   HYDRATION_GOAL_OZ,
   HYDRATION_XP_PER_8OZ,
   QUICK_ADDS_OZ,
+  localDateKey,
 } from "@/lib/useSessionStore";
 
 export const Route = createFileRoute("/hydration")({
@@ -31,7 +32,7 @@ function HydrationPage() {
   const { t } = useI18n();
   const { ouncesToday, lastHydrationAdd, remindersEnabled, reminderIntervalMin, lastReminderAt } =
     useSessionStore();
-  const todayKey = new Date().toISOString().slice(0, 10);
+  const todayKey = localDateKey(new Date());
   const baselineStorageKey = `mm-hydration-baseline-${todayKey}`;
   const roundsStorageKey = `mm-hydration-rounds-${todayKey}`;
   const [bonusBaseline, setBonusBaseline] = useState<number>(() => {
