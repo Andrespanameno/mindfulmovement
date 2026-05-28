@@ -11,7 +11,6 @@ import { InspirationCard } from "@/components/mm/InspirationCard";
 import { useI18n } from "@/lib/i18n";
 import { MovementVisual } from "@/components/mm/MovementVisual";
 import { getMovementImage } from "@/lib/movementImages";
-import { useState as useReactState } from "react";
 
 export const Route = createFileRoute("/session")({
   head: () => ({
