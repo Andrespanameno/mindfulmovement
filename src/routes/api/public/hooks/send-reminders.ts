@@ -6,7 +6,7 @@ const MOVEMENT = [
   "Time for a quick movement reset?",
   "Let's stand and stretch for a minute.",
   "Movement helps reset the mind.",
-  "Roll your shoulders — slow and easy.",
+  "Roll your shoulders, slow and easy.",
   "A small walk now will feel great later.",
 ];
 const HYDRATION = [
