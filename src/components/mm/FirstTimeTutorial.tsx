@@ -3,49 +3,27 @@ import { Sparkles, Award, Droplet, Compass, TrendingUp, User, X, ArrowRight } fr
 import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 type Step = {
   icon: typeof Sparkles;
-  title: string;
-  body: string;
+  titleKey: string;
+  bodyKey: string;
 };
 
 const STEPS: Step[] = [
-  {
-    icon: Sparkles,
-    title: "Guided sessions",
-    body: "Your guided sessions help you reset, move, and recharge in just a few minutes throughout the day.",
-  },
-  {
-    icon: Award,
-    title: "XP & leveling",
-    body: "Completing movements earns XP. Levels are a gentle reflection of your consistency over time.",
-  },
-  {
-    icon: Droplet,
-    title: "Hydration goal",
-    body: "Log water through the day to build a steady hydration habit, sip by sip.",
-  },
-  {
-    icon: Compass,
-    title: "Movement tab",
-    body: "Tap here to explore all movements, stretches, breathing exercises, and resets.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Progress tab",
-    body: "Track your weekly and monthly progress: consistency, movement, hydration, and milestones.",
-  },
-  {
-    icon: User,
-    title: "Profile",
-    body: "Manage your preferences, reminders, language, and settings anytime.",
-  },
+  { icon: Sparkles, titleKey: "tutorial.guided.title", bodyKey: "tutorial.guided.body" },
+  { icon: Award, titleKey: "tutorial.xp.title", bodyKey: "tutorial.xp.body" },
+  { icon: Droplet, titleKey: "tutorial.hydration.title", bodyKey: "tutorial.hydration.body" },
+  { icon: Compass, titleKey: "tutorial.move.title", bodyKey: "tutorial.move.body" },
+  { icon: TrendingUp, titleKey: "tutorial.progress.title", bodyKey: "tutorial.progress.body" },
+  { icon: User, titleKey: "tutorial.profile.title", bodyKey: "tutorial.profile.body" },
 ];
 
 export function FirstTimeTutorial() {
   const { user } = useAuth();
   const { profile, updateProfile } = useProfile();
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
 
@@ -71,25 +49,25 @@ export function FirstTimeTutorial() {
   if (!open) return null;
 
   const isLast = step === STEPS.length - 1;
-  const { icon: Icon, title, body } = STEPS[step];
+  const { icon: Icon, titleKey, bodyKey } = STEPS[step];
 
   return (
     <div
       className="fixed inset-0 z-[60] grid place-items-end sm:place-items-center bg-foreground/30 backdrop-blur-sm px-4 pb-6 sm:pb-0 animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
-      aria-label="Welcome tour"
+      aria-label={t("tutorial.aria")}
     >
       <div className="w-full max-w-[420px] rounded-3xl bg-card ring-1 ring-border shadow-2xl p-6 animate-in slide-in-from-bottom-4 duration-300">
         <div className="flex items-center justify-between mb-5">
           <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-            {step + 1} of {STEPS.length}
+            {t("tutorial.step_of", { a: step + 1, b: STEPS.length })}
           </p>
           <button
             type="button"
             onClick={close}
             className="size-8 grid place-items-center rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition"
-            aria-label="Skip tour"
+            aria-label={t("tutorial.skip_aria")}
           >
             <X className="size-4" />
           </button>
@@ -99,9 +77,9 @@ export function FirstTimeTutorial() {
           <Icon className="size-6" strokeWidth={2} />
         </div>
 
-        <h2 className="text-lg font-semibold mb-2 text-balance">{title}</h2>
+        <h2 className="text-lg font-semibold mb-2 text-balance">{t(titleKey)}</h2>
         <p className="text-sm text-muted-foreground text-pretty leading-relaxed mb-6">
-          {body}
+          {t(bodyKey)}
         </p>
 
         <div className="flex items-center gap-1.5 mb-5">
@@ -122,16 +100,16 @@ export function FirstTimeTutorial() {
             onClick={close}
             className="text-xs text-muted-foreground hover:text-foreground transition px-2"
           >
-            Skip
+            {t("tutorial.skip")}
           </button>
           <button
             type="button"
             onClick={() => (isLast ? close() : setStep((s) => s + 1))}
             className="flex-1 h-11 rounded-xl bg-foreground text-background text-sm font-medium inline-flex items-center justify-center gap-2 transition"
           >
-            {isLast ? "Got it" : (
+            {isLast ? t("tutorial.got_it") : (
               <>
-                Next <ArrowRight className="size-4" />
+                {t("tutorial.next")} <ArrowRight className="size-4" />
               </>
             )}
           </button>
