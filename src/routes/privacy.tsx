@@ -58,8 +58,8 @@ function PrivacyPage() {
         </div>
         <p>
           {t("privacy.contact_pre")}
-          <a href="mailto:test@test.com" className="font-medium text-primary hover:underline">
-            test@test.com
+          <a href="mailto:andrespanameno89@gmail.com" className="font-medium text-primary hover:underline">
+            andrespanameno89@gmail.com
           </a>
           {t("privacy.contact_post")}
         </p>
