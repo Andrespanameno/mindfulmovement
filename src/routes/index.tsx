@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
 import { useI18n } from "@/lib/i18n";
 import { LanguageToggle } from "@/components/mm/LanguageToggle";
+import { ThemeToggle } from "@/components/mm/ThemeToggle";
 
 export const Route = createFileRoute("/")({
   head: () => ({
