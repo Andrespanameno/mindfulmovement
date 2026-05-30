@@ -28,6 +28,43 @@ function LoginPage() {
   const [fullName, setFullName] = useState("");
   const [busy, setBusy] = useState(false);
 
+  const setEmailValidity = (input: HTMLInputElement) => {
+    const v = input.validity;
+    if (v.valueMissing) {
+      input.setCustomValidity(t("auth.validation.email_required"));
+    } else if (v.typeMismatch) {
+      // Distinguish "no @" vs "nothing after @"
+      const val = input.value;
+      const atIdx = val.indexOf("@");
+      if (atIdx >= 0 && atIdx === val.length - 1) {
+        input.setCustomValidity(t("auth.validation.email_incomplete"));
+      } else {
+        input.setCustomValidity(t("auth.validation.email_invalid"));
+      }
+    } else {
+      input.setCustomValidity("");
+    }
+  };
+
+  const setPasswordValidity = (input: HTMLInputElement) => {
+    const v = input.validity;
+    if (v.valueMissing) {
+      input.setCustomValidity(t("auth.validation.password_required"));
+    } else if (v.tooShort) {
+      input.setCustomValidity(t("auth.validation.password_short"));
+    } else {
+      input.setCustomValidity("");
+    }
+  };
+
+  const setNameValidity = (input: HTMLInputElement) => {
+    if (input.validity.valueMissing) {
+      input.setCustomValidity(t("auth.validation.name_required"));
+    } else {
+      input.setCustomValidity("");
+    }
+  };
+
   const titles: Record<Mode, { title: string; sub: string; cta: string }> = {
     signin: { title: t("auth.signin.title"), sub: t("auth.signin.sub"), cta: t("auth.signin.cta") },
     signup: { title: t("auth.signup.title"), sub: t("auth.signup.sub"), cta: t("auth.signup.cta") },
