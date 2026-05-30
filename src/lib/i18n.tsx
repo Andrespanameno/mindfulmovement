@@ -73,7 +73,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "auth.signin.title": { en: "Welcome back to your center", es: "Bienvenido de nuevo a tu centro" },
   "auth.signin.sub": { en: "Take a deep breath. Let's start your day with intention.", es: "Respira profundo. Empecemos el día con intención." },
   "auth.signin.cta": { en: "Enter your space", es: "Entrar a tu espacio" },
-  "auth.signup.title": { en: "Begin your gentle journey", es: "Comienza tu camino tranquilo" },
+  "auth.signup.title": { en: "Begin your gentle journey", es: "Comienza tu proceso tranquilo" },
   "auth.signup.sub": { en: "Small actions create big change. Create your space.", es: "Las acciones pequeñas crean grandes cambios. Crea tu espacio." },
   "auth.signup.cta": { en: "Create account", es: "Crear cuenta" },
   "auth.forgot.title": { en: "Let's get you back in", es: "Vamos a recuperar tu acceso" },
