@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
 import { useI18n } from "@/lib/i18n";
 import { LanguageToggle } from "@/components/mm/LanguageToggle";
+import { ThemeToggle } from "@/components/mm/ThemeToggle";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -70,7 +71,10 @@ function LoginPage() {
           <div className="size-12 bg-primary/25 rounded-2xl flex items-center justify-center">
             <div className="size-4 rounded-full bg-primary" />
           </div>
-          <LanguageToggle />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <LanguageToggle />
+          </div>
         </div>
         <h1 className="text-3xl font-semibold leading-tight text-balance mb-3">
           {tt.title}
