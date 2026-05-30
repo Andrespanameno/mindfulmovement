@@ -313,6 +313,9 @@ function OnboardingPage() {
                     );
                   })}
                 </div>
+                <p className="text-[11px] text-muted-foreground mt-3 leading-relaxed">
+                  {tr("onb.reminder_note")}
+                </p>
               </div>
             </div>
           )}
