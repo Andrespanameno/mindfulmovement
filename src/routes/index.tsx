@@ -132,6 +132,8 @@ function LoginPage() {
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Alex Rivera"
                 className="w-full h-12 px-4 rounded-xl bg-secondary/60 ring-1 ring-black/5 focus:ring-2 focus:ring-primary outline-none transition"
+                onInvalid={(e) => setNameValidity(e.currentTarget)}
+                onInput={(e) => setNameValidity(e.currentTarget)}
               />
             </div>
           )}
@@ -146,6 +148,8 @@ function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="hello@example.com"
               className="w-full h-12 px-4 rounded-xl bg-secondary/60 ring-1 ring-black/5 focus:ring-2 focus:ring-primary outline-none transition"
+              onInvalid={(e) => setEmailValidity(e.currentTarget)}
+              onInput={(e) => setEmailValidity(e.currentTarget)}
             />
           </div>
           {mode !== "forgot" && (
@@ -161,6 +165,8 @@ function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="w-full h-12 px-4 rounded-xl bg-secondary/60 ring-1 ring-black/5 focus:ring-2 focus:ring-primary outline-none transition"
+                onInvalid={(e) => setPasswordValidity(e.currentTarget)}
+                onInput={(e) => setPasswordValidity(e.currentTarget)}
               />
             </div>
           )}
