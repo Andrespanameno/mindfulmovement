@@ -89,6 +89,30 @@ const dict: Record<string, { en: string; es: string }> = {
   "auth.invalid": { en: "Invalid email or password.", es: "Correo o contraseña no válidos." },
   "auth.signup.success": { en: "Account created. Check your email to confirm, then sign in.", es: "Cuenta creada. Revisa tu correo para confirmar y luego inicia sesión." },
   "auth.reset.success": { en: "Reset link sent. Check your email.", es: "Enlace enviado. Revisa tu correo." },
+  "auth.validation.email_required": {
+    en: "Please enter your email address.",
+    es: "Por favor, introduce tu correo electrónico.",
+  },
+  "auth.validation.email_invalid": {
+    en: "Please enter a valid email address (e.g. name@example.com).",
+    es: "Por favor, introduce un correo electrónico válido (ej. nombre@ejemplo.com).",
+  },
+  "auth.validation.email_incomplete": {
+    en: "Please enter a part following '@'. Email is incomplete.",
+    es: "Por favor, introduce la parte que sigue después de '@'. El correo electrónico está incompleto.",
+  },
+  "auth.validation.password_required": {
+    en: "Please enter your password.",
+    es: "Por favor, introduce tu contraseña.",
+  },
+  "auth.validation.password_short": {
+    en: "Password must be at least 6 characters.",
+    es: "La contraseña debe tener al menos 6 caracteres.",
+  },
+  "auth.validation.name_required": {
+    en: "Please enter your name.",
+    es: "Por favor, introduce tu nombre.",
+  },
 
   "home.greeting.morning": { en: "Good morning, {name}", es: "Buenos días, {name}" },
   "home.greeting.afternoon": { en: "Good afternoon, {name}", es: "Buenas tardes, {name}" },
