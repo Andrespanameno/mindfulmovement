@@ -58,8 +58,8 @@ function TermsPage() {
         </div>
         <p>
           {t("terms.contact_pre")}
-          <a href="mailto:test@test.com" className="font-medium text-primary hover:underline">
-            test@test.com
+          <a href="mailto:andrespanameno89@gmail.com" className="font-medium text-primary hover:underline">
+            andrespanameno89@gmail.com
           </a>.
         </p>
       </div>
