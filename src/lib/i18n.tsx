@@ -140,7 +140,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "progress.this_month": { en: "This month", es: "Este mes" },
   "progress.highlights": { en: "Highlights", es: "Aspectos destacados" },
   "progress.active_days": { en: "Active days", es: "Días activos" },
-  "progress.active_days_hint": { en: "You showed up.", es: "Estuviste presente." },
+  "progress.active_days_hint": { en: "You showed up", es: "Estuviste presente" },
   "progress.sessions": { en: "Sessions", es: "Sesiones" },
   "progress.minutes": { en: "Minutes moved", es: "Minutos en movimiento" },
   "progress.minutes_hint_week": { en: "{h} hrs this week", es: "{h} h esta semana" },
