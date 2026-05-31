@@ -228,7 +228,7 @@ function OnboardingPage() {
                         key={c!.id}
                         className="text-[11px] px-2 py-0.5 rounded-full bg-background ring-1 ring-black/5"
                       >
-                        {c!.short}
+                        {content.categoryShort(c!.id, c!.short)}
                       </span>
                     ))}
                   </div>
