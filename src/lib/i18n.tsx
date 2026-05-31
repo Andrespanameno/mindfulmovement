@@ -47,7 +47,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "tutorial.hydration.title": { en: "Hydration goal", es: "Meta de hidratación" },
   "tutorial.hydration.body": {
     en: "Log water through the day to build a steady hydration habit, sip by sip.",
-    es: "Registra el agua durante el día para crear un hábito constante de hidratación, sorbo a sorbo.",
+    es: "Registra el tomar agua durante el día para crear un hábito constante de hidratación, sorbo a sorbo.",
   },
   "tutorial.move.title": { en: "Movement tab", es: "Pestaña de movimiento" },
   "tutorial.move.body": {
