@@ -15,6 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
+import { useContent } from "@/lib/i18n-content";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
