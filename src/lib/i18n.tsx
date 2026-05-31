@@ -226,7 +226,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "profile.best": { en: "Best: {n} days", es: "Mejor: {n} días" },
 
   "xp.level": { en: "Level {n}", es: "Nivel {n}" },
-  "xp.to_next": { en: "{a} / {b} XP to Level {n}", es: "{a} / {b} XP hasta el nivel {n}" },
+  "xp.to_next": { en: "{a} / {b} XP to Level {n}", es: "{a} / {b} XP para el nivel {n}" },
 
   "mv.cat_label": { en: "Category", es: "Categoría" },
   "mv.start": { en: "Start", es: "Empezar" },
