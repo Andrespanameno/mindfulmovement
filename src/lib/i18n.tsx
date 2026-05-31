@@ -376,7 +376,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "reminders.hydration": { en: "Hydration", es: "Hidratación" },
   "reminders.hydration_desc": { en: "Sip-by-sip check-ins.", es: "Pequeños sorbos a tu ritmo." },
   "reminders.breathing": { en: "Breathing", es: "Respiración" },
-  "reminders.breathing_desc": { en: "A few intentional breaths.", es: "Unas respiraciones conscientes." },
+  "reminders.breathing_desc": { en: "A few intentional breaths.", es: "Respiraciones conscientes." },
   "reminders.quiet_times": { en: "Quiet times", es: "Momentos en silencio" },
   "reminders.quiet_weekends": { en: "Quiet on weekends", es: "Silencio los fines de semana" },
   "reminders.no_nudges_weekend": { en: "No nudges Sat & Sun.", es: "Sin avisos sábado y domingo." },
