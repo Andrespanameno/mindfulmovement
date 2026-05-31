@@ -68,7 +68,7 @@ export const LEVEL_TITLES_ES: string[] = [
 ];
 
 export const XP_ENCOURAGEMENTS_ES: string[] = [
-  "Cada movimiento cuenta.",
+  "Cada movimiento cuenta",
   "Las acciones pequeñas crean grandes cambios.",
   "Estás creando impulso.",
   "Constancia sobre intensidad.",

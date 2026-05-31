@@ -66,7 +66,7 @@ const dict: Record<string, { en: string; es: string }> = {
   },
 
   "nav.home": { en: "Home", es: "Inicio" },
-  "nav.move": { en: "Move", es: "Mover" },
+  "nav.move": { en: "Move", es: "Movimiento" },
   "nav.progress": { en: "Progress", es: "Progreso" },
   "nav.profile": { en: "Profile", es: "Perfil" },
 
@@ -120,12 +120,12 @@ const dict: Record<string, { en: string; es: string }> = {
   "home.title": { en: "Today is a fresh start", es: "Hoy es un nuevo comienzo" },
   "home.guided.eyebrow": { en: "Guided session", es: "Sesión guiada" },
   "home.guided.title": { en: "Start a 5-minute reset", es: "Comienza un reinicio de 5 minutos" },
-  "home.guided.sub": { en: "A few gentle movements, timed for you.", es: "Unos movimientos suaves, con tu propio ritmo." },
+  "home.guided.sub": { en: "A few gentle movements, timed for you.", es: "Unos movimientos suaves, a tu propio ritmo." },
   "home.hydration.title": { en: "Hydration Goal", es: "Meta de hidratación" },
   "home.hydration.reached": { en: "Goal reached. Beautifully done.", es: "Meta lograda. Muy bien hecho." },
   "home.hydration.remaining": { en: "{n} oz to reach your mark.", es: "{n} oz para alcanzar tu meta." },
   "home.xp_today": { en: "XP Today", es: "XP de hoy" },
-  "home.xp_tip": { en: "Every movement counts.", es: "Cada movimiento cuenta." },
+  "home.xp_tip": { en: "Every movement counts.", es: "Cada movimiento cuenta" },
 
   "move.eyebrow": { en: "Today's invitation", es: "Tu invitación de hoy" },
   "move.title": { en: "Move a little", es: "Muévete un poco" },
@@ -226,7 +226,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "profile.best": { en: "Best: {n} days", es: "Mejor: {n} días" },
 
   "xp.level": { en: "Level {n}", es: "Nivel {n}" },
-  "xp.to_next": { en: "{a} / {b} XP to Level {n}", es: "{a} / {b} XP hasta el nivel {n}" },
+  "xp.to_next": { en: "{a} / {b} XP to Level {n}", es: "{a} / {b} XP para el nivel {n}" },
 
   "mv.cat_label": { en: "Category", es: "Categoría" },
   "mv.start": { en: "Start", es: "Empezar" },
