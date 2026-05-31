@@ -15,6 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
+import { useContent } from "@/lib/i18n-content";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -44,6 +45,7 @@ const INTERVALS: { value: ReminderSettings["intervalMin"]; labelKey: string }[] 
 
 function OnboardingPage() {
   const { t: tr } = useI18n();
+  const content = useContent();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { profile, loading, updateProfile } = useProfile();
@@ -201,9 +203,9 @@ function OnboardingPage() {
                       <Icon className="size-5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{label}</p>
+                      <p className="text-sm font-medium">{content.lifestyleLabel(id, label)}</p>
                       <p className="text-xs text-muted-foreground mt-0.5 text-pretty">
-                        {description}
+                        {content.lifestyleDesc(id, description)}
                       </p>
                     </div>
                     {selected && <Check className="size-4 text-primary shrink-0 mt-1" />}
@@ -250,7 +252,7 @@ function OnboardingPage() {
                         : "bg-card ring-black/5",
                     )}
                   >
-                    {g}
+                    {content.wellnessGoal(g)}
                   </button>
                 );
               })}
