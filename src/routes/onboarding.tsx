@@ -45,7 +45,7 @@ const INTERVALS: { value: ReminderSettings["intervalMin"]; labelKey: string }[] 
 
 function OnboardingPage() {
   const { t: tr } = useI18n();
-  const c = useContent();
+  const content = useContent();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { profile, loading, updateProfile } = useProfile();
