@@ -9,18 +9,18 @@ import { useI18n, type Lang } from "@/lib/i18n";
 export const LIFESTYLE_ES: Record<string, { label: string; description: string }> = {
   "office-desk": { label: "Trabajo de oficina", description: "Pensado para largos periodos sentado y frente a pantallas." },
   "remote-desk": { label: "Trabajo remoto de escritorio", description: "Recordatorios suaves para tus días de trabajo en casa." },
-  "stay-at-home-parent": { label: "Padre/madre en casa", description: "Movimiento que encaja con la crianza y las rutinas del hogar." },
-  "busy-parent-fulltime": { label: "Padre/madre y trabajo a tiempo completo", description: "Reinicios rápidos entre reuniones y familia." },
-  "active-on-feet": { label: "Trabajo activo / de pie", description: "Movimiento de recuperación y movilidad de apoyo." },
+  "stay-at-home-parent": { label: "Padre/madre en casa", description: "Movimientos que encajan con la crianza y las rutinas del hogar." },
+  "busy-parent-fulltime": { label: "Padre/madre y trabajo a tiempo completo", description: "Reinicios cortos entre reuniones y familia." },
+  "active-on-feet": { label: "Trabajo activo / de pie", description: "Movimiento de recuperación y movilidad." },
   "hybrid": { label: "Horario híbrido", description: "Se adapta a tus días en casa y en la oficina." },
   "student": { label: "Estudiante", description: "Pausas útiles entre clases y sesiones de estudio." },
-  "driver": { label: "Conductor frecuente", description: "Estiramientos y respiración para tiempo en la carretera." },
+  "driver": { label: "Conductor frecuente", description: "Estiramientos y respiración mientras en la carretera." },
   "shift-worker": { label: "Trabajo por turnos", description: "Recordatorios flexibles que siguen tus horarios cambiantes." },
   "healthcare": { label: "Personal de salud", description: "Reinicios rápidos entre rondas y turnos largos." },
-  "retail-hospitality": { label: "Retail / hostelería", description: "Momentos de recuperación para días de cara al público." },
+  "retail-hospitality": { label: "Retail / hostelería", description: "Momentos de recuperación para días largos atendiendo al público." },
   "fitness-beginner": { label: "Principiante en fitness", description: "Puntos de partida suaves para crear un hábito diario." },
   "retired-low-activity": { label: "Jubilado / actividad baja", description: "Movimiento suave y respiración consciente para días tranquilos." },
-  "general-busy": { label: "Estilo de vida ocupado", description: "Pequeños reinicios para días completos." },
+  "general-busy": { label: "Estilo de vida ocupado", description: "Pequeños reinicios para días largos." },
 };
 
 export const FITNESS_ES: Record<string, string> = {
