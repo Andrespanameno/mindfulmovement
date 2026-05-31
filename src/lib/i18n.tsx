@@ -52,7 +52,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "tutorial.move.title": { en: "Movement tab", es: "Pestaña de movimiento" },
   "tutorial.move.body": {
     en: "Tap here to explore all movements, stretches, breathing exercises, and resets.",
-    es: "Toca aquí para explorar todos los movimientos, estiramientos, ejercicios de respiración y reinicios.",
+    es: "Toca estas pestaña para explorar todos los movimientos, estiramientos, ejercicios de respiración y reinicios.",
   },
   "tutorial.progress.title": { en: "Progress tab", es: "Pestaña de progreso" },
   "tutorial.progress.body": {
