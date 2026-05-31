@@ -203,9 +203,9 @@ function OnboardingPage() {
                       <Icon className="size-5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{c.lifestyleLabel(id, label)}</p>
+                      <p className="text-sm font-medium">{content.lifestyleLabel(id, label)}</p>
                       <p className="text-xs text-muted-foreground mt-0.5 text-pretty">
-                        {c.lifestyleDesc(id, description)}
+                        {content.lifestyleDesc(id, description)}
                       </p>
                     </div>
                     {selected && <Check className="size-4 text-primary shrink-0 mt-1" />}
