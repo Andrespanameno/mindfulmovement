@@ -37,7 +37,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "tutorial.guided.title": { en: "Guided sessions", es: "Sesiones guiadas" },
   "tutorial.guided.body": {
     en: "Your guided sessions help you reset, move, and recharge in just a few minutes throughout the day.",
-    es: "Tus sesiones guiadas te ayudan a reiniciar, moverte y recargar energías en pocos minutos a lo largo del día.",
+    es: "Tus sesiones guiadas te ayudan a reiniciar, moverte y recargar energía en pocos minutos a lo largo del día.",
   },
   "tutorial.xp.title": { en: "XP & leveling", es: "XP y niveles" },
   "tutorial.xp.body": {
