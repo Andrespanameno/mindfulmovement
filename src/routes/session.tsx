@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { InspirationCard } from "@/components/mm/InspirationCard";
 import { useI18n } from "@/lib/i18n";
+import { useContent } from "@/lib/i18n-content";
 import { MovementVisual } from "@/components/mm/MovementVisual";
 import { getMovementImage } from "@/lib/movementImages";
 
@@ -30,6 +31,7 @@ function format(s: number) {
 
 function SessionPage() {
   const { t } = useI18n();
+  const content = useContent();
   const { profile } = useProfile();
   const navigate = useNavigate();
 
@@ -223,11 +225,13 @@ function SessionPage() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-              {current.movement.category}
+              {content.categoryLabel(current.movement.category, current.movement.category)}
             </p>
-            <h2 className="text-xl font-semibold leading-snug mb-1">{current.movement.title}</h2>
+            <h2 className="text-xl font-semibold leading-snug mb-1">
+              {content.movementTitle(current.movement.id, current.movement.title)}
+            </h2>
             <p className="text-sm text-muted-foreground text-pretty leading-relaxed">
-              {current.movement.description}
+              {content.movementDesc(current.movement.id, current.movement.description)}
             </p>
           </div>
         </div>
@@ -243,7 +247,7 @@ function SessionPage() {
                 {imageUrl && !imgFailed ? (
                   <img
                     src={imageUrl}
-                    alt={current.movement.title}
+                    alt={content.movementTitle(current.movement.id, current.movement.title)}
                     loading="lazy"
                     onError={() => setImgFailed(true)}
                     className="w-full h-40 sm:h-48 object-contain"
@@ -253,7 +257,9 @@ function SessionPage() {
                     <div className={cn("size-12 rounded-2xl flex items-center justify-center", current.movement.tint)}>
                       <Icon className="size-5" />
                     </div>
-                    <p className="text-xs font-medium text-center">{current.movement.title}</p>
+                    <p className="text-xs font-medium text-center">
+                      {content.movementTitle(current.movement.id, current.movement.title)}
+                    </p>
                   </div>
                 )}
               </div>
@@ -337,7 +343,9 @@ function SessionPage() {
                   <div className={cn("size-9 rounded-xl flex items-center justify-center", s.movement.tint)}>
                     <I className="size-4" />
                   </div>
-                  <span className="flex-1 text-sm">{s.movement.title}</span>
+                  <span className="flex-1 text-sm">
+                    {content.movementTitle(s.movement.id, s.movement.title)}
+                  </span>
                   <span className="text-xs text-muted-foreground tabular-nums">{format(s.seconds)}</span>
                 </li>
               );
