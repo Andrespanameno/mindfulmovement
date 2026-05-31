@@ -252,7 +252,7 @@ function OnboardingPage() {
                         : "bg-card ring-black/5",
                     )}
                   >
-                    {c.wellnessGoal(g)}
+                    {content.wellnessGoal(g)}
                   </button>
                 );
               })}
