@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/reset-password")({
 
 function ResetPasswordPage() {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<"loading" | "ready" | "invalid">("loading");
@@ -111,7 +113,7 @@ function ResetPasswordPage() {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("Password updated. Welcome back.");
+      toast.success(t("reset.success"));
       navigate({ to: "/home" });
     }
   };
@@ -122,29 +124,29 @@ function ResetPasswordPage() {
         <div className="size-12 bg-primary/25 rounded-2xl flex items-center justify-center mb-8">
           <div className="size-4 rounded-full bg-primary" />
         </div>
-        <h1 className="text-3xl font-semibold leading-tight mb-3">Set a new password</h1>
+        <h1 className="text-3xl font-semibold leading-tight mb-3">{t("reset.title")}</h1>
         <p className="text-base text-muted-foreground mb-10">
-          Choose something you'll remember. Small steps, fresh start.
+          {t("reset.sub")}
         </p>
 
         {status === "loading" && (
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <div className="size-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-            Verifying your reset link…
+            {t("reset.verifying")}
           </div>
         )}
 
         {status === "invalid" && (
           <div className="space-y-4">
             <p className="text-sm text-foreground">
-              This reset link is expired or invalid. Please request a new password reset link.
+              {t("reset.invalid")}
             </p>
             <button
               type="button"
               onClick={() => navigate({ to: "/" })}
               className="w-full h-12 bg-foreground text-background rounded-xl font-medium text-sm hover:opacity-90 transition"
             >
-              Back to sign in
+              {t("reset.back_signin")}
             </button>
           </div>
         )}
@@ -152,7 +154,7 @@ function ResetPasswordPage() {
         {status === "ready" && (
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-muted-foreground ml-1">New password</label>
+            <label className="text-xs font-medium text-muted-foreground ml-1">{t("reset.label")}</label>
             <input
               type="password"
               required
@@ -168,7 +170,7 @@ function ResetPasswordPage() {
             disabled={busy}
             className="w-full h-12 bg-foreground text-background rounded-xl font-medium text-sm hover:opacity-90 transition"
           >
-            {busy ? "Updating…" : "Update password"}
+            {busy ? t("reset.updating") : t("reset.submit")}
           </button>
         </form>
         )}

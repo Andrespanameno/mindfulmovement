@@ -261,7 +261,7 @@ function ProgressPage() {
           <span className="inline-flex items-center gap-1">
             <Flame className="size-3 text-accent" /> {t("progress.current_best", { c: session.streak, b: session.bestStreak })}
           </span>
-          <span>{t("progress.peak", { n: peakStreak })}</span>
+          <span>{t(peakStreak === 1 ? "progress.peak_one" : "progress.peak_other", { n: peakStreak })}</span>
         </div>
       </div>
 

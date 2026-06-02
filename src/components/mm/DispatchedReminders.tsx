@@ -2,14 +2,34 @@ import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
+import { useI18n } from "@/lib/i18n";
+import {
+  MOVEMENT_REMINDERS,
+  MOVEMENT_REMINDERS_ES,
+  HYDRATION_REMINDERS,
+  HYDRATION_REMINDERS_ES,
+  BREATH_REMINDERS,
+  BREATH_REMINDERS_ES,
+} from "@/lib/reminders";
 
 type Kind = "movement" | "hydration" | "breath";
 
-function titleFor(kind: Kind): string {
-  if (kind === "movement") return "Mindful Movement";
-  if (kind === "hydration") return "Hydration check";
-  return "Breath check";
+function buildEnToEsMap(): Record<string, string> {
+  const map: Record<string, string> = {};
+  const pairs: [string[], string[]][] = [
+    [MOVEMENT_REMINDERS, MOVEMENT_REMINDERS_ES],
+    [HYDRATION_REMINDERS, HYDRATION_REMINDERS_ES],
+    [BREATH_REMINDERS, BREATH_REMINDERS_ES],
+  ];
+  for (const [en, es] of pairs) {
+    en.forEach((s, i) => {
+      if (es[i]) map[s] = es[i];
+    });
+  }
+  return map;
 }
+
+const EN_TO_ES = buildEnToEsMap();
 
 /**
  * Subscribes to the user's `reminder_dispatches` rows and surfaces any
@@ -18,11 +38,23 @@ function titleFor(kind: Kind): string {
  */
 export function DispatchedReminders() {
   const { user } = useAuth();
+  const { t, lang } = useI18n();
   const seenRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     if (!user) return;
     seenRef.current = new Set();
+
+    const titleFor = (kind: Kind): string => {
+      if (kind === "movement") return t("notif.movement.title");
+      if (kind === "hydration") return t("notif.hydration.title");
+      return t("notif.breath.title");
+    };
+
+    const localizeMessage = (msg: string): string => {
+      if (lang !== "es" || !msg) return msg;
+      return EN_TO_ES[msg] ?? msg;
+    };
 
     const surface = async (row: {
       id: string;
@@ -34,10 +66,10 @@ export function DispatchedReminders() {
       if (seenRef.current.has(row.id)) return;
       seenRef.current.add(row.id);
       toast(titleFor(row.kind as Kind), {
-        description: row.message,
+        description: localizeMessage(row.message),
         duration: 10000,
         action: {
-          label: "Start",
+          label: t("notif.action_start"),
           onClick: () => {
             window.location.assign("/session");
           },
@@ -89,7 +121,7 @@ export function DispatchedReminders() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user]);
+  }, [user, t, lang]);
 
   return null;
 }

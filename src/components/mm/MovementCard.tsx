@@ -172,8 +172,8 @@ export function MovementCard({ movement, variant = "full" }: Props) {
         </div>
         <button
           onClick={done ? handleUndo : handleComplete}
-          aria-label={done ? "Undo completion" : "Mark complete"}
-          title={done ? "Tap to undo" : "Mark complete"}
+          aria-label={done ? t("mv.aria.undo") : t("mv.aria.mark_complete")}
+          title={done ? t("mv.aria.tap_to_undo") : t("mv.aria.mark_complete")}
           className={cn(
             "size-9 rounded-full flex items-center justify-center transition-all ring-1",
             done
@@ -259,8 +259,8 @@ export function MovementCard({ movement, variant = "full" }: Props) {
         {done ? (
           <button
             onClick={handleUndo}
-            aria-label="Undo completion"
-            title="Tap to undo"
+            aria-label={t("mv.aria.undo")}
+            title={t("mv.aria.tap_to_undo")}
             className={cn(
               "h-9 px-4 rounded-full text-sm font-medium inline-flex items-center gap-2 transition-all group",
               "bg-primary/15 text-primary hover:bg-primary/25 active:scale-95",
@@ -275,7 +275,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
         ) : !started ? (
           <button
             onClick={handleStart}
-            aria-label="Start timer"
+            aria-label={t("mv.aria.start_timer")}
             className="h-9 px-4 rounded-full text-sm font-medium inline-flex items-center gap-2 bg-foreground text-background hover:opacity-90 active:scale-95 transition-all"
           >
             <Play className="size-4" /> {t("mv.start")}
@@ -285,14 +285,14 @@ export function MovementCard({ movement, variant = "full" }: Props) {
             <span className="tabular-nums">{formatTime(secondsLeft)}</span>
             <button
               onClick={running ? handlePause : handleResume}
-              aria-label={running ? "Pause timer" : "Resume timer"}
+              aria-label={running ? t("mv.aria.pause_timer") : t("mv.aria.resume_timer")}
               className="size-7 rounded-full bg-background/15 hover:bg-background/25 flex items-center justify-center transition-colors"
             >
               {running ? <Pause className="size-3.5" /> : <Play className="size-3.5" />}
             </button>
             <button
               onClick={handleStop}
-              aria-label="Stop and reset timer"
+              aria-label={t("mv.aria.stop_timer")}
               className="size-7 rounded-full bg-background/15 hover:bg-background/25 flex items-center justify-center transition-colors"
             >
               <Square className="size-3.5" />
@@ -301,7 +301,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
         ) : (
           <button
             onClick={handleComplete}
-            aria-label="Mark done"
+            aria-label={t("mv.aria.mark_done")}
             className={cn(
               "h-9 px-4 rounded-full text-sm font-medium inline-flex items-center gap-2 transition-all",
               "bg-foreground text-background hover:opacity-90 active:scale-95",
