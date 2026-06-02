@@ -41,7 +41,7 @@ const dict: Record<string, { en: string; es: string }> = {
   },
   "welcome.body3": {
     en: "Micro consistency. Macro results.",
-    es: "Micro constancia. Macro resultados.",
+    es: "Micro constancia. Macro Resultados.",
   },
   "welcome.cta": { en: "Got It", es: "Entendido" },
 
