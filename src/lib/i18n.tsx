@@ -37,7 +37,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "tutorial.guided.title": { en: "Guided sessions", es: "Sesiones guiadas" },
   "tutorial.guided.body": {
     en: "Your guided sessions help you reset, move, and recharge in just a few minutes throughout the day.",
-    es: "Tus sesiones guiadas te ayudan a reiniciar, moverte y recargar energía en pocos minutos a lo largo del día.",
+    es: "Tus sesiones guiadas te ayudan a hacer una pausa, moverte y recargar energía en pocos minutos durante el día.",
   },
   "tutorial.xp.title": { en: "XP & leveling", es: "XP y niveles" },
   "tutorial.xp.body": {
@@ -47,12 +47,12 @@ const dict: Record<string, { en: string; es: string }> = {
   "tutorial.hydration.title": { en: "Hydration goal", es: "Meta de hidratación" },
   "tutorial.hydration.body": {
     en: "Log water through the day to build a steady hydration habit, sip by sip.",
-    es: "Registra el tomar agua durante el día para crear un hábito constante de hidratación, sorbo a sorbo.",
+    es: "Registra el agua que tomas durante el día para crear un hábito constante, sorbo a sorbo.",
   },
   "tutorial.move.title": { en: "Movement tab", es: "Pestaña de movimiento" },
   "tutorial.move.body": {
     en: "Tap here to explore all movements, stretches, breathing exercises, and resets.",
-    es: "Toca estas pestaña para explorar todos los movimientos, estiramientos, ejercicios de respiración y reinicios.",
+    es: "Toca esta pestaña para explorar movimientos, estiramientos, respiraciones y pausas.",
   },
   "tutorial.progress.title": { en: "Progress tab", es: "Pestaña de progreso" },
   "tutorial.progress.body": {
@@ -148,12 +148,12 @@ const dict: Record<string, { en: string; es: string }> = {
   "hydration.toast.logged": { en: "+{n} oz logged", es: "+{n} oz anotadas" },
   "hydration.toast.xp": { en: "+{xp} XP · Small sips, big impact.", es: "+{xp} XP · Sorbos pequeños, gran diferencia." },
   "hydration.toast.keep": { en: "Keep sipping gently.", es: "Sigue así, sin presiones." },
-  "hydration.toast.goal": { en: "Daily hydration goal reached 🌿", es: "Meta diaria de hidratación lograda 🌿" },
+  "hydration.toast.goal": { en: "Daily hydration goal reached 🌿", es: "¡Meta de hidratación cumplida! 🌿" },
   "hydration.toast.goal_sub": { en: "Beautifully done. Your body thanks you.", es: "Muy bien hecho. Tu cuerpo te lo agradece." },
-  "hydration.toast.sip": { en: "Time for a sip 💧", es: "Es momento de un sorbo 💧" },
+  "hydration.toast.sip": { en: "Time for a sip 💧", es: "Momento para un sorbo 💧" },
   "hydration.toast.sip_sub": { en: "A quick glass keeps you steady.", es: "Un vasito te ayuda a mantener el ritmo." },
   "hydration.keep_going": { en: "Keep Going", es: "Continuar" },
-  "hydration.keep_going_started": { en: "New round started", es: "Nueva ronda iniciada" },
+  "hydration.keep_going_started": { en: "New round started", es: "¡Comenzó una ronda nueva!" },
   "hydration.keep_going_sub": { en: "Keep the momentum, every sip counts.", es: "Sigue así, cada sorbo suma." },
   "hydration.total_today": { en: "Total today", es: "Total de hoy" },
   "hydration.round": { en: "Round", es: "Ronda" },
@@ -186,7 +186,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "progress.total_squats": { en: "Total squats", es: "Total de sentadillas" },
   "progress.total_breathing": { en: "Breathing sessions", es: "Sesiones de respiración" },
   "progress.milestones": { en: "Milestones", es: "Logros" },
-  "progress.ready": { en: "Ready when you are", es: "Listo cuando tú quieras" },
+  "progress.ready": { en: "Ready when you are", es: "Cuando tú quieras" },
   "progress.from_prev": { en: "from {n} last period", es: "desde {n} en el periodo anterior" },
   "progress.vs_prev": { en: "vs prev", es: "vs ant" },
   "progress.pp_week": { en: "pp wk/wk", es: "pp sem/sem" },
