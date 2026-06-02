@@ -254,14 +254,15 @@ function HydrationPage() {
 
       <div className="grid grid-cols-8 gap-1.5 mb-8">
         {Array.from({ length: 8 }).map((_, i) => {
-          const filled = roundOunces >= (i + 1) * 8;
+          const segment = goalOz / 8;
+          const filled = roundOunces >= (i + 1) * segment;
           return (
             <div
               key={i}
               className={`h-10 rounded-md transition ${
                 filled ? "bg-primary" : "bg-secondary"
               }`}
-              title={`${(i + 1) * 8} oz`}
+              title={`${Math.round((i + 1) * segment)} oz`}
             />
           );
         })}
