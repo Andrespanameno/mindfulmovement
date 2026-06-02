@@ -29,6 +29,22 @@ const dict: Record<string, { en: string; es: string }> = {
   "common.language": { en: "Language", es: "Idioma" },
 
   "tutorial.aria": { en: "Welcome tour", es: "Recorrido de bienvenida" },
+
+  "welcome.title": { en: "Welcome to Mindful Movement", es: "Bienvenido a Mindful Movement" },
+  "welcome.body1": {
+    en: "Life gets busy. Your health shouldn't have to wait.",
+    es: "La vida es ajetreada. Tu salud no debería esperar.",
+  },
+  "welcome.body2": {
+    en: "Mindful Movement helps improve your physical and mental well-being through simple movement, breathing, hydration, and mindfulness breaks that fit into even the busiest day.",
+    es: "Mindful Movement te ayuda a mejorar tu bienestar físico y mental con pausas simples de movimiento, respiración, hidratación y atención plena que encajan hasta en el día más ocupado.",
+  },
+  "welcome.body3": {
+    en: "Micro consistency. Macro results.",
+    es: "Micro constancia. Macro resultados.",
+  },
+  "welcome.cta": { en: "Got It", es: "Entendido" },
+
   "tutorial.skip_aria": { en: "Skip tour", es: "Omitir recorrido" },
   "tutorial.skip": { en: "Skip", es: "Omitir" },
   "tutorial.next": { en: "Next", es: "Siguiente" },
