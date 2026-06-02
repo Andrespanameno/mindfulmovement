@@ -43,8 +43,8 @@ function computeActiveDayStreaks(history: Record<string, { sessions: number }>) 
 export function MilestoneGrid() {
   const s = useSessionStore();
   const c = useContent();
-  const { lang } = useI18n();
-  const achievedLabel = lang === "es" ? "Logrado" : "Achieved";
+  const { t } = useI18n();
+  const achievedLabel = t("milestone.achieved");
   const derived = computeActiveDayStreaks(s.history);
   const bestStreak = Math.max(s.bestStreak, derived.best);
   const streak = Math.max(s.streak, derived.current);
