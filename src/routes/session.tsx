@@ -160,7 +160,7 @@ function SessionPage() {
           <h1 className="text-2xl font-semibold mb-2">{t("session.complete")}</h1>
           <InspirationCard placement="session_completion" variant="bare" className="max-w-sm mb-6" />
           <div className="flex items-center gap-6 text-sm text-muted-foreground mb-8">
-            <span>{t("session.movements", { n: completed })}</span>
+            <span>{t(completed === 1 ? "session.movements_one" : "session.movements_other", { n: completed })}</span>
             <span className="size-1 rounded-full bg-muted-foreground/40" />
             <span>{t("session.min", { n: Math.round(totalSeconds / 60) })}</span>
             <span className="size-1 rounded-full bg-muted-foreground/40" />
@@ -200,7 +200,7 @@ function SessionPage() {
         </div>
         <button
           onClick={handleExit}
-          aria-label="End session"
+          aria-label={t("session.aria.end")}
           className="size-10 rounded-full bg-card ring-1 ring-black/5 grid place-items-center hover:bg-accent/20"
         >
           <X className="size-4" />
@@ -284,7 +284,7 @@ function SessionPage() {
           <>
             <button
               onClick={() => setRunning((r) => !r)}
-              aria-label={running ? "Pause" : "Resume"}
+              aria-label={running ? t("session.aria.pause") : t("session.aria.resume")}
               className="h-12 px-6 rounded-full bg-foreground text-background text-sm font-medium inline-flex items-center gap-2 active:scale-95 transition-transform"
             >
               {running ? <><Pause className="size-4" /> {t("session.pause")}</> : <><Play className="size-4" /> {t("session.resume")}</>}
@@ -303,7 +303,7 @@ function SessionPage() {
             <button
               onClick={confirmStep}
               disabled={confirmed}
-              aria-label="Mark movement done"
+              aria-label={t("session.aria.mark_done")}
               className={cn(
                 "h-12 px-6 rounded-full text-sm font-medium inline-flex items-center gap-2 active:scale-95 transition-transform animate-scale-in",
                 confirmed
@@ -316,8 +316,8 @@ function SessionPage() {
             <button
               onClick={advanceToNext}
               disabled={!confirmed}
-              aria-label="Next movement"
-              title={confirmed ? undefined : "Tap Done first"}
+              aria-label={t("session.aria.next")}
+              title={confirmed ? undefined : t("session.tap_done_first")}
               className={cn(
                 "h-12 px-5 rounded-full text-sm font-medium inline-flex items-center gap-2 transition-transform",
                 confirmed
