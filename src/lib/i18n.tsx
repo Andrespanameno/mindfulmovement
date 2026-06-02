@@ -281,7 +281,7 @@ const dict: Record<string, { en: string; es: string }> = {
     es: "Sigue tu constancia, movimiento, hidratación, respiración y progreso a lo largo del tiempo, una pequeña acción a la vez.",
   },
   "how.philosophy_label": { en: "Core Philosophy", es: "Filosofía central" },
-  "how.philosophy": { en: "\"Micro actions. Macro results.\"", es: "\"Micro constancia. Macro Resultados.\"" },
+  "how.philosophy": { en: "\"Micro consistency. Macro results.\"", es: "\"Micro constancia. Macro Resultados.\"" },
 
   "privacy.title": { en: "Privacy Policy", es: "Política de privacidad" },
   "privacy.intro": {
