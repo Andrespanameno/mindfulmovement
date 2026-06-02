@@ -84,7 +84,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "auth.password": { en: "Password", es: "Contraseña" },
   "auth.forgot_link": { en: "Forgot your password?", es: "¿Olvidaste tu contraseña?" },
   "auth.new_here": { en: "New to Mindful Movement?", es: "¿Nuevo en Mindful Movement?" },
-  "auth.begin": { en: "Begin journey", es: "Comenzar" },
+  "auth.begin": { en: "Begin journey and create an account", es: "Comenzar y crear una cuenta" },
   "auth.back_signin": { en: "Back to sign in", es: "Volver a iniciar sesión" },
   "auth.invalid": { en: "Invalid email or password.", es: "El correo o la contraseña no coinciden." },
   "auth.signup.success": { en: "Account created. Check your email to confirm, then sign in.", es: "Cuenta creada. Revisa tu correo para confirmar y luego inicia sesión." },
