@@ -37,7 +37,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "tutorial.guided.title": { en: "Guided sessions", es: "Sesiones guiadas" },
   "tutorial.guided.body": {
     en: "Your guided sessions help you reset, move, and recharge in just a few minutes throughout the day.",
-    es: "Tus sesiones guiadas te ayudan a reiniciar, moverte y recargar energía en pocos minutos a lo largo del día.",
+    es: "Tus sesiones guiadas te ayudan a hacer una pausa, moverte y recargar energía en pocos minutos durante el día.",
   },
   "tutorial.xp.title": { en: "XP & leveling", es: "XP y niveles" },
   "tutorial.xp.body": {
@@ -47,12 +47,12 @@ const dict: Record<string, { en: string; es: string }> = {
   "tutorial.hydration.title": { en: "Hydration goal", es: "Meta de hidratación" },
   "tutorial.hydration.body": {
     en: "Log water through the day to build a steady hydration habit, sip by sip.",
-    es: "Registra el tomar agua durante el día para crear un hábito constante de hidratación, sorbo a sorbo.",
+    es: "Registra el agua que tomas durante el día para crear un hábito constante, sorbo a sorbo.",
   },
   "tutorial.move.title": { en: "Movement tab", es: "Pestaña de movimiento" },
   "tutorial.move.body": {
     en: "Tap here to explore all movements, stretches, breathing exercises, and resets.",
-    es: "Toca estas pestaña para explorar todos los movimientos, estiramientos, ejercicios de respiración y reinicios.",
+    es: "Toca esta pestaña para explorar movimientos, estiramientos, respiraciones y pausas.",
   },
   "tutorial.progress.title": { en: "Progress tab", es: "Pestaña de progreso" },
   "tutorial.progress.body": {
@@ -148,12 +148,12 @@ const dict: Record<string, { en: string; es: string }> = {
   "hydration.toast.logged": { en: "+{n} oz logged", es: "+{n} oz anotadas" },
   "hydration.toast.xp": { en: "+{xp} XP · Small sips, big impact.", es: "+{xp} XP · Sorbos pequeños, gran diferencia." },
   "hydration.toast.keep": { en: "Keep sipping gently.", es: "Sigue así, sin presiones." },
-  "hydration.toast.goal": { en: "Daily hydration goal reached 🌿", es: "Meta diaria de hidratación lograda 🌿" },
+  "hydration.toast.goal": { en: "Daily hydration goal reached 🌿", es: "¡Meta de hidratación cumplida! 🌿" },
   "hydration.toast.goal_sub": { en: "Beautifully done. Your body thanks you.", es: "Muy bien hecho. Tu cuerpo te lo agradece." },
-  "hydration.toast.sip": { en: "Time for a sip 💧", es: "Es momento de un sorbo 💧" },
+  "hydration.toast.sip": { en: "Time for a sip 💧", es: "Momento para un sorbo 💧" },
   "hydration.toast.sip_sub": { en: "A quick glass keeps you steady.", es: "Un vasito te ayuda a mantener el ritmo." },
   "hydration.keep_going": { en: "Keep Going", es: "Continuar" },
-  "hydration.keep_going_started": { en: "New round started", es: "Nueva ronda iniciada" },
+  "hydration.keep_going_started": { en: "New round started", es: "¡Comenzó una ronda nueva!" },
   "hydration.keep_going_sub": { en: "Keep the momentum, every sip counts.", es: "Sigue así, cada sorbo suma." },
   "hydration.total_today": { en: "Total today", es: "Total de hoy" },
   "hydration.round": { en: "Round", es: "Ronda" },
@@ -186,7 +186,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "progress.total_squats": { en: "Total squats", es: "Total de sentadillas" },
   "progress.total_breathing": { en: "Breathing sessions", es: "Sesiones de respiración" },
   "progress.milestones": { en: "Milestones", es: "Logros" },
-  "progress.ready": { en: "Ready when you are", es: "Listo cuando tú quieras" },
+  "progress.ready": { en: "Ready when you are", es: "Cuando tú quieras" },
   "progress.from_prev": { en: "from {n} last period", es: "desde {n} en el periodo anterior" },
   "progress.vs_prev": { en: "vs prev", es: "vs ant" },
   "progress.pp_week": { en: "pp wk/wk", es: "pp sem/sem" },
@@ -206,10 +206,10 @@ const dict: Record<string, { en: string; es: string }> = {
   "progress.sum.hydration_month": { en: "Your hydration consistency improved this month (+{n} points).", es: "Te hidrataste con más constancia este mes (+{n} puntos)." },
   "progress.sum.consistency_week": { en: "Your consistency improved this week (+{n}%).", es: "Vas con más constancia esta semana (+{n}%)." },
   "progress.sum.consistency_month": { en: "Your consistency improved this month (+{n}%).", es: "Vas con más constancia este mes (+{n}%)." },
-  "progress.sum.breathing_one_week": { en: "You took 1 mindful breathing session this week.", es: "Hiciste 1 sesión de respiración consciente esta semana." },
-  "progress.sum.breathing_many_week": { en: "You took {n} mindful breathing sessions this week.", es: "Hiciste {n} sesiones de respiración consciente esta semana." },
-  "progress.sum.breathing_one_month": { en: "You took 1 mindful breathing session this month.", es: "Hiciste 1 sesión de respiración consciente este mes." },
-  "progress.sum.breathing_many_month": { en: "You took {n} mindful breathing sessions this month.", es: "Hiciste {n} sesiones de respiración consciente este mes." },
+  "progress.sum.breathing_one_week": { en: "You took 1 mindful breathing session this week.", es: "Hiciste 1 sesión de respiración esta semana." },
+  "progress.sum.breathing_many_week": { en: "You took {n} mindful breathing sessions this week.", es: "Hiciste {n} sesiones de respiración esta semana." },
+  "progress.sum.breathing_one_month": { en: "You took 1 mindful breathing session this month.", es: "Hiciste 1 sesión de respiración este mes." },
+  "progress.sum.breathing_many_month": { en: "You took {n} mindful breathing sessions this month.", es: "Hiciste {n} sesiones de respiración este mes." },
 
   "profile.edit": { en: "Edit profile", es: "Editar perfil" },
   "profile.day_streak": { en: "Streak", es: "Constancia" },
@@ -388,10 +388,10 @@ const dict: Record<string, { en: string; es: string }> = {
   "onb.step1.title": { en: "What does your day look like?", es: "¿Cómo es tu día?" },
   "onb.step1.sub": { en: "Pick the lifestyle that fits best. You can change this anytime.", es: "Elige el estilo de vida que mejor te describa. Puedes cambiarlo cuando quieras." },
   "onb.step2.title": { en: "What feels most supportive?", es: "¿Qué te ayudaría más?" },
-  "onb.step2.sub": { en: "Choose any goals that matter to you. Skip if you'd rather explore.", es: "Elige los objetivos que te importen. Puedes omitirlo si prefieres explorar." },
+  "onb.step2.sub": { en: "Choose any goals that matter to you. Skip if you'd rather explore.", es: "Elige los objetivos que más te importen. Puedes saltarlo si prefieres explorar." },
   "onb.step3.title": { en: "When should we check in?", es: "¿Cuándo te recordamos?" },
   "onb.step3.sub": { en: "Gentle reminders, on your schedule.", es: "Recordatorios suaves, a tu ritmo." },
-  "onb.start_rotation": { en: "We'll start your rotation with", es: "Empezaremos tu rotación con" },
+  "onb.start_rotation": { en: "We'll start your rotation with", es: "Empezaremos con" },
   "onb.tune_later": { en: "You can fine-tune this anytime from your profile.", es: "Puedes ajustarlo cuando quieras desde tu perfil." },
   "onb.reminder_window": { en: "Reminder window", es: "Horario de recordatorios" },
   "onb.how_often": { en: "How often?", es: "¿Con qué frecuencia?" },
@@ -413,7 +413,7 @@ const dict: Record<string, { en: string; es: string }> = {
   },
 
   "session.guided": { en: "Guided session", es: "Sesión guiada" },
-  "session.left": { en: "{t} left", es: "{t} restante" },
+  "session.left": { en: "{t} left", es: "Queda {t}" },
   "session.step_of": { en: "Step {i} of {n}", es: "Paso {i} de {n}" },
   "session.up_next": { en: "Up next", es: "A continuación" },
   "session.pause": { en: "Pause", es: "Pausar" },
@@ -425,7 +425,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "session.back_home": { en: "Back home", es: "Volver al inicio" },
   "session.view_progress": { en: "View progress", es: "Ver progreso" },
   "session.preparing": { en: "Preparing your session…", es: "Preparando tu sesión, un momento…" },
-  "session.finish_first": { en: "Finish the timer to continue", es: "Termina el temporizador para continuar" },
+  "session.finish_first": { en: "Finish the timer to continue", es: "Termina el tiempo para continuar" },
 
   "edit.title": { en: "Edit profile", es: "Editar perfil" },
   "edit.desc": { en: "Personalize Mindful Movement to fit your day.", es: "Personaliza Mindful Movement según tu día." },
@@ -446,6 +446,11 @@ const dict: Record<string, { en: string; es: string }> = {
   "error.title": { en: "This page didn't load", es: "Esta página no se pudo cargar" },
   "error.sub": { en: "Something went wrong on our end. You can try refreshing or head back home.", es: "Algo falló de nuestro lado. Intenta recargar o vuelve al inicio." },
   "error.try_again": { en: "Try again", es: "Intentar de nuevo" },
+
+  "notif.movement.title": { en: "Mindful Movement", es: "Hora de moverte" },
+  "notif.hydration.title": { en: "Hydration check", es: "Pausa de hidratación" },
+  "notif.breath.title": { en: "Breath check", es: "Pausa para respirar" },
+  "notif.action_start": { en: "Start", es: "Empezar" },
 };
 
 function format(str: string, vars?: Record<string, string | number>): string {
