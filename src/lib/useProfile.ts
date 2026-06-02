@@ -16,10 +16,12 @@ export interface Profile {
   language: string;
   has_seen_welcome_modal: boolean;
   hydration_unit: "oz" | "ml";
+  daily_water_goal_display: number | null;
+  daily_water_goal_display_unit: "oz" | "ml" | null;
 }
 
 export type ProfileUpdate = Partial<
-  Pick<Profile, "full_name" | "fitness_level" | "work_style" | "lifestyle" | "wellness_goals" | "daily_water_goal" | "preferred_categories" | "onboarding_completed" | "tutorial_seen" | "has_seen_welcome_modal" | "hydration_unit">
+  Pick<Profile, "full_name" | "fitness_level" | "work_style" | "lifestyle" | "wellness_goals" | "daily_water_goal" | "preferred_categories" | "onboarding_completed" | "tutorial_seen" | "has_seen_welcome_modal" | "hydration_unit" | "daily_water_goal_display" | "daily_water_goal_display_unit">
 >;
 
 // Shared module-level store so every useProfile() consumer (AuthGate,

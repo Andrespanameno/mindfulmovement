@@ -494,6 +494,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "edit.water": { en: "Daily water goal (oz)", es: "Meta diaria de agua (oz)" },
   "edit.water_oz": { en: "Daily water goal (oz)", es: "Meta diaria de agua (oz)" },
   "edit.water_ml": { en: "Daily water goal (mL)", es: "Meta diaria de agua (mL)" },
+ "edit.water_invalid": { en: "Enter a daily water goal greater than 0", es: "Ingresa una meta de agua mayor a 0" },
   "unit.oz": { en: "oz", es: "oz" },
   "unit.ml": { en: "mL", es: "mL" },
   "unit.ounces": { en: "Ounces", es: "Onzas" },

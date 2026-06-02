@@ -24,7 +24,7 @@ import { LIFESTYLES } from "@/lib/lifestyles";
 import { useI18n } from "@/lib/i18n";
 import { useContent } from "@/lib/i18n-content";
 import { HydrationUnitToggle } from "@/components/mm/HydrationUnitToggle";
-import { ozToMl, mlToOz, type HydrationUnit } from "@/lib/hydrationUnit";
+import { ozToMl, mlToOz, ML_PER_OZ, type HydrationUnit } from "@/lib/hydrationUnit";
 
 const FITNESS = ["beginner", "casual", "active", "athletic"] as const;
 const WORK_STYLES = ["desk", "hybrid", "active", "on-the-go"] as const;
@@ -55,8 +55,9 @@ export function EditProfileDialog({
   const [workStyle, setWorkStyle] = useState(profile.work_style ?? "");
   const [lifestyle, setLifestyle] = useState(profile.lifestyle ?? "");
   const [goals, setGoals] = useState<string[]>(profile.wellness_goals ?? []);
-  const [water, setWater] = useState<number>(profile.daily_water_goal);
   const [unit, setUnit] = useState<HydrationUnit>(profile.hydration_unit ?? "oz");
+  // Controlled string so the field can be empty while editing
+  const [water, setWater] = useState<string>("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -66,8 +67,19 @@ export function EditProfileDialog({
       setWorkStyle(profile.work_style ?? "");
       setLifestyle(profile.lifestyle ?? "");
       setGoals(profile.wellness_goals ?? []);
-      setWater(profile.daily_water_goal);
-      setUnit(profile.hydration_unit ?? "oz");
+      const initialUnit: HydrationUnit = profile.hydration_unit ?? "oz";
+      setUnit(initialUnit);
+      // Prefer the last saved display value if it matches the current unit,
+      // otherwise derive from the stored oz value.
+      const savedDisplay = profile.daily_water_goal_display;
+      const savedDisplayUnit = profile.daily_water_goal_display_unit;
+      if (savedDisplay != null && savedDisplayUnit === initialUnit) {
+        setWater(String(savedDisplay));
+      } else if (initialUnit === "ml") {
+        setWater(String(ozToMl(profile.daily_water_goal)));
+      } else {
+        setWater(String(profile.daily_water_goal));
+      }
     }
   }, [open, profile]);
 
@@ -76,17 +88,26 @@ export function EditProfileDialog({
 
   const handleSave = async () => {
     setBusy(true);
-    // `water` is stored in the currently-selected unit while editing.
-    // Convert back to oz for storage.
-    const waterOz = unit === "ml" ? mlToOz(Number(water) || 0) : Math.round(Number(water) || 0);
+    const numeric = Number(water);
+    if (!water.trim() || !Number.isFinite(numeric) || numeric <= 0) {
+      setBusy(false);
+      toast.error(t("edit.water_invalid"));
+      return;
+    }
+    // Store oz precisely for calculations; preserve the exact display value the
+    // user entered (in their chosen unit) so the field shows it next time.
+    const waterOzRaw = unit === "ml" ? numeric / ML_PER_OZ : numeric;
+    const waterOz = Math.max(16, Math.min(400, Math.round(waterOzRaw)));
     const { error } = await onSave({
       full_name: fullName.trim() || null,
       fitness_level: fitness || null,
       work_style: workStyle || null,
       lifestyle: lifestyle || null,
       wellness_goals: goals,
-      daily_water_goal: Math.max(16, Math.min(400, waterOz || 64)),
+      daily_water_goal: waterOz,
       hydration_unit: unit,
+      daily_water_goal_display: numeric,
+      daily_water_goal_display_unit: unit,
       onboarding_completed: true,
     });
     setBusy(false);
@@ -190,21 +211,27 @@ export function EditProfileDialog({
                 value={unit}
                 onChange={(next) => {
                   if (next === unit) return;
-                  // convert current input between units so the user sees the equivalent value
-                  const current = Number(water) || 0;
-                  if (next === "ml" && unit === "oz") setWater(ozToMl(current));
-                  else if (next === "oz" && unit === "ml") setWater(mlToOz(current));
+                  // Convert current input between units (only when there is a value)
+                  const current = Number(water);
+                  if (water.trim() && Number.isFinite(current)) {
+                    if (next === "ml" && unit === "oz") setWater(String(ozToMl(current)));
+                    else if (next === "oz" && unit === "ml") setWater(String(mlToOz(current)));
+                  }
                   setUnit(next);
                 }}
               />
             </div>
             <Input
               id="water"
-              type="number"
-              min={unit === "ml" ? 500 : 16}
-              max={unit === "ml" ? 6000 : 200}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={water}
-              onChange={(e) => setWater(Number(e.target.value))}
+              onChange={(e) => {
+                const v = e.target.value;
+                // Allow empty; otherwise only non-negative integers
+                if (v === "" || /^\d+$/.test(v)) setWater(v);
+              }}
             />
           </div>
         </div>
