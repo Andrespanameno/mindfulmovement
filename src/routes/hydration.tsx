@@ -36,6 +36,13 @@ function HydrationPage() {
   const { profile, updateProfile } = useProfile();
   const unit: HydrationUnit = profile?.hydration_unit ?? "oz";
   const goalOz = profile?.daily_water_goal ?? DEFAULT_HYDRATION_GOAL_OZ;
+  // Prefer the user's exact saved display value when the unit matches, so
+  // 1000 mL stays 1000 mL (avoid round-tripping mL → oz → mL).
+  const goalDisplay: number =
+    profile?.daily_water_goal_display != null &&
+    profile?.daily_water_goal_display_unit === unit
+      ? Number(profile.daily_water_goal_display)
+      : formatAmount(goalOz, unit);
   const setUnit = (next: HydrationUnit) => {
     if (next === unit) return;
     void updateProfile({ hydration_unit: next });
@@ -186,7 +193,7 @@ function HydrationPage() {
             <p className="text-4xl font-semibold tabular-nums">{formatAmount(roundOunces, unit)}</p>
             <p className="text-xs text-muted-foreground">
               {t("hydration.of_today_u", {
-                goal: formatAmount(goalOz, unit),
+                goal: goalDisplay,
                 unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
               })}
             </p>
