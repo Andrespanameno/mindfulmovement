@@ -144,7 +144,7 @@ function ProgressPage() {
       <div className="grid grid-cols-2 gap-3 mb-6">
         <StreakBadge />
         <Stat
-          label={t("progress.active_days")}
+          label={range === "week" ? t("progress.active_days_week") : t("progress.active_days_month")}
           value={`${summary.activeDays}/${summary.totalDays}`}
           hint={t("progress.active_days_hint")}
         />
