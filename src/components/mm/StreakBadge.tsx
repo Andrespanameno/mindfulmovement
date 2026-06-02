@@ -15,7 +15,7 @@ export function StreakBadge({ className }: { className?: string }) {
       <p className="text-2xl font-semibold">
         {streak} <span className="text-sm font-medium text-muted-foreground">{t("profile.days")}</span>
       </p>
-      <p className="text-[11px] text-muted-foreground mt-1">{t("profile.best", { n: bestStreak })}</p>
+      <p className="text-[11px] text-muted-foreground mt-1">{t(bestStreak === 1 ? "profile.best_one" : "profile.best_other", { n: bestStreak })}</p>
     </div>
   );
 }
