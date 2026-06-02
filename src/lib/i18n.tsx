@@ -446,6 +446,11 @@ const dict: Record<string, { en: string; es: string }> = {
   "error.title": { en: "This page didn't load", es: "Esta página no se pudo cargar" },
   "error.sub": { en: "Something went wrong on our end. You can try refreshing or head back home.", es: "Algo falló de nuestro lado. Intenta recargar o vuelve al inicio." },
   "error.try_again": { en: "Try again", es: "Intentar de nuevo" },
+
+  "notif.movement.title": { en: "Mindful Movement", es: "Hora de moverte" },
+  "notif.hydration.title": { en: "Hydration check", es: "Pausa de hidratación" },
+  "notif.breath.title": { en: "Breath check", es: "Pausa para respirar" },
+  "notif.action_start": { en: "Start", es: "Empezar" },
 };
 
 function format(str: string, vars?: Record<string, string | number>): string {
