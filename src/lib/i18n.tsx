@@ -488,6 +488,13 @@ const dict: Record<string, { en: string; es: string }> = {
   "edit.work_style.placeholder": { en: "How do you spend your day?", es: "¿Cómo pasas tu día?" },
   "edit.goals": { en: "Wellness goals", es: "Objetivos de bienestar" },
   "edit.water": { en: "Daily water goal (oz)", es: "Meta diaria de agua (oz)" },
+  "edit.water_oz": { en: "Daily water goal (oz)", es: "Meta diaria de agua (oz)" },
+  "edit.water_ml": { en: "Daily water goal (mL)", es: "Meta diaria de agua (mL)" },
+  "unit.oz": { en: "oz", es: "oz" },
+  "unit.ml": { en: "mL", es: "mL" },
+  "unit.ounces": { en: "Ounces", es: "Onzas" },
+  "unit.milliliters": { en: "Milliliters", es: "Mililitros" },
+  "unit.hydration_unit": { en: "Hydration unit", es: "Unidad de hidratación" },
   "edit.updated": { en: "Profile updated", es: "Perfil actualizado" },
 
   "error.404_title": { en: "Page not found", es: "Página no encontrada" },
