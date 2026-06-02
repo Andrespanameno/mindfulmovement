@@ -15,7 +15,7 @@ import {
   undoLastHydration,
   setRemindersEnabled,
   markReminderShown,
-  HYDRATION_GOAL_OZ,
+  HYDRATION_GOAL_OZ as DEFAULT_HYDRATION_GOAL_OZ,
   HYDRATION_XP_PER_8OZ,
   QUICK_ADDS_OZ,
   localDateKey,
@@ -35,6 +35,7 @@ function HydrationPage() {
   const { t } = useI18n();
   const { profile, updateProfile } = useProfile();
   const unit: HydrationUnit = profile?.hydration_unit ?? "oz";
+  const goalOz = profile?.daily_water_goal ?? DEFAULT_HYDRATION_GOAL_OZ;
   const setUnit = (next: HydrationUnit) => {
     if (next === unit) return;
     void updateProfile({ hydration_unit: next });
@@ -68,11 +69,11 @@ function HydrationPage() {
 
   const roundOunces = Math.max(0, ouncesToday - bonusBaseline);
   const roundNumber = roundsCompleted + 1;
-  const pct = Math.min(100, Math.round((roundOunces / HYDRATION_GOAL_OZ) * 100));
-  const roundComplete = roundOunces >= HYDRATION_GOAL_OZ;
+  const pct = Math.min(100, Math.round((roundOunces / goalOz) * 100));
+  const roundComplete = roundOunces >= goalOz;
   const r = 86;
   const c = 2 * Math.PI * r;
-  const reachedRef = useRef(ouncesToday >= HYDRATION_GOAL_OZ);
+  const reachedRef = useRef(ouncesToday >= goalOz);
 
   const startNewRound = () => {
     const newBaseline = ouncesToday;
@@ -111,8 +112,8 @@ function HydrationPage() {
 
   const add = (oz: number) => {
     if (roundComplete) return;
-    const beforeRound = Math.min(roundOunces, HYDRATION_GOAL_OZ);
-    const afterRound = Math.min(HYDRATION_GOAL_OZ, roundOunces + oz);
+    const beforeRound = Math.min(roundOunces, goalOz);
+    const afterRound = Math.min(goalOz, roundOunces + oz);
     const xp = Math.max(
       0,
       Math.floor(afterRound / 8) * HYDRATION_XP_PER_8OZ -
@@ -127,15 +128,15 @@ function HydrationPage() {
   };
 
   useEffect(() => {
-    if (roundOunces >= HYDRATION_GOAL_OZ && !reachedRef.current) {
+    if (roundOunces >= goalOz && !reachedRef.current) {
       reachedRef.current = true;
       toast.success(t("hydration.toast.goal"), {
         description: hydrationMsg?.message ?? t("hydration.toast.goal_sub"),
       });
       nextHydrationMsg();
     }
-    if (roundOunces < HYDRATION_GOAL_OZ) reachedRef.current = false;
-  }, [roundOunces, hydrationMsg, nextHydrationMsg]);
+    if (roundOunces < goalOz) reachedRef.current = false;
+  }, [roundOunces, goalOz, hydrationMsg, nextHydrationMsg]);
 
   // Gentle reminders while the page is open
   useEffect(() => {
@@ -143,13 +144,13 @@ function HydrationPage() {
     const id = window.setInterval(() => {
       const last = lastReminderAt ?? 0;
       const due = Date.now() - last >= reminderIntervalMin * 60 * 1000;
-      if (due && ouncesToday < HYDRATION_GOAL_OZ) {
+      if (due && ouncesToday < goalOz) {
         toast(t("hydration.toast.sip"), { description: t("hydration.toast.sip_sub") });
         markReminderShown();
       }
     }, 30 * 1000);
     return () => window.clearInterval(id);
-  }, [remindersEnabled, reminderIntervalMin, lastReminderAt, ouncesToday]);
+  }, [remindersEnabled, reminderIntervalMin, lastReminderAt, ouncesToday, goalOz]);
 
   return (
     <AppShell>
@@ -185,7 +186,7 @@ function HydrationPage() {
             <p className="text-4xl font-semibold tabular-nums">{formatAmount(roundOunces, unit)}</p>
             <p className="text-xs text-muted-foreground">
               {t("hydration.of_today_u", {
-                goal: formatAmount(HYDRATION_GOAL_OZ, unit),
+                goal: formatAmount(goalOz, unit),
                 unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
               })}
             </p>
@@ -205,7 +206,7 @@ function HydrationPage() {
           {roundComplete
             ? t("home.hydration.reached")
             : t("hydration.to_go_u", {
-                n: formatAmount(HYDRATION_GOAL_OZ - roundOunces, unit),
+                n: formatAmount(Math.max(0, goalOz - roundOunces), unit),
                 unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
               })}
         </p>
