@@ -9,6 +9,7 @@ import { useProfile } from "@/lib/useProfile";
 import { useAuth } from "@/lib/auth-context";
 import { InspirationCard } from "@/components/mm/InspirationCard";
 import { FirstTimeTutorial } from "@/components/mm/FirstTimeTutorial";
+import { WelcomeModal } from "@/components/mm/WelcomeModal";
 import { useI18n } from "@/lib/i18n";
 
 function getGreetingKey() {
