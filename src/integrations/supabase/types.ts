@@ -149,6 +149,7 @@ export type Database = {
           daily_water_goal: number
           fitness_level: string | null
           full_name: string | null
+          has_seen_welcome_modal: boolean
           id: string
           language: string
           lifestyle: string | null
@@ -164,6 +165,7 @@ export type Database = {
           daily_water_goal?: number
           fitness_level?: string | null
           full_name?: string | null
+          has_seen_welcome_modal?: boolean
           id: string
           language?: string
           lifestyle?: string | null
@@ -179,6 +181,7 @@ export type Database = {
           daily_water_goal?: number
           fitness_level?: string | null
           full_name?: string | null
+          has_seen_welcome_modal?: boolean
           id?: string
           language?: string
           lifestyle?: string | null
