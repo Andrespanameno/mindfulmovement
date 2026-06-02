@@ -77,11 +77,11 @@ export const XP_ENCOURAGEMENTS_ES: string[] = [
 
 export const MILESTONE_ES: Record<string, { label: string; description: string }> = {
   "first-move": { label: "Primer paso", description: "Tu camino ya comenzó." },
-  "streak-3": { label: "Chispa de 3 días", description: "Tres días suaves, uno tras otro." },
-  "streak-7": { label: "Brillo de 7 días", description: "Una semana entera de presencia." },
-  "streak-14": { label: "Flujo de dos semanas", description: "La constancia se está volviendo parte de ti." },
-  "hydrated": { label: "Día hidratado", description: "Llegaste a tu meta de agua." },
-  "xp-1000": { label: "1,000 XP", description: "Pequeñas acciones, gran cambio." },
+  "streak-3": { label: "Racha de 3 días", description: "Tres días seguidos. ¡Vas muy bien!" },
+  "streak-7": { label: "Una semana de constancia", description: "Una semana completa. ¡Sigue así!" },
+  "streak-14": { label: "Dos semanas de constancia", description: "La constancia ya es parte de ti." },
+  "hydrated": { label: "¡Día bien hidratado!", description: "Cumpliste tu meta de agua." },
+  "xp-1000": { label: "1,000 XP", description: "Acciones pequeñas, gran logro." },
 };
 
 export const ENCOURAGEMENTS_ES: string[] = [

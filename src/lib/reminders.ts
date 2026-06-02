@@ -20,6 +20,26 @@ export const BREATH_REMINDERS = [
   "One mindful breath, right now.",
 ];
 
+export const MOVEMENT_REMINDERS_ES = [
+  "¿Te das un minuto para moverte?",
+  "Vamos a pararnos y estirarnos un minuto.",
+  "Moverte un poco te ayuda a despejar la mente.",
+  "Rota los hombros, despacio y sin prisa.",
+  "Una caminata corta ahora se va a sentir muy bien después.",
+];
+
+export const HYDRATION_REMINDERS_ES = [
+  "Pausa para hidratarte.",
+  "Un vaso de agua siempre cae bien.",
+  "Sorbos pequeños, mente clara.",
+];
+
+export const BREATH_REMINDERS_ES = [
+  "Date unas respiraciones tranquilas.",
+  "Inhala despacio, exhala más despacio.",
+  "Una respiración tranquila, justo ahora.",
+];
+
 export type ReminderKind = "movement" | "hydration" | "breath";
 
 export interface ReminderSettings {
@@ -114,11 +134,17 @@ export function getReminderSettings(): ReminderSettings {
   return state;
 }
 
-export function pickReminder(s: ReminderSettings): { kind: ReminderKind; text: string } | null {
+export function pickReminder(
+  s: ReminderSettings,
+  lang: "en" | "es" = "en",
+): { kind: ReminderKind; text: string } | null {
+  const move = lang === "es" ? MOVEMENT_REMINDERS_ES : MOVEMENT_REMINDERS;
+  const hyd = lang === "es" ? HYDRATION_REMINDERS_ES : HYDRATION_REMINDERS;
+  const br = lang === "es" ? BREATH_REMINDERS_ES : BREATH_REMINDERS;
   const pool: { kind: ReminderKind; text: string }[] = [];
-  if (s.movement) MOVEMENT_REMINDERS.forEach((t) => pool.push({ kind: "movement", text: t }));
-  if (s.hydration) HYDRATION_REMINDERS.forEach((t) => pool.push({ kind: "hydration", text: t }));
-  if (s.breath) BREATH_REMINDERS.forEach((t) => pool.push({ kind: "breath", text: t }));
+  if (s.movement) move.forEach((t) => pool.push({ kind: "movement", text: t }));
+  if (s.hydration) hyd.forEach((t) => pool.push({ kind: "hydration", text: t }));
+  if (s.breath) br.forEach((t) => pool.push({ kind: "breath", text: t }));
   if (pool.length === 0) return null;
   return pool[Math.floor(Math.random() * pool.length)];
 }
