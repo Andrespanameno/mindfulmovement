@@ -14,10 +14,11 @@ export interface Profile {
   onboarding_completed: boolean;
   tutorial_seen: boolean;
   language: string;
+  has_seen_welcome_modal: boolean;
 }
 
 export type ProfileUpdate = Partial<
-  Pick<Profile, "full_name" | "fitness_level" | "work_style" | "lifestyle" | "wellness_goals" | "daily_water_goal" | "preferred_categories" | "onboarding_completed" | "tutorial_seen">
+  Pick<Profile, "full_name" | "fitness_level" | "work_style" | "lifestyle" | "wellness_goals" | "daily_water_goal" | "preferred_categories" | "onboarding_completed" | "tutorial_seen" | "has_seen_welcome_modal">
 >;
 
 // Shared module-level store so every useProfile() consumer (AuthGate,
