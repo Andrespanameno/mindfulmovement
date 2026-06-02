@@ -182,11 +182,16 @@ function HydrationPage() {
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <Droplet className="size-5 text-primary mb-1" />
-            <p className="text-4xl font-semibold tabular-nums">{roundOunces}</p>
-            <p className="text-xs text-muted-foreground">{t("hydration.of_today", { goal: HYDRATION_GOAL_OZ })}</p>
+            <p className="text-4xl font-semibold tabular-nums">{formatAmount(roundOunces, unit)}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("hydration.of_today_u", {
+                goal: formatAmount(HYDRATION_GOAL_OZ, unit),
+                unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
+              })}
+            </p>
             {bonusBaseline > 0 && (
               <p className="text-[10px] font-medium text-muted-foreground mt-0.5">
-                {t("hydration.total_today")}: {ouncesToday} oz · {t("hydration.round")} {roundNumber}
+                {t("hydration.total_today")}: {formatAmount(ouncesToday, unit)} {t(unit === "ml" ? "unit.ml" : "unit.oz")} · {t("hydration.round")} {roundNumber}
               </p>
             )}
             {roundComplete && (
@@ -199,7 +204,10 @@ function HydrationPage() {
         <p className="text-sm text-muted-foreground text-pretty">
           {roundComplete
             ? t("home.hydration.reached")
-            : t("hydration.to_go", { n: HYDRATION_GOAL_OZ - roundOunces })}
+            : t("hydration.to_go_u", {
+                n: formatAmount(HYDRATION_GOAL_OZ - roundOunces, unit),
+                unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
+              })}
         </p>
         {roundComplete && (
           <button
@@ -215,18 +223,21 @@ function HydrationPage() {
         {t("hydration.quick_add")}
       </h3>
       <div className="grid grid-cols-3 gap-3 mb-4">
-        {QUICK_ADDS_OZ.map((oz) => (
-          <button
-            key={oz}
-            onClick={() => add(oz)}
-            disabled={roundComplete}
-            className="h-20 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary font-semibold flex flex-col items-center justify-center gap-1 active:scale-[0.97] transition disabled:opacity-40 disabled:active:scale-100 disabled:cursor-not-allowed"
-          >
-            <Droplet className="size-4" />
-            <span className="text-lg leading-none">{oz}</span>
-            <span className="text-[10px] font-medium uppercase tracking-wider opacity-70">oz</span>
-          </button>
-        ))}
+        {(unit === "ml" ? QUICK_ADDS_ML : QUICK_ADDS_OZ).map((amount) => {
+          const oz = unit === "ml" ? mlToOz(amount) : amount;
+          return (
+            <button
+              key={amount}
+              onClick={() => add(oz)}
+              disabled={roundComplete}
+              className="h-20 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary font-semibold flex flex-col items-center justify-center gap-1 active:scale-[0.97] transition disabled:opacity-40 disabled:active:scale-100 disabled:cursor-not-allowed"
+            >
+              <Droplet className="size-4" />
+              <span className="text-lg leading-none">{amount}</span>
+              <span className="text-[10px] font-medium uppercase tracking-wider opacity-70">{unit === "ml" ? "mL" : "oz"}</span>
+            </button>
+          );
+        })}
       </div>
 
       <button
@@ -234,7 +245,10 @@ function HydrationPage() {
         disabled={ouncesToday === 0 || lastHydrationAdd === 0}
         className="w-full h-11 rounded-2xl bg-card ring-1 ring-black/5 text-sm font-medium text-muted-foreground flex items-center justify-center gap-2 mb-8 disabled:opacity-40"
       >
-        <Undo2 className="size-4" /> {t("hydration.undo", { n: lastHydrationAdd || 8 })}
+        <Undo2 className="size-4" /> {t("hydration.undo_u", {
+          n: formatAmount(lastHydrationAdd || 8, unit),
+          unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
+        })}
       </button>
 
       <div className="grid grid-cols-8 gap-1.5 mb-8">
