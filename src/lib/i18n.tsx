@@ -206,10 +206,10 @@ const dict: Record<string, { en: string; es: string }> = {
   "progress.sum.hydration_month": { en: "Your hydration consistency improved this month (+{n} points).", es: "Te hidrataste con más constancia este mes (+{n} puntos)." },
   "progress.sum.consistency_week": { en: "Your consistency improved this week (+{n}%).", es: "Vas con más constancia esta semana (+{n}%)." },
   "progress.sum.consistency_month": { en: "Your consistency improved this month (+{n}%).", es: "Vas con más constancia este mes (+{n}%)." },
-  "progress.sum.breathing_one_week": { en: "You took 1 mindful breathing session this week.", es: "Hiciste 1 sesión de respiración consciente esta semana." },
-  "progress.sum.breathing_many_week": { en: "You took {n} mindful breathing sessions this week.", es: "Hiciste {n} sesiones de respiración consciente esta semana." },
-  "progress.sum.breathing_one_month": { en: "You took 1 mindful breathing session this month.", es: "Hiciste 1 sesión de respiración consciente este mes." },
-  "progress.sum.breathing_many_month": { en: "You took {n} mindful breathing sessions this month.", es: "Hiciste {n} sesiones de respiración consciente este mes." },
+  "progress.sum.breathing_one_week": { en: "You took 1 mindful breathing session this week.", es: "Hiciste 1 sesión de respiración esta semana." },
+  "progress.sum.breathing_many_week": { en: "You took {n} mindful breathing sessions this week.", es: "Hiciste {n} sesiones de respiración esta semana." },
+  "progress.sum.breathing_one_month": { en: "You took 1 mindful breathing session this month.", es: "Hiciste 1 sesión de respiración este mes." },
+  "progress.sum.breathing_many_month": { en: "You took {n} mindful breathing sessions this month.", es: "Hiciste {n} sesiones de respiración este mes." },
 
   "profile.edit": { en: "Edit profile", es: "Editar perfil" },
   "profile.day_streak": { en: "Streak", es: "Constancia" },
@@ -413,7 +413,7 @@ const dict: Record<string, { en: string; es: string }> = {
   },
 
   "session.guided": { en: "Guided session", es: "Sesión guiada" },
-  "session.left": { en: "{t} left", es: "{t} restante" },
+  "session.left": { en: "{t} left", es: "Queda {t}" },
   "session.step_of": { en: "Step {i} of {n}", es: "Paso {i} de {n}" },
   "session.up_next": { en: "Up next", es: "A continuación" },
   "session.pause": { en: "Pause", es: "Pausar" },
@@ -425,7 +425,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "session.back_home": { en: "Back home", es: "Volver al inicio" },
   "session.view_progress": { en: "View progress", es: "Ver progreso" },
   "session.preparing": { en: "Preparing your session…", es: "Preparando tu sesión, un momento…" },
-  "session.finish_first": { en: "Finish the timer to continue", es: "Termina el temporizador para continuar" },
+  "session.finish_first": { en: "Finish the timer to continue", es: "Termina el tiempo para continuar" },
 
   "edit.title": { en: "Edit profile", es: "Editar perfil" },
   "edit.desc": { en: "Personalize Mindful Movement to fit your day.", es: "Personaliza Mindful Movement según tu día." },
