@@ -6,6 +6,9 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useMotivationalMessage } from "@/hooks/useMotivationalMessage";
 import { useI18n } from "@/lib/i18n";
+import { useProfile } from "@/lib/useProfile";
+import { HydrationUnitToggle } from "@/components/mm/HydrationUnitToggle";
+import { formatAmount, mlToOz, QUICK_ADDS_ML, type HydrationUnit } from "@/lib/hydrationUnit";
 import {
   useSessionStore,
   logHydration,
@@ -30,6 +33,12 @@ export const Route = createFileRoute("/hydration")({
 
 function HydrationPage() {
   const { t } = useI18n();
+  const { profile, updateProfile } = useProfile();
+  const unit: HydrationUnit = profile?.hydration_unit ?? "oz";
+  const setUnit = (next: HydrationUnit) => {
+    if (next === unit) return;
+    void updateProfile({ hydration_unit: next });
+  };
   const { ouncesToday, lastHydrationAdd, remindersEnabled, reminderIntervalMin, lastReminderAt } =
     useSessionStore();
   const todayKey = localDateKey(new Date());
@@ -110,7 +119,8 @@ function HydrationPage() {
         Math.floor(beforeRound / 8) * HYDRATION_XP_PER_8OZ,
     );
     logHydration(oz);
-    toast.success(t("hydration.toast.logged", { n: oz }), {
+    const displayN = unit === "ml" ? Math.round(oz * 29.5735) : oz;
+    toast.success(t("hydration.toast.logged_u", { n: displayN, unit: t(unit === "ml" ? "unit.ml" : "unit.oz") }), {
       description: xp > 0 ? t("hydration.toast.xp", { xp }) : t("hydration.toast.keep"),
     });
     void persistHydration(oz);
@@ -151,7 +161,7 @@ function HydrationPage() {
           <ArrowLeft className="size-4" />
         </Link>
         <h1 className="text-base font-semibold">{t("hydration.title")}</h1>
-        <div className="size-10" />
+        <HydrationUnitToggle value={unit} onChange={setUnit} />
       </header>
 
       <div className="rounded-3xl bg-card ring-1 ring-black/5 p-8 mb-6 text-center">
