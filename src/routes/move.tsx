@@ -36,12 +36,12 @@ const FEATURED_TITLES = {
     { en: "Morning Awakening", es: "Despertar de la mañana" },
     { en: "Morning Reset", es: "Reinicio matutino" },
     { en: "Start Your Day", es: "Empieza tu día" },
-    { en: "Morning Momentum", es: "Impulso matutino" },
+    { en: "Morning Momentum", es: "Ritmo matutino" },
   ],
   afternoon: [
     { en: "Afternoon Reset", es: "Reinicio de la tarde" },
     { en: "Midday Recharge", es: "Recarga del mediodía" },
-    { en: "Afternoon Momentum", es: "Impulso de la tarde" },
+    { en: "Afternoon Momentum", es: "Ritmo de la tarde" },
     { en: "Refresh & Refocus", es: "Refresca y reenfoca" },
   ],
   evening: [
