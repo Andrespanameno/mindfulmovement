@@ -75,9 +75,9 @@ function ProfilePage() {
         <button
           onClick={() => setEditOpen(true)}
           disabled={loading || !profile}
-          className="mt-3 inline-flex items-center gap-1.5 font-medium text-primary hover:underline disabled:opacity-50 text-sm"
+          className="mt-3 inline-flex items-center gap-1.5 font-medium text-primary hover:underline disabled:opacity-50 text-sm px-2 py-1 rounded-lg hover:bg-primary/5 transition"
         >
-          <Pencil className="size-3" /> {c.t("profile.edit")}
+          <Pencil className="size-4" /> {c.t("profile.edit")}
         </button>
         {profile && (lifestyle || profile.fitness_level || profile.work_style) && (
           <div className="flex flex-wrap justify-center gap-1.5 mt-3">
