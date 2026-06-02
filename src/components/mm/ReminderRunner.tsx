@@ -5,6 +5,7 @@ import {
   isDispatchSlot,
   pickReminder,
 } from "@/lib/reminders";
+import { useI18n } from "@/lib/i18n";
 
 const LAST_KEY = "mm-reminder-last-fired";
 
@@ -17,7 +18,7 @@ function writeLast(t: number) {
   if (typeof window !== "undefined") localStorage.setItem(LAST_KEY, String(t));
 }
 
-function notify(title: string, body: string) {
+function notify(title: string, body: string, actionLabel: string) {
   if (typeof window === "undefined") return;
   if ("Notification" in window && Notification.permission === "granted") {
     try {
@@ -36,7 +37,7 @@ function notify(title: string, body: string) {
     description: body,
     duration: 10000,
     action: {
-      label: "Start",
+      label: actionLabel,
       onClick: () => {
         window.location.assign("/session");
       },
@@ -46,6 +47,7 @@ function notify(title: string, body: string) {
 
 export function ReminderRunner() {
   const settings = useReminderSettings();
+  const { lang, t } = useI18n();
 
   useEffect(() => {
     const tick = () => {
@@ -56,16 +58,16 @@ export function ReminderRunner() {
       // Guard against duplicate fires within the same interval block.
       const intervalMs = settings.intervalMin * 60 * 1000;
       if (now - last < intervalMs - 90 * 1000) return;
-      const r = pickReminder(settings);
+      const r = pickReminder(settings, lang);
       if (!r) return;
       writeLast(now);
       const title =
         r.kind === "movement"
-          ? "Mindful Movement"
+          ? t("notif.movement.title")
           : r.kind === "hydration"
-            ? "Hydration check"
-            : "Breath check";
-      notify(title, r.text);
+            ? t("notif.hydration.title")
+            : t("notif.breath.title");
+      notify(title, r.text, t("notif.action_start"));
     };
 
     // schedule at the next minute boundary so hourly fires land near :00
@@ -82,7 +84,7 @@ export function ReminderRunner() {
       window.clearTimeout(startTimer);
       if (interval) window.clearInterval(interval);
     };
-  }, [settings]);
+  }, [settings, lang, t]);
 
   return null;
 }
