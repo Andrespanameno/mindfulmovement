@@ -150,6 +150,7 @@ export type Database = {
           fitness_level: string | null
           full_name: string | null
           has_seen_welcome_modal: boolean
+          hydration_unit: string
           id: string
           language: string
           lifestyle: string | null
@@ -166,6 +167,7 @@ export type Database = {
           fitness_level?: string | null
           full_name?: string | null
           has_seen_welcome_modal?: boolean
+          hydration_unit?: string
           id: string
           language?: string
           lifestyle?: string | null
@@ -182,6 +184,7 @@ export type Database = {
           fitness_level?: string | null
           full_name?: string | null
           has_seen_welcome_modal?: boolean
+          hydration_unit?: string
           id?: string
           language?: string
           lifestyle?: string | null

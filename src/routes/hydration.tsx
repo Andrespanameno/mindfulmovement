@@ -6,6 +6,9 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useMotivationalMessage } from "@/hooks/useMotivationalMessage";
 import { useI18n } from "@/lib/i18n";
+import { useProfile } from "@/lib/useProfile";
+import { HydrationUnitToggle } from "@/components/mm/HydrationUnitToggle";
+import { formatAmount, mlToOz, QUICK_ADDS_ML, type HydrationUnit } from "@/lib/hydrationUnit";
 import {
   useSessionStore,
   logHydration,
@@ -30,6 +33,12 @@ export const Route = createFileRoute("/hydration")({
 
 function HydrationPage() {
   const { t } = useI18n();
+  const { profile, updateProfile } = useProfile();
+  const unit: HydrationUnit = profile?.hydration_unit ?? "oz";
+  const setUnit = (next: HydrationUnit) => {
+    if (next === unit) return;
+    void updateProfile({ hydration_unit: next });
+  };
   const { ouncesToday, lastHydrationAdd, remindersEnabled, reminderIntervalMin, lastReminderAt } =
     useSessionStore();
   const todayKey = localDateKey(new Date());
@@ -110,7 +119,8 @@ function HydrationPage() {
         Math.floor(beforeRound / 8) * HYDRATION_XP_PER_8OZ,
     );
     logHydration(oz);
-    toast.success(t("hydration.toast.logged", { n: oz }), {
+    const displayN = unit === "ml" ? Math.round(oz * 29.5735) : oz;
+    toast.success(t("hydration.toast.logged_u", { n: displayN, unit: t(unit === "ml" ? "unit.ml" : "unit.oz") }), {
       description: xp > 0 ? t("hydration.toast.xp", { xp }) : t("hydration.toast.keep"),
     });
     void persistHydration(oz);
@@ -151,7 +161,7 @@ function HydrationPage() {
           <ArrowLeft className="size-4" />
         </Link>
         <h1 className="text-base font-semibold">{t("hydration.title")}</h1>
-        <div className="size-10" />
+        <HydrationUnitToggle value={unit} onChange={setUnit} />
       </header>
 
       <div className="rounded-3xl bg-card ring-1 ring-black/5 p-8 mb-6 text-center">
@@ -172,11 +182,16 @@ function HydrationPage() {
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <Droplet className="size-5 text-primary mb-1" />
-            <p className="text-4xl font-semibold tabular-nums">{roundOunces}</p>
-            <p className="text-xs text-muted-foreground">{t("hydration.of_today", { goal: HYDRATION_GOAL_OZ })}</p>
+            <p className="text-4xl font-semibold tabular-nums">{formatAmount(roundOunces, unit)}</p>
+            <p className="text-xs text-muted-foreground">
+              {t("hydration.of_today_u", {
+                goal: formatAmount(HYDRATION_GOAL_OZ, unit),
+                unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
+              })}
+            </p>
             {bonusBaseline > 0 && (
               <p className="text-[10px] font-medium text-muted-foreground mt-0.5">
-                {t("hydration.total_today")}: {ouncesToday} oz · {t("hydration.round")} {roundNumber}
+                {t("hydration.total_today")}: {formatAmount(ouncesToday, unit)} {t(unit === "ml" ? "unit.ml" : "unit.oz")} · {t("hydration.round")} {roundNumber}
               </p>
             )}
             {roundComplete && (
@@ -189,7 +204,10 @@ function HydrationPage() {
         <p className="text-sm text-muted-foreground text-pretty">
           {roundComplete
             ? t("home.hydration.reached")
-            : t("hydration.to_go", { n: HYDRATION_GOAL_OZ - roundOunces })}
+            : t("hydration.to_go_u", {
+                n: formatAmount(HYDRATION_GOAL_OZ - roundOunces, unit),
+                unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
+              })}
         </p>
         {roundComplete && (
           <button
@@ -205,18 +223,21 @@ function HydrationPage() {
         {t("hydration.quick_add")}
       </h3>
       <div className="grid grid-cols-3 gap-3 mb-4">
-        {QUICK_ADDS_OZ.map((oz) => (
-          <button
-            key={oz}
-            onClick={() => add(oz)}
-            disabled={roundComplete}
-            className="h-20 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary font-semibold flex flex-col items-center justify-center gap-1 active:scale-[0.97] transition disabled:opacity-40 disabled:active:scale-100 disabled:cursor-not-allowed"
-          >
-            <Droplet className="size-4" />
-            <span className="text-lg leading-none">{oz}</span>
-            <span className="text-[10px] font-medium uppercase tracking-wider opacity-70">oz</span>
-          </button>
-        ))}
+        {(unit === "ml" ? QUICK_ADDS_ML : QUICK_ADDS_OZ).map((amount) => {
+          const oz = unit === "ml" ? mlToOz(amount) : amount;
+          return (
+            <button
+              key={amount}
+              onClick={() => add(oz)}
+              disabled={roundComplete}
+              className="h-20 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary font-semibold flex flex-col items-center justify-center gap-1 active:scale-[0.97] transition disabled:opacity-40 disabled:active:scale-100 disabled:cursor-not-allowed"
+            >
+              <Droplet className="size-4" />
+              <span className="text-lg leading-none">{amount}</span>
+              <span className="text-[10px] font-medium uppercase tracking-wider opacity-70">{unit === "ml" ? "mL" : "oz"}</span>
+            </button>
+          );
+        })}
       </div>
 
       <button
@@ -224,7 +245,10 @@ function HydrationPage() {
         disabled={ouncesToday === 0 || lastHydrationAdd === 0}
         className="w-full h-11 rounded-2xl bg-card ring-1 ring-black/5 text-sm font-medium text-muted-foreground flex items-center justify-center gap-2 mb-8 disabled:opacity-40"
       >
-        <Undo2 className="size-4" /> {t("hydration.undo", { n: lastHydrationAdd || 8 })}
+        <Undo2 className="size-4" /> {t("hydration.undo_u", {
+          n: formatAmount(lastHydrationAdd || 8, unit),
+          unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
+        })}
       </button>
 
       <div className="grid grid-cols-8 gap-1.5 mb-8">
