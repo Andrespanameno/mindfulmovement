@@ -111,6 +111,7 @@ function HomePage() {
       </div>
 
       <InspirationCard placement="home_page" />
+      <WelcomeModal />
       <FirstTimeTutorial />
     </AppShell>
   );
