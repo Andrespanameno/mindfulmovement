@@ -7,18 +7,18 @@ import { useI18n, type Lang } from "@/lib/i18n";
  */
 
 export const LIFESTYLE_ES: Record<string, { label: string; description: string }> = {
-  "office-desk": { label: "Trabajo de oficina", description: "Pensado para largas horas sentado frente a la pantalla." },
+  "office-desk": { label: "Trabajo en oficina", description: "Pensado para largas horas sentado frente a la pantalla." },
   "remote-desk": { label: "Home office", description: "Recordatorios suaves para tus días trabajando desde casa." },
-  "stay-at-home-parent": { label: "Papá/mamá en casa", description: "Movimientos que se acomodan a la crianza y a la rutina del hogar." },
-  "busy-parent-fulltime": { label: "Papá/mamá con trabajo de tiempo completo", description: "Pausas cortas entre reuniones y tiempo en familia." },
+  "stay-at-home-parent": { label: "Mamá o papá en casa", description: "Movimientos que se acomodan a la crianza y a la rutina del hogar." },
+  "busy-parent-fulltime": { label: "Mamá o papá con trabajo de tiempo completo", description: "Pausas cortas entre reuniones y tiempo en familia." },
   "active-on-feet": { label: "Trabajo activo o de pie", description: "Movimientos para recuperarte y mantener la movilidad." },
   "hybrid": { label: "Esquema híbrido", description: "Se adapta a tus días en casa y en la oficina." },
   "student": { label: "Estudiante", description: "Pausas útiles entre clases y momentos de estudio." },
-  "driver": { label: "Manejas seguido", description: "Estiramientos y respiración para tus tiempos al volante." },
+  "driver": { label: "Manejas a menudo", description: "Estiramientos y respiración para tus tiempos al volante." },
   "shift-worker": { label: "Trabajo por turnos", description: "Recordatorios flexibles que se acomodan a tus horarios cambiantes." },
   "healthcare": { label: "Personal de salud", description: "Pausas rápidas entre rondas y turnos largos." },
   "retail-hospitality": { label: "Comercio o atención al cliente", description: "Momentos de recuperación para jornadas largas atendiendo al público." },
-  "fitness-beginner": { label: "Iniciando en el fitness", description: "Puntos de partida suaves para construir un hábito diario." },
+  "fitness-beginner": { label: "Comenzando con el ejercicio", description: "Puntos de partida suaves para construir un hábito diario." },
   "retired-low-activity": { label: "Jubilado o de baja actividad", description: "Movimiento suave y respiración consciente para días tranquilos." },
   "general-busy": { label: "Día a día ocupado", description: "Pequeñas pausas para sobrellevar días largos." },
 };
@@ -27,7 +27,7 @@ export const FITNESS_ES: Record<string, string> = {
   beginner: "principiante",
   casual: "casual",
   active: "activo",
-  athletic: "deportista",
+  athletic: "atlético",
 };
 
 export const WORK_STYLE_ES: Record<string, string> = {
@@ -45,7 +45,7 @@ export const DIFFICULTY_ES: Record<string, string> = {
 
 export const CATEGORY_ES: Record<string, { label: string; short: string; description: string }> = {
   "desk-posture": { label: "Pausas de escritorio y postura", short: "Escritorio", description: "Pausas tranquilas para las largas horas frente a la pantalla." },
-  "quick-walks": { label: "Caminatas rápidas y energía", short: "Caminatas", description: "Pequeños impulsos para despertar cuerpo y mente." },
+  "quick-walks": { label: "Caminatas rápidas y energía", short: "Caminatas", description: "Caminatas cortas para despertar cuerpo y mente." },
   "stretch-mobility": { label: "Estiramiento y movilidad", short: "Movilidad", description: "Flujos suaves de rango de movimiento para mantenerte ágil." },
   "low-energy": { label: "Recuperación con poca energía", short: "Recuperar", description: "Pausas suaves para los días cansados, sin presión." },
   "strength-snacks": { label: "Mini sesiones de fuerza", short: "Fuerza", description: "Series cortitas de fuerza que puedes hacer en cualquier lugar." },
@@ -57,9 +57,9 @@ export const CATEGORY_ES: Record<string, { label: string; short: string; descrip
 export const LEVEL_TITLES_ES: string[] = [
   "Primer paso",
   "Movimiento suave",
-  "Quien comienza con conciencia",
+  "Primeros pasos con calma",
   "Espíritu constante",
-  "Explorador consciente",
+  "Buscador del bienestar",
   "Devoción diaria",
   "Constructor de calma",
   "Fuerza serena",
@@ -68,10 +68,10 @@ export const LEVEL_TITLES_ES: string[] = [
 ];
 
 export const XP_ENCOURAGEMENTS_ES: string[] = [
-  "Cada movimiento cuenta.",
-  "Las pequeñas acciones generan grandes cambios.",
-  "Estás generando impulso.",
-  "Constancia antes que intensidad.",
+  "Cada movimiento suma.",
+  "Las acciones pequeñas hacen grandes cambios.",
+  "Vas tomando ritmo.",
+  "Mejor constancia que intensidad.",
   "Progreso suave, cambio real.",
 ];
 
@@ -87,12 +87,12 @@ export const MILESTONE_ES: Record<string, { label: string; description: string }
 export const ENCOURAGEMENTS_ES: string[] = [
   "Movimiento completado.",
   "Las pequeñas acciones suman.",
-  "El impulso se construye con constancia.",
-  "Tu cuerpo agradece cada pequeño esfuerzo.",
+  "El ritmo se construye con constancia.",
+  "Tu cuerpo agradece cada pequeño esfuerzo que haces.",
   "Progreso suave, cambio real.",
-  "Un momento consciente a la vez.",
-  "Ese fue un gesto amable contigo mismo.",
-  "Ritmo constante, ser constante.",
+  "Un momento a la vez, sin apuro.",
+  "Fue un buen gesto contigo.",
+  "Ritmo constante, calma constante.",
 ];
 
 export const WELLNESS_GOALS_ES: Record<string, string> = {
@@ -232,32 +232,32 @@ const ENCOURAGEMENTS_EN_INDEX: Record<string, number> = {
 /** Overlay translations for DB-driven motivational messages */
 export const MESSAGE_ES: Record<string, string> = {
   "Small actions build lasting progress.": "Las acciones pequeñas construyen progreso duradero.",
-  "A few intentional minutes can shift your whole day.": "Unos minutos intencionales pueden cambiar tu día.",
-  "Your body appreciates every mindful movement.": "Tu cuerpo agradece cada movimiento consciente.",
+  "A few intentional minutes can shift your whole day.": "Unos minutos para ti pueden cambiar tu día.",
+  "Your body appreciates every mindful movement.": "Tu cuerpo agradece cada movimiento, por más pequeño que sea.",
   "Progress does not have to be intense to be meaningful.": "El progreso no tiene que ser intenso para ser significativo.",
-  "Today is a gentle invitation to begin again.": "Hoy es una invitación suave a empezar de nuevo.",
+  "Today is a gentle invitation to begin again.": "Hoy es un buen momento para empezar de nuevo.",
   "Consistency is kinder than intensity.": "La constancia es más amable que la intensidad.",
   "Movement is a quiet form of self-care.": "El movimiento es una forma callada de cuidarte.",
   "A calm breath is always within reach.": "Una respiración calmada siempre está al alcance.",
-  "Tiny resets create steady momentum.": "Los pequeños reinicios crean impulso constante.",
+  "Tiny resets create steady momentum.": "Las pausas pequeñas te dan ritmo constante.",
   "Stillness counts. Motion counts. Both matter.": "La quietud cuenta. El movimiento cuenta. Ambos importan.",
   "Hydration is a small act of devotion to yourself.": "La hidratación es un pequeño acto de devoción hacia ti.",
   "You do not need a perfect day to make a meaningful one.": "No necesitas un día perfecto para que sea significativo.",
-  "Show up softly. That is enough.": "Preséntate con suavidad. Eso es suficiente.",
+  "Show up softly. That is enough.": "Date el espacio, con calma. Con eso basta.",
   "You showed up for yourself today.": "Hoy estuviste presente para ti.",
   "That small pause mattered.": "Esa pequeña pausa importó.",
-  "Momentum grows one reset at a time.": "El impulso crece un reinicio a la vez.",
+  "Momentum grows one reset at a time.": "El ritmo crece una pausa a la vez.",
   "Your body says thank you.": "Tu cuerpo te lo agradece.",
-  "Beautifully done. Carry this calm with you.": "Muy bien hecho. Lleva esta calma contigo.",
+  "Beautifully done. Carry this calm with you.": "Muy bien hecho. Llévate esta calma.",
   "A few minutes well spent.": "Unos minutos bien invertidos.",
   "Gentle effort is real effort.": "El esfuerzo suave es esfuerzo de verdad.",
   "You just made the day a little kinder.": "Acabas de hacer el día un poco más amable.",
   "That is how lasting change is built.": "Así es como se construye el cambio duradero.",
   "Every reset is a quiet victory.": "Cada reinicio es una victoria silenciosa.",
   "Your breath, your body, your moment.": "Tu aliento, tu cuerpo, tu momento.",
-  "You returned to yourself. That is everything.": "Volviste a ti. Eso lo es todo.",
+  "You returned to yourself. That is everything.": "Volviste a conectar contigo. Eso lo es todo.",
   "Small movement, big care.": "Movimiento pequeño, gran cuidado.",
-  "A sip is a small promise kept.": "Un sorbo es una pequeña promesa cumplida.",
+  "A sip is a small promise kept.": "Cada sorbo es una promesa que te cumples.",
   "Your body is grateful for that glass.": "Tu cuerpo está agradecido por ese vaso.",
   "Hydration done gently is hydration done well.": "La hidratación hecha con suavidad es hidratación bien hecha.",
   "Steady sips, steady self.": "Sorbos constantes, serenidad constante.",
@@ -267,7 +267,7 @@ export const MESSAGE_ES: Record<string, string> = {
   "One glass closer to a softer afternoon.": "Un vaso más cerca de una tarde más suave.",
   "Gentle hydration, gentle energy.": "Hidratación suave, energía suave.",
   "Small sips, real care.": "Sorbos pequeños, cuidado real.",
-  "Look how far small steps have carried you.": "Mira qué lejos te han llevado los pequeños pasos.",
+  "Look how far small steps have carried you.": "Mira qué lejos te han llevado los pasos pequeños.",
   "Consistency, not intensity, built this.": "La constancia, no la intensidad, construyó esto.",
   "Every entry here is a moment you chose yourself.": "Cada entrada aquí es un momento que elegiste tú.",
   "Progress is the gentle sum of showing up.": "El progreso es la suma suave de presentarse.",
@@ -278,7 +278,7 @@ export const MESSAGE_ES: Record<string, string> = {
   "This is what kind progress looks like.": "Así se ve el progreso amable.",
   "Each session here is a small thank-you to your future self.": "Cada sesión aquí es un pequeño gracias a tu yo futuro.",
   "Movement, breath, hydration, all woven into your week.": "Movimiento, respiración, hidratación, todo tejido en tu semana.",
-  "Streaks are built breath by breath.": "Las constancias se construyen aliento a aliento.",
+  "Streaks are built breath by breath.": "La constancia se construye respiración a respiración.",
 };
 
 export function translateMessage(msg: string): string {
