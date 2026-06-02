@@ -147,6 +147,8 @@ export type Database = {
         Row: {
           created_at: string
           daily_water_goal: number
+          daily_water_goal_display: number | null
+          daily_water_goal_display_unit: string | null
           fitness_level: string | null
           full_name: string | null
           has_seen_welcome_modal: boolean
@@ -164,6 +166,8 @@ export type Database = {
         Insert: {
           created_at?: string
           daily_water_goal?: number
+          daily_water_goal_display?: number | null
+          daily_water_goal_display_unit?: string | null
           fitness_level?: string | null
           full_name?: string | null
           has_seen_welcome_modal?: boolean
@@ -181,6 +185,8 @@ export type Database = {
         Update: {
           created_at?: string
           daily_water_goal?: number
+          daily_water_goal_display?: number | null
+          daily_water_goal_display_unit?: string | null
           fitness_level?: string | null
           full_name?: string | null
           has_seen_welcome_modal?: boolean
