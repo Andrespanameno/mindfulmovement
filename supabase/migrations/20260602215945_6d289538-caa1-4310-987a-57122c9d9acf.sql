@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN hydration_unit text NOT NULL DEFAULT 'oz' CHECK (hydration_unit IN ('oz','ml'));
