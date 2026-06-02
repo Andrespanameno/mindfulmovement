@@ -75,7 +75,7 @@ function ProfilePage() {
         <button
           onClick={() => setEditOpen(true)}
           disabled={loading || !profile}
-          className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline disabled:opacity-50"
+          className="mt-3 inline-flex items-center gap-1.5 font-medium text-primary hover:underline disabled:opacity-50 text-sm"
         >
           <Pencil className="size-3" /> {c.t("profile.edit")}
         </button>
