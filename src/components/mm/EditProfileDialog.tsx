@@ -23,6 +23,8 @@ import type { Profile, ProfileUpdate } from "@/lib/useProfile";
 import { LIFESTYLES } from "@/lib/lifestyles";
 import { useI18n } from "@/lib/i18n";
 import { useContent } from "@/lib/i18n-content";
+import { HydrationUnitToggle } from "@/components/mm/HydrationUnitToggle";
+import { ozToMl, mlToOz, type HydrationUnit } from "@/lib/hydrationUnit";
 
 const FITNESS = ["beginner", "casual", "active", "athletic"] as const;
 const WORK_STYLES = ["desk", "hybrid", "active", "on-the-go"] as const;
@@ -54,6 +56,7 @@ export function EditProfileDialog({
   const [lifestyle, setLifestyle] = useState(profile.lifestyle ?? "");
   const [goals, setGoals] = useState<string[]>(profile.wellness_goals ?? []);
   const [water, setWater] = useState<number>(profile.daily_water_goal);
+  const [unit, setUnit] = useState<HydrationUnit>(profile.hydration_unit ?? "oz");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -64,6 +67,7 @@ export function EditProfileDialog({
       setLifestyle(profile.lifestyle ?? "");
       setGoals(profile.wellness_goals ?? []);
       setWater(profile.daily_water_goal);
+      setUnit(profile.hydration_unit ?? "oz");
     }
   }, [open, profile]);
 
@@ -72,13 +76,17 @@ export function EditProfileDialog({
 
   const handleSave = async () => {
     setBusy(true);
+    // `water` is stored in the currently-selected unit while editing.
+    // Convert back to oz for storage.
+    const waterOz = unit === "ml" ? mlToOz(Number(water) || 0) : Math.round(Number(water) || 0);
     const { error } = await onSave({
       full_name: fullName.trim() || null,
       fitness_level: fitness || null,
       work_style: workStyle || null,
       lifestyle: lifestyle || null,
       wellness_goals: goals,
-      daily_water_goal: Math.max(16, Math.min(200, Number(water) || 64)),
+      daily_water_goal: Math.max(16, Math.min(400, waterOz || 64)),
+      hydration_unit: unit,
       onboarding_completed: true,
     });
     setBusy(false);
@@ -176,12 +184,25 @@ export function EditProfileDialog({
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="water">{t("edit.water")}</Label>
+            <div className="flex items-center justify-between gap-2">
+              <Label htmlFor="water">{unit === "ml" ? t("edit.water_ml") : t("edit.water_oz")}</Label>
+              <HydrationUnitToggle
+                value={unit}
+                onChange={(next) => {
+                  if (next === unit) return;
+                  // convert current input between units so the user sees the equivalent value
+                  const current = Number(water) || 0;
+                  if (next === "ml" && unit === "oz") setWater(ozToMl(current));
+                  else if (next === "oz" && unit === "ml") setWater(mlToOz(current));
+                  setUnit(next);
+                }}
+              />
+            </div>
             <Input
               id="water"
               type="number"
-              min={16}
-              max={200}
+              min={unit === "ml" ? 500 : 16}
+              max={unit === "ml" ? 6000 : 200}
               value={water}
               onChange={(e) => setWater(Number(e.target.value))}
             />
