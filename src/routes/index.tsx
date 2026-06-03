@@ -1,10 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
 import { useI18n } from "@/lib/i18n";
 import { LanguageToggle } from "@/components/mm/LanguageToggle";
 import { ThemeToggle } from "@/components/mm/ThemeToggle";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,6 +19,8 @@ export const Route = createFileRoute("/")({
 
 type Mode = "signin" | "signup" | "forgot";
 
+const REMEMBER_KEY = "mm-remembered-email";
+
 function LoginPage() {
   const navigate = useNavigate();
   const { signIn, signUp, resetPassword } = useAuth();
@@ -27,6 +30,8 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
   const setEmailValidity = (input: HTMLInputElement) => {
     const v = input.validity;
@@ -72,6 +77,25 @@ function LoginPage() {
   };
   const tt = titles[mode];
 
+  useEffect(() => {
+    const saved = localStorage.getItem(REMEMBER_KEY);
+    if (saved) {
+      setEmail(saved);
+      setRememberMe(true);
+      setTimeout(() => passwordRef.current?.focus(), 0);
+    }
+  }, []);
+
+  const handleRememberChange = (checked: boolean) => {
+    setRememberMe(checked);
+    if (checked) {
+      if (email) localStorage.setItem(REMEMBER_KEY, email);
+    } else {
+      localStorage.removeItem(REMEMBER_KEY);
+      toast.success(t("auth.email_removed"));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
@@ -81,6 +105,11 @@ function LoginPage() {
         if (error) {
           toast.error(error.includes("Invalid") ? t("auth.invalid") : error);
         } else {
+          if (rememberMe && email) {
+            localStorage.setItem(REMEMBER_KEY, email);
+          } else {
+            localStorage.removeItem(REMEMBER_KEY);
+          }
           navigate({ to: "/home" });
         }
       } else if (mode === "signup") {
@@ -152,6 +181,15 @@ function LoginPage() {
               onInput={(e) => setEmailValidity(e.currentTarget)}
             />
           </div>
+          {mode === "signin" && (
+            <label className="flex items-center gap-2 cursor-pointer ml-1">
+              <Checkbox
+                checked={rememberMe}
+                onCheckedChange={(checked) => handleRememberChange(checked === true)}
+              />
+              <span className="text-sm text-muted-foreground">{t("auth.remember_me")}</span>
+            </label>
+          )}
           {mode !== "forgot" && (
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground ml-1">
@@ -165,6 +203,7 @@ function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="w-full h-12 px-4 rounded-xl bg-secondary/60 ring-1 ring-black/5 focus:ring-2 focus:ring-primary outline-none transition"
+                ref={passwordRef}
                 onInvalid={(e) => setPasswordValidity(e.currentTarget)}
                 onInput={(e) => setPasswordValidity(e.currentTarget)}
               />

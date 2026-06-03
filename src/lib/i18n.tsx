@@ -129,6 +129,9 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "Please enter your name.",
     es: "Ingresa tu nombre.",
   },
+  "auth.remember_me": { en: "Remember me", es: "Recuérdame" },
+  "auth.email_remembered": { en: "Email remembered", es: "Correo recordado" },
+  "auth.email_removed": { en: "Email removed", es: "Correo eliminado" },
 
   "home.greeting.morning": { en: "Good morning, {name}", es: "Buenos días, {name}" },
   "home.greeting.afternoon": { en: "Good afternoon, {name}", es: "Buenas tardes, {name}" },
