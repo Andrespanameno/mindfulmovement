@@ -181,6 +181,15 @@ function LoginPage() {
               onInput={(e) => setEmailValidity(e.currentTarget)}
             />
           </div>
+          {mode === "signin" && (
+            <label className="flex items-center gap-2 cursor-pointer ml-1">
+              <Checkbox
+                checked={rememberMe}
+                onCheckedChange={(checked) => handleRememberChange(checked === true)}
+              />
+              <span className="text-sm text-muted-foreground">{t("auth.remember_me")}</span>
+            </label>
+          )}
           {mode !== "forgot" && (
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground ml-1">
