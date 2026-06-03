@@ -203,6 +203,7 @@ function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="w-full h-12 px-4 rounded-xl bg-secondary/60 ring-1 ring-black/5 focus:ring-2 focus:ring-primary outline-none transition"
+                ref={passwordRef}
                 onInvalid={(e) => setPasswordValidity(e.currentTarget)}
                 onInput={(e) => setPasswordValidity(e.currentTarget)}
               />
