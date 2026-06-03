@@ -77,6 +77,25 @@ function LoginPage() {
   };
   const tt = titles[mode];
 
+  useEffect(() => {
+    const saved = localStorage.getItem(REMEMBER_KEY);
+    if (saved) {
+      setEmail(saved);
+      setRememberMe(true);
+      setTimeout(() => passwordRef.current?.focus(), 0);
+    }
+  }, []);
+
+  const handleRememberChange = (checked: boolean) => {
+    setRememberMe(checked);
+    if (checked) {
+      if (email) localStorage.setItem(REMEMBER_KEY, email);
+    } else {
+      localStorage.removeItem(REMEMBER_KEY);
+      toast.success(t("auth.email_removed"));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
@@ -86,6 +105,11 @@ function LoginPage() {
         if (error) {
           toast.error(error.includes("Invalid") ? t("auth.invalid") : error);
         } else {
+          if (rememberMe && email) {
+            localStorage.setItem(REMEMBER_KEY, email);
+          } else {
+            localStorage.removeItem(REMEMBER_KEY);
+          }
           navigate({ to: "/home" });
         }
       } else if (mode === "signup") {
