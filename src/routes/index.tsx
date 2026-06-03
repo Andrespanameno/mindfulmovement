@@ -19,6 +19,8 @@ export const Route = createFileRoute("/")({
 
 type Mode = "signin" | "signup" | "forgot";
 
+const REMEMBER_KEY = "mm-remembered-email";
+
 function LoginPage() {
   const navigate = useNavigate();
   const { signIn, signUp, resetPassword } = useAuth();
@@ -28,6 +30,8 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
   const setEmailValidity = (input: HTMLInputElement) => {
     const v = input.validity;
