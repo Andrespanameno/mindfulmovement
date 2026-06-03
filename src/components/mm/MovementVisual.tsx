@@ -4,7 +4,7 @@ import Lottie from "lottie-react";
 import type { LottieRefCurrentProps } from "lottie-react";
 import { useEffect, useRef } from "react";
 import breathing478 from "@/assets/lottie/4-7-8-breathing.json";
-import boxBreathing from "@/assets/lottie/box-breathing.json";
+import { BoxBreathingVisual } from "./BoxBreathingVisual";
 
 interface Props {
   movementId: string;
