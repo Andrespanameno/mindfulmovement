@@ -512,6 +512,10 @@ const dict: Record<string, { en: string; es: string }> = {
   "error.sub": { en: "Something went wrong on our end. You can try refreshing or head back home.", es: "Algo falló de nuestro lado. Intenta recargar o vuelve al inicio." },
   "error.try_again": { en: "Try again", es: "Intentar de nuevo" },
 
+  "breath.inhale": { en: "Inhale", es: "Inhala" },
+  "breath.hold": { en: "Hold", es: "Mantén" },
+  "breath.exhale": { en: "Exhale", es: "Exhala" },
+
   "notif.movement.title": { en: "Mindful Movement", es: "Hora de moverte" },
   "notif.hydration.title": { en: "Hydration check", es: "Pausa de hidratación" },
   "notif.breath.title": { en: "Breath check", es: "Pausa para respirar" },
