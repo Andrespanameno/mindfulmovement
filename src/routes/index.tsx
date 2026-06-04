@@ -276,6 +276,13 @@ function LoginPage() {
                 onInvalid={(e) => setPasswordValidity(e.currentTarget)}
                 onInput={(e) => setPasswordValidity(e.currentTarget)}
               />
+              <label className="flex items-center gap-2 cursor-pointer ml-1 pt-1">
+                <Checkbox
+                  checked={showPassword}
+                  onCheckedChange={(checked) => setShowPassword(checked === true)}
+                />
+                <span className="text-sm text-muted-foreground">{t("auth.see_password")}</span>
+              </label>
             </div>
           )}
           <button
