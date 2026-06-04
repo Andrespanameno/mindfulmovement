@@ -265,7 +265,7 @@ function LoginPage() {
                 {t("auth.password")}
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 minLength={6}
                 value={password}
