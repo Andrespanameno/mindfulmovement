@@ -55,11 +55,11 @@ export function BoxBreathingVisual({ running = false }: Props) {
 
         <style>{`
           @keyframes box-breath-dot {
-            0%   { transform: translate(-52px, 52px); }
-            25%  { transform: translate(-52px, -52px); }
-            50%  { transform: translate(52px, -52px); }
-            75%  { transform: translate(52px, 52px); }
-            100% { transform: translate(-52px, 52px); }
+            0%   { transform: translate(-64px, 64px); }
+            25%  { transform: translate(-64px, -64px); }
+            50%  { transform: translate(64px, -64px); }
+            75%  { transform: translate(64px, 64px); }
+            100% { transform: translate(-64px, 64px); }
           }
           @keyframes box-breath-pulse {
             0%, 100% { transform: scale(1); }
