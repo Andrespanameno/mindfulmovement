@@ -146,6 +146,7 @@ const dict: Record<string, { en: string; es: string }> = {
     es: "Ingresa tu nombre.",
   },
   "auth.remember_me": { en: "Remember me", es: "Recuérdame" },
+  "auth.see_password": { en: "See password", es: "Ver contraseña" },
   "auth.email_remembered": { en: "Email remembered", es: "Correo recordado" },
   "auth.email_removed": { en: "Email removed", es: "Correo eliminado" },
 
