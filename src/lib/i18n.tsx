@@ -105,6 +105,22 @@ const dict: Record<string, { en: string; es: string }> = {
   "auth.invalid": { en: "Invalid email or password.", es: "El correo o la contraseña no coinciden." },
   "auth.signup.success": { en: "Account created. Check your email to confirm, then sign in.", es: "Cuenta creada. Revisa tu correo para confirmar y luego inicia sesión." },
   "auth.reset.success": { en: "Reset link sent. Check your email.", es: "Enlace enviado. Revisa tu correo." },
+  "auth.verify.title": { en: "Check your email", es: "Revisa tu correo" },
+  "auth.verify.sub": {
+    en: "We sent a verification link to {email}. Tap the link to verify your account and continue.",
+    es: "Enviamos un enlace de verificación a {email}. Toca el enlace para verificar tu cuenta y continuar.",
+  },
+  "auth.verify.resend": { en: "Resend email", es: "Reenviar correo" },
+  "auth.verify.resend_in": { en: "Resend in {s}s", es: "Reenviar en {s}s" },
+  "auth.verify.resend_success": { en: "Verification email sent.", es: "Correo de verificación enviado." },
+  "auth.verify.verified": { en: "Email verified", es: "Correo verificado" },
+  "auth.verify.link_expired": { en: "Verification link expired", es: "El enlace de verificación caducó" },
+  "auth.verify.try_again": { en: "Try again", es: "Intentar de nuevo" },
+  "auth.verify.not_confirmed": {
+    en: "Please verify your email before continuing.",
+    es: "Por favor verifica tu correo antes de continuar.",
+  },
+  "auth.verify.back": { en: "Back to sign in", es: "Volver a iniciar sesión" },
   "auth.validation.email_required": {
     en: "Please enter your email address.",
     es: "Por favor, ingresa tu correo electrónico.",
