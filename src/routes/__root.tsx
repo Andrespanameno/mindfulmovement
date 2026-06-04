@@ -147,7 +147,7 @@ function RootComponent() {
           <AuthGate>
             <Outlet />
           </AuthGate>
-          <Toaster position="top-center" />
+          <Toaster />
           <ReminderRunner />
           <StatsSync />
           <ProgressSync />
