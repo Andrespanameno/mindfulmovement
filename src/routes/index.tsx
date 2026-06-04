@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
+import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
 import { LanguageToggle } from "@/components/mm/LanguageToggle";
 import { ThemeToggle } from "@/components/mm/ThemeToggle";
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/")({
   component: LoginPage,
 });
 
-type Mode = "signin" | "signup" | "forgot";
+type Mode = "signin" | "signup" | "forgot" | "verify";
 
 const REMEMBER_KEY = "mm-remembered-email";
 
@@ -31,6 +32,8 @@ function LoginPage() {
   const [fullName, setFullName] = useState("");
   const [busy, setBusy] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState("");
+  const [resendCooldown, setResendCooldown] = useState(0);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const setEmailValidity = (input: HTMLInputElement) => {
@@ -74,6 +77,7 @@ function LoginPage() {
     signin: { title: t("auth.signin.title"), sub: t("auth.signin.sub"), cta: t("auth.signin.cta") },
     signup: { title: t("auth.signup.title"), sub: t("auth.signup.sub"), cta: t("auth.signup.cta") },
     forgot: { title: t("auth.forgot.title"), sub: t("auth.forgot.sub"), cta: t("auth.forgot.cta") },
+    verify: { title: t("auth.verify.title"), sub: "", cta: "" },
   };
   const tt = titles[mode];
 
@@ -85,6 +89,38 @@ function LoginPage() {
       setTimeout(() => passwordRef.current?.focus(), 0);
     }
   }, []);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const id = window.setTimeout(() => setResendCooldown((s) => s - 1), 1000);
+    return () => window.clearTimeout(id);
+  }, [resendCooldown]);
+
+  const startVerify = (addr: string) => {
+    setPendingEmail(addr);
+    setMode("verify");
+    setResendCooldown(60);
+  };
+
+  const handleResend = async () => {
+    if (resendCooldown > 0 || !pendingEmail) return;
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: pendingEmail,
+        options: { emailRedirectTo: `${window.location.origin}/home` },
+      });
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success(t("auth.verify.resend_success"));
+        setResendCooldown(60);
+      }
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const handleRememberChange = (checked: boolean) => {
     setRememberMe(checked);
@@ -103,7 +139,13 @@ function LoginPage() {
       if (mode === "signin") {
         const { error } = await signIn(email, password);
         if (error) {
-          toast.error(error.includes("Invalid") ? t("auth.invalid") : error);
+          const lower = error.toLowerCase();
+          if (lower.includes("not confirmed") || lower.includes("not verified") || lower.includes("email_not_confirmed")) {
+            toast.error(t("auth.verify.not_confirmed"));
+            startVerify(email);
+          } else {
+            toast.error(error.includes("Invalid") ? t("auth.invalid") : error);
+          }
         } else {
           if (rememberMe && email) {
             localStorage.setItem(REMEMBER_KEY, email);
@@ -117,8 +159,7 @@ function LoginPage() {
         if (error) {
           toast.error(error);
         } else {
-          toast.success(t("auth.signup.success"));
-          setMode("signin");
+          startVerify(email);
         }
       } else {
         const { error } = await resetPassword(email);
@@ -145,10 +186,37 @@ function LoginPage() {
         <h1 className="text-3xl font-semibold leading-tight text-balance mb-3">
           {tt.title}
         </h1>
-        <p className="text-base text-muted-foreground text-pretty mb-10">
-          {tt.sub}
-        </p>
+        {mode === "verify" ? (
+          <p className="text-base text-muted-foreground text-pretty mb-8">
+            {t("auth.verify.sub").replace("{email}", pendingEmail)}
+          </p>
+        ) : (
+          <p className="text-base text-muted-foreground text-pretty mb-10">
+            {tt.sub}
+          </p>
+        )}
 
+        {mode === "verify" ? (
+          <div className="space-y-3">
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={busy || resendCooldown > 0}
+              className="w-full h-12 bg-foreground text-background rounded-xl font-medium text-sm hover:opacity-90 transition disabled:opacity-60"
+            >
+              {resendCooldown > 0
+                ? t("auth.verify.resend_in").replace("{s}", String(resendCooldown))
+                : t("auth.verify.resend")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("signin")}
+              className="w-full text-xs text-muted-foreground hover:text-foreground transition"
+            >
+              {t("auth.verify.back")}
+            </button>
+          </div>
+        ) : (
         <form className="space-y-4" onSubmit={handleSubmit}>
           {mode === "signup" && (
             <div className="space-y-1.5">
@@ -227,9 +295,10 @@ function LoginPage() {
             </button>
           )}
         </form>
+        )}
 
         <div className="mt-auto pt-12 text-center">
-          {mode === "signin" ? (
+          {mode === "verify" ? null : mode === "signin" ? (
             <p className="text-sm text-muted-foreground">
               {t("auth.new_here")}{" "}
               <button
