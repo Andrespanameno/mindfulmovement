@@ -11,6 +11,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
       mobileOffset="calc(env(safe-area-inset-top, 0px) + 56px)"
       gap={16}
       visibleToasts={3}
+      closeButton
+      dismissible
       style={
         {
           "--width": "min(480px, calc(100vw - 24px))",
