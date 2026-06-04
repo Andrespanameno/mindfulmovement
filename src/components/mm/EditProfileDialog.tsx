@@ -215,7 +215,7 @@ export function EditProfileDialog({
                   const current = Number(water);
                   if (water.trim() && Number.isFinite(current)) {
                     if (next === "ml" && unit === "oz") setWater(String(ozToMl(current)));
-                    else if (next === "oz" && unit === "ml") setWater(String(mlToOz(current)));
+                    else if (next === "oz" && unit === "ml") setWater(String(Math.round(mlToOz(current))));
                   }
                   setUnit(next);
                 }}
