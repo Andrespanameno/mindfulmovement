@@ -42,10 +42,10 @@ function SupportPage() {
         <p className="text-sm text-muted-foreground leading-relaxed">
           {t("support.body_pre")}
           <a
-          href="mailto:andrespanameno89@gmail.com"
+          href="mailto:support@mindfulmovementapp.com"
           className="font-medium text-primary hover:underline"
         >
-          andrespanameno89@gmail.com
+          support@mindfulmovementapp.com
         </a>
           {t("support.body_post")}
         </p>
