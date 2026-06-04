@@ -186,10 +186,37 @@ function LoginPage() {
         <h1 className="text-3xl font-semibold leading-tight text-balance mb-3">
           {tt.title}
         </h1>
-        <p className="text-base text-muted-foreground text-pretty mb-10">
-          {tt.sub}
-        </p>
+        {mode === "verify" ? (
+          <p className="text-base text-muted-foreground text-pretty mb-8">
+            {t("auth.verify.sub").replace("{email}", pendingEmail)}
+          </p>
+        ) : (
+          <p className="text-base text-muted-foreground text-pretty mb-10">
+            {tt.sub}
+          </p>
+        )}
 
+        {mode === "verify" ? (
+          <div className="space-y-3">
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={busy || resendCooldown > 0}
+              className="w-full h-12 bg-foreground text-background rounded-xl font-medium text-sm hover:opacity-90 transition disabled:opacity-60"
+            >
+              {resendCooldown > 0
+                ? t("auth.verify.resend_in").replace("{s}", String(resendCooldown))
+                : t("auth.verify.resend")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("signin")}
+              className="w-full text-xs text-muted-foreground hover:text-foreground transition"
+            >
+              {t("auth.verify.back")}
+            </button>
+          </div>
+        ) : (
         <form className="space-y-4" onSubmit={handleSubmit}>
           {mode === "signup" && (
             <div className="space-y-1.5">
@@ -268,9 +295,10 @@ function LoginPage() {
             </button>
           )}
         </form>
+        )}
 
         <div className="mt-auto pt-12 text-center">
-          {mode === "signin" ? (
+          {mode === "verify" ? null : mode === "signin" ? (
             <p className="text-sm text-muted-foreground">
               {t("auth.new_here")}{" "}
               <button
