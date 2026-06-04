@@ -32,6 +32,7 @@ function LoginPage() {
   const [fullName, setFullName] = useState("");
   const [busy, setBusy] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [pendingEmail, setPendingEmail] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -264,7 +265,7 @@ function LoginPage() {
                 {t("auth.password")}
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 minLength={6}
                 value={password}
@@ -275,6 +276,13 @@ function LoginPage() {
                 onInvalid={(e) => setPasswordValidity(e.currentTarget)}
                 onInput={(e) => setPasswordValidity(e.currentTarget)}
               />
+              <label className="flex items-center gap-2 cursor-pointer ml-1 pt-1">
+                <Checkbox
+                  checked={showPassword}
+                  onCheckedChange={(checked) => setShowPassword(checked === true)}
+                />
+                <span className="text-sm text-muted-foreground">{t("auth.see_password")}</span>
+              </label>
             </div>
           )}
           <button
