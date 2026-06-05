@@ -377,7 +377,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "settings.item.how": { en: "How It Works", es: "Cómo funciona" },
   "settings.item.privacy": { en: "Privacy Policy", es: "Política de privacidad" },
   "settings.item.terms": { en: "Terms of Service", es: "Términos de servicio" },
-  "settings.version": { en: "Mindful Movement v0.1 Beta", es: "Mindful Movement v0.1 Beta" },
+  "settings.version": { en: "Mindful Movement v1.0.0", es: "Mindful Movement v1.0.0" },
   "settings.language.label": { en: "Language", es: "Idioma" },
   "settings.language.hint": { en: "Choose your preferred language.", es: "Elige tu idioma preferido." },
   "settings.replay_tour": { en: "Replay welcome tour", es: "Repetir tutorial de bienvenida" },
