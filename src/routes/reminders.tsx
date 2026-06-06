@@ -10,6 +10,13 @@ import {
   type ReminderSettings,
 } from "@/lib/reminders";
 import { useI18n } from "@/lib/i18n";
+import { isNative } from "@/lib/native";
+import {
+  getNativePermission,
+  requestNativePermission,
+  scheduleReminders,
+  type NativePermissionState,
+} from "@/lib/nativeNotifications";
 
 export const Route = createFileRoute("/reminders")({
   head: () => ({
@@ -24,22 +31,39 @@ export const Route = createFileRoute("/reminders")({
 const INTERVAL_OPTIONS: ReminderSettings["intervalMin"][] = [30, 60, 90, 120];
 
 function RemindersPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const s = useReminderSettings();
   const [permission, setPermission] = useState<NotificationPermission | "unsupported">(
     "default",
   );
+  const [nativePerm, setNativePerm] = useState<NativePermissionState>("prompt");
+  const native = isNative();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (native) {
+      void getNativePermission().then(setNativePerm);
+      return;
+    }
     if (!("Notification" in window)) {
       setPermission("unsupported");
       return;
     }
     setPermission(Notification.permission);
-  }, []);
+  }, [native]);
 
   const requestPermission = async () => {
+    if (native) {
+      const result = await requestNativePermission();
+      setNativePerm(result);
+      if (result === "granted") {
+        toast.success(t("reminders.notifs_on"), {
+          description: t("reminders.notifs_on_sub"),
+        });
+        await scheduleReminders(s, lang);
+      }
+      return;
+    }
     if (!("Notification" in window)) return;
     const result = await Notification.requestPermission();
     setPermission(result);
@@ -85,7 +109,25 @@ function RemindersPage() {
         <Toggle on={s.enabled} />
       </button>
 
-      {permission !== "granted" && permission !== "unsupported" && s.enabled && (
+      {native ? (
+        s.enabled && nativePerm !== "granted" ? (
+          <button
+            onClick={requestPermission}
+            disabled={nativePerm === "denied"}
+            className="w-full p-4 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary text-sm font-medium mb-6 text-left disabled:opacity-60"
+          >
+            {nativePerm === "denied"
+              ? t("reminders.native_denied_title")
+              : t("reminders.native_request_cta")}
+            <span className="block text-xs text-primary/70 font-normal mt-1">
+              {nativePerm === "denied"
+                ? t("reminders.native_denied_body")
+                : t("reminders.native_request_sub")}
+            </span>
+          </button>
+        ) : null
+      ) : (
+        permission !== "granted" && permission !== "unsupported" && s.enabled && (
         <button
           onClick={requestPermission}
           className="w-full p-4 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary text-sm font-medium mb-6 text-left"
@@ -95,6 +137,7 @@ function RemindersPage() {
             {t("reminders.enable_browser_sub")}
           </span>
         </button>
+        )
       )}
 
       <Section title={t("reminders.active_hours")}>

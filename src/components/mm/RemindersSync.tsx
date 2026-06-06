@@ -1,6 +1,9 @@
 import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
+import { useI18n } from "@/lib/i18n";
+import { isNative } from "@/lib/native";
+import { scheduleReminders } from "@/lib/nativeNotifications";
 import {
   getReminderSettings,
   hydrateReminderSettings,
@@ -15,6 +18,7 @@ import {
  */
 export function RemindersSync() {
   const { user } = useAuth();
+  const { lang } = useI18n();
   const hydratedRef = useRef<string | null>(null);
   const timerRef = useRef<number | null>(null);
   const lastSentRef = useRef<string>("");
@@ -55,12 +59,15 @@ export function RemindersSync() {
         lastSentRef.current = JSON.stringify(snap);
       }
       hydratedRef.current = user.id;
+      if (isNative()) {
+        void scheduleReminders(getReminderSettings(), lang);
+      }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [user, lang]);
 
   useEffect(() => {
     if (!user) return;
@@ -96,6 +103,9 @@ export function RemindersSync() {
         { onConflict: "user_id" },
       );
       if (error) console.error("[reminder_settings] upsert failed:", error.message);
+      if (isNative()) {
+        void scheduleReminders(s, lang);
+      }
     };
 
     const unsub = subscribeToReminderSettings(() => {
@@ -107,7 +117,7 @@ export function RemindersSync() {
       unsub();
       if (timerRef.current) window.clearTimeout(timerRef.current);
     };
-  }, [user]);
+  }, [user, lang]);
 
   return null;
 }
