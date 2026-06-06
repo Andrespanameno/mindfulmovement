@@ -45,17 +45,15 @@ function RemindersPage() {
       void getNativePermission().then((state) => {
         console.info("[reminders] opened settings, permission ->", state);
         setNativePerm(state);
-        if (s.enabled) {
-          void ensureNativePermissionAndSync(s, lang).then((resolved) => {
-            console.info("[reminders] opened settings, synced permission ->", resolved);
-            setNativePerm(resolved);
-            if (resolved === "denied") {
-              toast.message(t("reminders.native_denied_title"), {
-                description: t("reminders.native_denied_body"),
-              });
-            }
-          });
-        }
+        void ensureNativePermissionAndSync(s, lang).then((resolved) => {
+          console.info("[reminders] opened settings, synced permission ->", resolved);
+          setNativePerm(resolved);
+          if (resolved === "denied") {
+            toast.message(t("reminders.native_denied_title"), {
+              description: t("reminders.native_denied_body"),
+            });
+          }
+        });
       });
       return;
     }
