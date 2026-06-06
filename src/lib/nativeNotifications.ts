@@ -1,6 +1,6 @@
 import { LocalNotifications, type ScheduleOptions } from "@capacitor/local-notifications";
 import { isNative } from "./native";
-import { pickReminder, type ReminderSettings } from "./reminders";
+import { type ReminderSettings } from "./reminders";
 
 const ID_MIN = 1000;
 const ID_MAX = 1999;
@@ -9,11 +9,38 @@ const WINDOW_DAYS = 14;
 
 type Lang = "en" | "es";
 
-const TITLES: Record<"movement" | "hydration" | "breath", Record<Lang, string>> = {
-  movement: { en: "Mindful Movement", es: "Hora de moverte" },
-  hydration: { en: "Hydration check", es: "Pausa de hidratación" },
-  breath: { en: "Breath check", es: "Pausa para respirar" },
+const NATIVE_TITLE: Record<Lang, string> = {
+  en: "Mindful Movement",
+  es: "Mindful Movement",
 };
+
+const GENERIC_BODIES: Record<Lang, string[]> = {
+  en: [
+    "Time for a mindful reset",
+    "Ready for a quick movement break?",
+    "Take a few minutes to move",
+    "Your next reset is ready",
+    "A small movement can help",
+    "Time to move with intention",
+    "Let's take a quick reset",
+    "Your mindful movement is ready",
+  ],
+  es: [
+    "Tiempo para un reset consciente",
+    "¿Listo para una pausa de movimiento?",
+    "Tómate unos minutos para moverte",
+    "Tu siguiente reset está listo",
+    "Un pequeño movimiento puede ayudar",
+    "Es hora de moverte con intención",
+    "Hagamos un reset rápido",
+    "Tu movimiento consciente está listo",
+  ],
+};
+
+function pickGenericBody(lang: Lang): string {
+  const pool = GENERIC_BODIES[lang] ?? GENERIC_BODIES.en;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
 
 export type NativePermissionState = "granted" | "denied" | "prompt";
 
@@ -121,14 +148,10 @@ export async function scheduleReminders(
   if (slots.length === 0) return;
 
   const notifications: ScheduleOptions["notifications"] = slots.map((at, i) => {
-    const r = pickReminder(settings, lang) ?? {
-      kind: "movement" as const,
-      text: lang === "es" ? "Pausa breve." : "Quick reset.",
-    };
     return {
       id: ID_MIN + i,
-      title: TITLES[r.kind][lang],
-      body: r.text,
+      title: NATIVE_TITLE[lang],
+      body: pickGenericBody(lang),
       schedule: { at, allowWhileIdle: true },
       extra: { route: "/session" },
     };
