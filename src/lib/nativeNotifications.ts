@@ -148,14 +148,10 @@ export async function scheduleReminders(
   if (slots.length === 0) return;
 
   const notifications: ScheduleOptions["notifications"] = slots.map((at, i) => {
-    const r = pickReminder(settings, lang) ?? {
-      kind: "movement" as const,
-      text: lang === "es" ? "Pausa breve." : "Quick reset.",
-    };
     return {
       id: ID_MIN + i,
-      title: TITLES[r.kind][lang],
-      body: r.text,
+      title: NATIVE_TITLE[lang],
+      body: pickGenericBody(lang),
       schedule: { at, allowWhileIdle: true },
       extra: { route: "/session" },
     };
