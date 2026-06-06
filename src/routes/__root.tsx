@@ -19,6 +19,7 @@ import { StatsSync } from "@/components/mm/StatsSync";
 import { ProgressSync } from "@/components/mm/ProgressSync";
 import { RemindersSync } from "@/components/mm/RemindersSync";
 import { DispatchedReminders } from "@/components/mm/DispatchedReminders";
+import { NativeBridge } from "@/components/mm/NativeBridge";
 import { initTheme } from "@/lib/theme";
 
 function NotFoundComponent() {
@@ -153,6 +154,7 @@ function RootComponent() {
           <ProgressSync />
           <RemindersSync />
           <DispatchedReminders />
+          <NativeBridge />
         </I18nProvider>
       </AuthProvider>
     </QueryClientProvider>
