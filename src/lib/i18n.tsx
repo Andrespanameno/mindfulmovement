@@ -427,6 +427,27 @@ const dict: Record<string, { en: string; es: string }> = {
   "reminders.notifs_on": { en: "Notifications on", es: "Notificaciones activadas" },
   "reminders.notifs_on_sub": { en: "We'll nudge you gently.", es: "Te avisaremos con suavidad." },
 
+  "reminders.native_request_cta": {
+    en: "Turn on iPhone notifications →",
+    es: "Activar notificaciones del iPhone →",
+  },
+  "reminders.native_request_sub": {
+    en: "We'll send gentle reminders even when the app is closed.",
+    es: "Te enviaremos recordatorios suaves incluso con la app cerrada.",
+  },
+  "reminders.native_enabled": {
+    en: "iPhone notifications are on.",
+    es: "Las notificaciones del iPhone están activadas.",
+  },
+  "reminders.native_denied_title": {
+    en: "iPhone notifications are off",
+    es: "Las notificaciones del iPhone están desactivadas",
+  },
+  "reminders.native_denied_body": {
+    en: "Open iOS Settings → Notifications → Mindful Movement to turn them on. You'll still see reminders inside the app.",
+    es: "Abre Ajustes de iOS → Notificaciones → Mindful Movement para activarlas. Seguirás viendo los recordatorios dentro de la app.",
+  },
+
   "onb.step": { en: "Step {n} of 3", es: "Paso {n} de 3" },
   "onb.step1.title": { en: "What does your day look like?", es: "¿Cómo es tu día?" },
   "onb.step1.sub": { en: "Pick the lifestyle that fits best. You can change this anytime.", es: "Elige el estilo de vida que mejor te describa. Puedes cambiarlo cuando quieras." },
