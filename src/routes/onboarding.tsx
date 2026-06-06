@@ -18,8 +18,7 @@ import { useI18n } from "@/lib/i18n";
 import { useContent } from "@/lib/i18n-content";
 import { isNative } from "@/lib/native";
 import {
-  requestNativePermission,
-  scheduleReminders,
+  ensureNativePermissionAndSync,
 } from "@/lib/nativeNotifications";
 
 export const Route = createFileRoute("/onboarding")({
@@ -140,9 +139,12 @@ function OnboardingPage() {
     }
     if (isNative()) {
       try {
-        const perm = await requestNativePermission();
-        if (perm === "granted") {
-          await scheduleReminders(getReminderSettings(), lang);
+        const perm = await ensureNativePermissionAndSync(getReminderSettings(), lang);
+        console.info("[onboarding] native reminder permission ->", perm);
+        if (perm === "denied") {
+          toast.message(tr("reminders.native_denied_title"), {
+            description: tr("reminders.native_denied_body"),
+          });
         }
       } catch (e) {
         console.error("[onboarding] native permission flow failed:", e);
