@@ -34,7 +34,9 @@ export async function getNativePermission(): Promise<NativePermissionState> {
   if (!isNative()) return "prompt";
   try {
     const res = await LocalNotifications.checkPermissions();
-    return normalizeDisplay(res.display);
+    const state = normalizeDisplay(res.display);
+    console.info("[nativeNotifications] checkPermissions ->", state);
+    return state;
   } catch (err) {
     console.error("[nativeNotifications] checkPermissions failed:", err);
     return "prompt";
