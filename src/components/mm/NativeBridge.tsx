@@ -6,6 +6,11 @@ import { isNative } from "@/lib/native";
 import { getReminderSettings } from "@/lib/reminders";
 import { scheduleReminders } from "@/lib/nativeNotifications";
 import { useI18n } from "@/lib/i18n";
+import {
+  markReminderHandled,
+  isOnSessionRoute,
+  isGuidedSessionActive,
+} from "@/lib/reminderDedup";
 
 /**
  * Native-only glue:
@@ -26,6 +31,15 @@ export function NativeBridge() {
         const route =
           (event.notification.extra as { route?: string } | undefined)?.route ??
           "/session";
+        // Mark this reminder event as handled so any in-app toast
+        // for the same scheduled window is suppressed.
+        markReminderHandled();
+        console.info("[NativeBridge] notification tapped -> route", route);
+        // Guard: don't restart an active guided session.
+        if (route === "/session" && (isOnSessionRoute() || isGuidedSessionActive())) {
+          console.info("[NativeBridge] guided session already active; skipping navigate");
+          return;
+        }
         try {
           router.navigate({ to: route });
         } catch {

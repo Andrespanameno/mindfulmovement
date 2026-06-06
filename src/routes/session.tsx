@@ -6,6 +6,7 @@ import { buildGuidedSession, type SessionStep } from "@/lib/movements";
 import { useProfile } from "@/lib/useProfile";
 import { completeMovement } from "@/lib/useSessionStore";
 import { supabase } from "@/integrations/supabase/client";
+import { setGuidedSessionActive } from "@/lib/reminderDedup";
 import { cn } from "@/lib/utils";
 import { InspirationCard } from "@/components/mm/InspirationCard";
 import { useI18n } from "@/lib/i18n";
@@ -34,6 +35,13 @@ function SessionPage() {
   const content = useContent();
   const { profile } = useProfile();
   const navigate = useNavigate();
+
+  // Mark a guided session as active so reminder surfaces (native taps and
+  // in-app toasts) can de-duplicate against an in-progress session.
+  useEffect(() => {
+    setGuidedSessionActive(true);
+    return () => setGuidedSessionActive(false);
+  }, []);
 
   // Build once per mount so the session feels consistent through.
   const [steps, setSteps] = useState<SessionStep[]>(() => buildGuidedSession(profile?.preferred_categories));

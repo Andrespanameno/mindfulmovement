@@ -6,6 +6,7 @@ import {
   pickReminder,
 } from "@/lib/reminders";
 import { useI18n } from "@/lib/i18n";
+import { shouldSuppressReminder } from "@/lib/reminderDedup";
 
 const LAST_KEY = "mm-reminder-last-fired";
 
@@ -53,6 +54,10 @@ export function ReminderRunner() {
     const tick = () => {
       const nowDate = new Date();
       if (!isDispatchSlot(settings, nowDate)) return;
+      if (shouldSuppressReminder()) {
+        console.info("[ReminderRunner] suppressed (recent native tap or active session)");
+        return;
+      }
       const now = nowDate.getTime();
       const last = readLast();
       // Guard against duplicate fires within the same interval block.
