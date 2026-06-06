@@ -1,6 +1,6 @@
 import { LocalNotifications, type ScheduleOptions } from "@capacitor/local-notifications";
 import { isNative } from "./native";
-import { isDispatchSlot, pickReminder, type ReminderSettings } from "./reminders";
+import { pickReminder, type ReminderSettings } from "./reminders";
 
 const ID_MIN = 1000;
 const ID_MAX = 1999;
