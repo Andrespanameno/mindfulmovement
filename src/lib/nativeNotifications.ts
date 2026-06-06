@@ -1,6 +1,6 @@
 import { LocalNotifications, type ScheduleOptions } from "@capacitor/local-notifications";
 import { isNative } from "./native";
-import { isDispatchSlot, pickReminder, type ReminderSettings } from "./reminders";
+import { pickReminder, type ReminderSettings } from "./reminders";
 
 const ID_MIN = 1000;
 const ID_MAX = 1999;
@@ -109,21 +109,14 @@ export async function scheduleReminders(
   if (!settings.enabled) return;
   if (!settings.movement && !settings.hydration && !settings.breath) return;
 
-  // Walk forward minute by minute, picking matching dispatch slots.
-  const slots: Date[] = [];
-  const start = new Date();
-  // Round up to the next minute boundary so we never schedule in the past.
-  start.setSeconds(0, 0);
-  start.setMinutes(start.getMinutes() + 1);
-  const horizon = new Date(start.getTime() + WINDOW_DAYS * 24 * 60 * 60 * 1000);
-
-  const cursor = new Date(start);
-  while (cursor < horizon && slots.length < MAX_PENDING) {
-    if (isDispatchSlot(settings, cursor)) {
-      slots.push(new Date(cursor));
-    }
-    cursor.setMinutes(cursor.getMinutes() + 1);
-  }
+  const slots = generateScheduledSlots(settings, new Date(), WINDOW_DAYS, MAX_PENDING);
+  console.info("[nativeNotifications] schedule plan", {
+    cadence: settings.intervalMin,
+    activeHours: `${settings.startHour}-${settings.endHour}`,
+    quietWeekends: settings.quietWeekends,
+    count: slots.length,
+    times: slots.map((d) => d.toString()),
+  });
 
   if (slots.length === 0) return;
 
@@ -143,9 +136,116 @@ export async function scheduleReminders(
 
   try {
     await LocalNotifications.schedule({ notifications });
+    console.info(
+      `[nativeNotifications] scheduled ${notifications.length} local notifications`,
+    );
   } catch (err) {
     console.error("[nativeNotifications] schedule failed:", err);
   }
+}
+
+/**
+ * Build the exact list of local notification fire times based on the user's
+ * selected cadence + active hours. All times use the device's local
+ * timezone. Slots in the past (relative to `now`) are skipped. Duplicate
+ * timestamps are removed.
+ *
+ * Cadence rules:
+ *   - 30  → :00 and :30 within active hours
+ *   - 60  → :00 of each active hour
+ *   - 90  → first slot at (startHour+1):30, then every 90 min (within window)
+ *   - 120 → :00 every 2 hours, anchored at startHour (within window)
+ */
+export function generateScheduledSlots(
+  s: ReminderSettings,
+  now: Date,
+  days: number,
+  max: number,
+): Date[] {
+  const seen = new Set<number>();
+  const out: Date[] = [];
+  let skippedPast = 0;
+  let skippedDup = 0;
+
+  for (let d = 0; d < days && out.length < max; d++) {
+    const day = new Date(now);
+    day.setHours(0, 0, 0, 0);
+    day.setDate(day.getDate() + d);
+
+    if (s.quietWeekends) {
+      const dow = day.getDay();
+      if (dow === 0 || dow === 6) continue;
+    }
+
+    const dayStart = new Date(day);
+    dayStart.setHours(s.startHour, 0, 0, 0);
+    const dayEnd = new Date(day);
+    // endHour is exclusive (no notifications at or after endHour:00)
+    dayEnd.setHours(s.endHour, 0, 0, 0);
+    // If active hours wrap midnight, extend to next day
+    if (s.endHour <= s.startHour) {
+      dayEnd.setDate(dayEnd.getDate() + 1);
+    }
+
+    const slots = slotsForDay(s, dayStart, dayEnd);
+    for (const t of slots) {
+      if (out.length >= max) break;
+      if (t.getTime() <= now.getTime()) {
+        skippedPast++;
+        continue;
+      }
+      const key = t.getTime();
+      if (seen.has(key)) {
+        skippedDup++;
+        continue;
+      }
+      seen.add(key);
+      out.push(t);
+    }
+  }
+
+  if (skippedPast || skippedDup) {
+    console.info("[nativeNotifications] slot filter", { skippedPast, skippedDup });
+  }
+  return out;
+}
+
+function slotsForDay(s: ReminderSettings, dayStart: Date, dayEnd: Date): Date[] {
+  const out: Date[] = [];
+  const startMs = dayStart.getTime();
+  const endMs = dayEnd.getTime();
+
+  switch (s.intervalMin) {
+    case 30: {
+      // :00 and :30 of every active hour
+      for (let t = startMs; t < endMs; t += 30 * 60 * 1000) {
+        out.push(new Date(t));
+      }
+      break;
+    }
+    case 60: {
+      for (let t = startMs; t < endMs; t += 60 * 60 * 1000) {
+        out.push(new Date(t));
+      }
+      break;
+    }
+    case 90: {
+      // First slot at (startHour+1):30 local
+      const first = new Date(dayStart);
+      first.setHours(s.startHour + 1, 30, 0, 0);
+      for (let t = first.getTime(); t < endMs; t += 90 * 60 * 1000) {
+        if (t >= startMs) out.push(new Date(t));
+      }
+      break;
+    }
+    case 120: {
+      for (let t = startMs; t < endMs; t += 120 * 60 * 1000) {
+        out.push(new Date(t));
+      }
+      break;
+    }
+  }
+  return out;
 }
 
 export async function cancelAllReminders(): Promise<void> {
