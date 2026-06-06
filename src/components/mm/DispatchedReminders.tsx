@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { useI18n } from "@/lib/i18n";
+import { shouldSuppressReminder } from "@/lib/reminderDedup";
 import {
   MOVEMENT_REMINDERS,
   MOVEMENT_REMINDERS_ES,
@@ -65,16 +66,23 @@ export function DispatchedReminders() {
       if (row.delivered_at) return;
       if (seenRef.current.has(row.id)) return;
       seenRef.current.add(row.id);
-      toast(titleFor(row.kind as Kind), {
-        description: localizeMessage(row.message),
-        duration: 10000,
-        action: {
-          label: t("notif.action_start"),
-          onClick: () => {
-            window.location.assign("/session");
+      // Suppress in-app toast if a native notification was just tapped or
+      // the user is already in a guided session — still mark delivered so
+      // it does not replay on next mount.
+      if (shouldSuppressReminder()) {
+        console.info("[DispatchedReminders] suppressed toast for", row.id);
+      } else {
+        toast(titleFor(row.kind as Kind), {
+          description: localizeMessage(row.message),
+          duration: 10000,
+          action: {
+            label: t("notif.action_start"),
+            onClick: () => {
+              window.location.assign("/session");
+            },
           },
-        },
-      });
+        });
+      }
       await supabase
         .from("reminder_dispatches")
         .update({ delivered_at: new Date().toISOString() })
