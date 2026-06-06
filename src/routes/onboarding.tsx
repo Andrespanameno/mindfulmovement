@@ -16,6 +16,11 @@ import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
 import { useContent } from "@/lib/i18n-content";
+import { isNative } from "@/lib/native";
+import {
+  requestNativePermission,
+  scheduleReminders,
+} from "@/lib/nativeNotifications";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -45,6 +50,7 @@ const INTERVALS: { value: ReminderSettings["intervalMin"]; labelKey: string }[] 
 
 function OnboardingPage() {
   const { t: tr } = useI18n();
+  const { lang } = useI18n();
   const content = useContent();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -132,6 +138,16 @@ function OnboardingPage() {
     if (error) {
       toast.error(error);
       return;
+    }
+    if (isNative()) {
+      try {
+        const perm = await requestNativePermission();
+        if (perm === "granted") {
+          await scheduleReminders(getReminderSettings(), lang);
+        }
+      } catch (e) {
+        console.error("[onboarding] native permission flow failed:", e);
+      }
     }
     toast.success(tr("onb.welcome"));
     navigate({ to: "/home", replace: true });
