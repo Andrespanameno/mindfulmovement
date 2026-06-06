@@ -1,7 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AppShell } from "@/components/mm/AppShell";
-import { ArrowLeft, Bell, BellOff, Sparkles, Droplet, Wind, Check } from "lucide-react";
+import {
+  ArrowLeft,
+  Bell,
+  BellOff,
+  Sparkles,
+  Droplet,
+  Wind,
+  Check,
+  FlaskConical,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   useReminderSettings,
@@ -12,9 +21,9 @@ import {
 import { useI18n } from "@/lib/i18n";
 import { isNative } from "@/lib/native";
 import {
+  ensureNativePermissionAndSync,
   getNativePermission,
-  requestNativePermission,
-  scheduleReminders,
+  scheduleTestNotification,
   type NativePermissionState,
 } from "@/lib/nativeNotifications";
 
@@ -22,7 +31,10 @@ export const Route = createFileRoute("/reminders")({
   head: () => ({
     meta: [
       { title: "Reminders — Mindful Movement" },
-      { name: "description", content: "Customize gentle movement, hydration, and breathing reminders." },
+      {
+        name: "description",
+        content: "Customize gentle movement, hydration, and breathing reminders.",
+      },
     ],
   }),
   component: RemindersPage,
@@ -33,16 +45,29 @@ const INTERVAL_OPTIONS: ReminderSettings["intervalMin"][] = [30, 60, 90, 120];
 function RemindersPage() {
   const { t, lang } = useI18n();
   const s = useReminderSettings();
-  const [permission, setPermission] = useState<NotificationPermission | "unsupported">(
-    "default",
-  );
+  const [permission, setPermission] = useState<NotificationPermission | "unsupported">("default");
   const [nativePerm, setNativePerm] = useState<NativePermissionState>("prompt");
   const native = isNative();
+  const openedSyncRef = useRef(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (native) {
-      void getNativePermission().then(setNativePerm);
+      if (openedSyncRef.current) return;
+      openedSyncRef.current = true;
+      void getNativePermission().then((state) => {
+        console.info("[reminders] opened settings, permission ->", state);
+        setNativePerm(state);
+        void ensureNativePermissionAndSync(s, lang).then((resolved) => {
+          console.info("[reminders] opened settings, synced permission ->", resolved);
+          setNativePerm(resolved);
+          if (resolved === "denied") {
+            toast.message(t("reminders.native_denied_title"), {
+              description: t("reminders.native_denied_body"),
+            });
+          }
+        });
+      });
       return;
     }
     if (!("Notification" in window)) {
@@ -50,17 +75,21 @@ function RemindersPage() {
       return;
     }
     setPermission(Notification.permission);
-  }, [native]);
+  }, [native, s, lang, t]);
 
   const requestPermission = async () => {
     if (native) {
-      const result = await requestNativePermission();
+      const result = await ensureNativePermissionAndSync(s, lang);
+      console.info("[reminders] requestPermission result ->", result);
       setNativePerm(result);
       if (result === "granted") {
         toast.success(t("reminders.notifs_on"), {
           description: t("reminders.notifs_on_sub"),
         });
-        await scheduleReminders(s, lang);
+      } else if (result === "denied") {
+        toast.message(t("reminders.native_denied_title"), {
+          description: t("reminders.native_denied_body"),
+        });
       }
       return;
     }
@@ -69,6 +98,51 @@ function RemindersPage() {
     setPermission(result);
     if (result === "granted") {
       toast.success(t("reminders.notifs_on"), { description: t("reminders.notifs_on_sub") });
+    }
+  };
+
+  const toggleEnabled = async () => {
+    const nextEnabled = !s.enabled;
+    updateReminderSettings({ enabled: nextEnabled });
+
+    if (native && nextEnabled) {
+      const nextSettings = { ...s, enabled: true };
+      const result = await ensureNativePermissionAndSync(nextSettings, lang);
+      console.info("[reminders] enabled reminders, permission ->", result);
+      setNativePerm(result);
+      if (result === "granted") {
+        toast.success(t("reminders.notifs_on"), {
+          description: t("reminders.notifs_on_sub"),
+        });
+      } else if (result === "denied") {
+        toast.message(t("reminders.native_denied_title"), {
+          description: t("reminders.native_denied_body"),
+        });
+      }
+    }
+  };
+
+  const sendTestNotification = async () => {
+    if (!native) return;
+
+    const result = await ensureNativePermissionAndSync(s, lang);
+    console.info("[reminders] test notification permission ->", result);
+    setNativePerm(result);
+
+    if (result === "denied") {
+      toast.message(t("reminders.native_denied_title"), {
+        description: t("reminders.native_denied_body"),
+      });
+      return;
+    }
+
+    if (result !== "granted") return;
+
+    const ok = await scheduleTestNotification(lang);
+    if (ok) {
+      toast.success(t("reminders.test_scheduled"), {
+        description: t("reminders.test_scheduled_sub"),
+      });
     }
   };
 
@@ -85,12 +159,10 @@ function RemindersPage() {
         <div className="size-10" />
       </header>
 
-      <p className="text-sm text-muted-foreground mb-6 text-pretty">
-        {t("reminders.intro")}
-      </p>
+      <p className="text-sm text-muted-foreground mb-6 text-pretty">{t("reminders.intro")}</p>
 
       <button
-        onClick={() => updateReminderSettings({ enabled: !s.enabled })}
+        onClick={toggleEnabled}
         className="w-full p-4 rounded-2xl bg-card ring-1 ring-black/5 flex items-center gap-3 mb-6"
       >
         <div
@@ -110,33 +182,49 @@ function RemindersPage() {
       </button>
 
       {native ? (
-        s.enabled && nativePerm !== "granted" ? (
+        <>
+          {s.enabled && nativePerm !== "granted" ? (
+            <button
+              onClick={requestPermission}
+              className="w-full p-4 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary text-sm font-medium mb-3 text-left"
+            >
+              {nativePerm === "denied"
+                ? t("reminders.native_denied_title")
+                : t("reminders.native_request_cta")}
+              <span className="block text-xs text-primary/70 font-normal mt-1">
+                {nativePerm === "denied"
+                  ? t("reminders.native_denied_body")
+                  : t("reminders.native_request_sub")}
+              </span>
+            </button>
+          ) : null}
+
+          <button
+            onClick={sendTestNotification}
+            className="w-full p-4 rounded-2xl bg-card ring-1 ring-black/5 flex items-center gap-3 mb-6 text-left"
+          >
+            <div className="size-10 rounded-xl bg-secondary grid place-items-center text-foreground">
+              <FlaskConical className="size-4" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium">{t("reminders.test_button")}</p>
+              <p className="text-xs text-muted-foreground">{t("reminders.test_button_sub")}</p>
+            </div>
+          </button>
+        </>
+      ) : (
+        permission !== "granted" &&
+        permission !== "unsupported" &&
+        s.enabled && (
           <button
             onClick={requestPermission}
-            disabled={nativePerm === "denied"}
-            className="w-full p-4 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary text-sm font-medium mb-6 text-left disabled:opacity-60"
+            className="w-full p-4 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary text-sm font-medium mb-6 text-left"
           >
-            {nativePerm === "denied"
-              ? t("reminders.native_denied_title")
-              : t("reminders.native_request_cta")}
+            {t("reminders.enable_browser")}
             <span className="block text-xs text-primary/70 font-normal mt-1">
-              {nativePerm === "denied"
-                ? t("reminders.native_denied_body")
-                : t("reminders.native_request_sub")}
+              {t("reminders.enable_browser_sub")}
             </span>
           </button>
-        ) : null
-      ) : (
-        permission !== "granted" && permission !== "unsupported" && s.enabled && (
-        <button
-          onClick={requestPermission}
-          className="w-full p-4 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary text-sm font-medium mb-6 text-left"
-        >
-          {t("reminders.enable_browser")}
-          <span className="block text-xs text-primary/70 font-normal mt-1">
-            {t("reminders.enable_browser_sub")}
-          </span>
-        </button>
         )
       )}
 
@@ -172,8 +260,12 @@ function RemindersPage() {
                     : "bg-card ring-black/5 text-foreground"
                 }`}
               >
-                <span className="text-base leading-none">{min < 60 ? `${min}m` : `${min / 60}h`}</span>
-                <span className={`text-[10px] mt-1 ${active ? "opacity-80" : "text-muted-foreground"}`}>
+                <span className="text-base leading-none">
+                  {min < 60 ? `${min}m` : `${min / 60}h`}
+                </span>
+                <span
+                  className={`text-[10px] mt-1 ${active ? "opacity-80" : "text-muted-foreground"}`}
+                >
                   {min === 60 ? t("reminders.hourly") : t("reminders.interval_label")}
                 </span>
               </button>

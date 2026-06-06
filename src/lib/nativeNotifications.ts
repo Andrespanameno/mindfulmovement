@@ -1,13 +1,6 @@
-import {
-  LocalNotifications,
-  type ScheduleOptions,
-} from "@capacitor/local-notifications";
+import { LocalNotifications, type ScheduleOptions } from "@capacitor/local-notifications";
 import { isNative } from "./native";
-import {
-  isDispatchSlot,
-  pickReminder,
-  type ReminderSettings,
-} from "./reminders";
+import { isDispatchSlot, pickReminder, type ReminderSettings } from "./reminders";
 
 const ID_MIN = 1000;
 const ID_MAX = 1999;
@@ -34,7 +27,9 @@ export async function getNativePermission(): Promise<NativePermissionState> {
   if (!isNative()) return "prompt";
   try {
     const res = await LocalNotifications.checkPermissions();
-    return normalizeDisplay(res.display);
+    const state = normalizeDisplay(res.display);
+    console.info("[nativeNotifications] checkPermissions ->", state);
+    return state;
   } catch (err) {
     console.error("[nativeNotifications] checkPermissions failed:", err);
     return "prompt";
@@ -45,11 +40,36 @@ export async function requestNativePermission(): Promise<NativePermissionState> 
   if (!isNative()) return "prompt";
   try {
     const res = await LocalNotifications.requestPermissions();
-    return normalizeDisplay(res.display);
+    const state = normalizeDisplay(res.display);
+    console.info("[nativeNotifications] requestPermissions ->", state);
+    return state;
   } catch (err) {
     console.error("[nativeNotifications] requestPermissions failed:", err);
     return "denied";
   }
+}
+
+export async function ensureNativePermissionAndSync(
+  settings: ReminderSettings,
+  lang: Lang = "en",
+): Promise<NativePermissionState> {
+  if (!isNative()) return "prompt";
+
+  const checked = await getNativePermission();
+  console.info("[nativeNotifications] checkPermissions ->", checked, settings);
+
+  let permission = checked;
+  if (permission === "prompt") {
+    permission = await requestNativePermission();
+  }
+
+  if (permission === "granted") {
+    await scheduleReminders(settings, lang);
+  } else {
+    await cancelOurs();
+  }
+
+  return permission;
 }
 
 async function cancelOurs(): Promise<void> {
@@ -131,4 +151,31 @@ export async function scheduleReminders(
 export async function cancelAllReminders(): Promise<void> {
   if (!isNative()) return;
   await cancelOurs();
+}
+
+export async function scheduleTestNotification(lang: Lang = "en"): Promise<boolean> {
+  if (!isNative()) return false;
+
+  try {
+    const at = new Date(Date.now() + 10_000);
+    console.info("[nativeNotifications] scheduling test notification for", at.toISOString());
+    await LocalNotifications.schedule({
+      notifications: [
+        {
+          id: ID_MAX + 1,
+          title: lang === "es" ? "Prueba de Mindful Movement" : "Mindful Movement test",
+          body:
+            lang === "es"
+              ? "Si ves esto, las notificaciones nativas están funcionando."
+              : "If you see this, native notifications are working.",
+          schedule: { at, allowWhileIdle: true },
+          extra: { route: "/session", test: true },
+        },
+      ],
+    });
+    return true;
+  } catch (err) {
+    console.error("[nativeNotifications] test notification schedule failed:", err);
+    return false;
+  }
 }
