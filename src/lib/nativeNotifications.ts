@@ -1,13 +1,6 @@
-import {
-  LocalNotifications,
-  type ScheduleOptions,
-} from "@capacitor/local-notifications";
+import { LocalNotifications, type ScheduleOptions } from "@capacitor/local-notifications";
 import { isNative } from "./native";
-import {
-  isDispatchSlot,
-  pickReminder,
-  type ReminderSettings,
-} from "./reminders";
+import { isDispatchSlot, pickReminder, type ReminderSettings } from "./reminders";
 
 const ID_MIN = 1000;
 const ID_MAX = 1999;
@@ -160,9 +153,7 @@ export async function cancelAllReminders(): Promise<void> {
   await cancelOurs();
 }
 
-export async function scheduleTestNotification(
-  lang: Lang = "en",
-): Promise<boolean> {
+export async function scheduleTestNotification(lang: Lang = "en"): Promise<boolean> {
   if (!isNative()) return false;
 
   try {

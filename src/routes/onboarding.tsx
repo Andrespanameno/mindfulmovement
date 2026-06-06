@@ -17,9 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
 import { useContent } from "@/lib/i18n-content";
 import { isNative } from "@/lib/native";
-import {
-  ensureNativePermissionAndSync,
-} from "@/lib/nativeNotifications";
+import { ensureNativePermissionAndSync } from "@/lib/nativeNotifications";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -125,7 +123,7 @@ function OnboardingPage() {
     const seededCategories =
       profile?.preferred_categories && profile.preferred_categories.length > 0
         ? profile.preferred_categories
-        : lifestyleDef?.defaultCategories ?? [];
+        : (lifestyleDef?.defaultCategories ?? []);
     const { error } = await updateProfile({
       lifestyle,
       wellness_goals: goals,
@@ -249,31 +247,29 @@ function OnboardingPage() {
                       </span>
                     ))}
                   </div>
-                  <p className="text-[11px] text-muted-foreground mt-2">
-                    {tr("onb.tune_later")}
-                  </p>
+                  <p className="text-[11px] text-muted-foreground mt-2">{tr("onb.tune_later")}</p>
                 </div>
               )}
-            <div className="grid grid-cols-2 gap-2.5">
-              {WELLNESS_GOALS.map((g) => {
-                const selected = goals.includes(g);
-                return (
-                  <button
-                    key={g}
-                    type="button"
-                    onClick={() => toggleGoal(g)}
-                    className={cn(
-                      "p-3.5 rounded-2xl ring-1 text-left text-sm transition",
-                      selected
-                        ? "bg-primary/10 ring-primary font-medium"
-                        : "bg-card ring-black/5",
-                    )}
-                  >
-                    {content.wellnessGoal(g)}
-                  </button>
-                );
-              })}
-            </div>
+              <div className="grid grid-cols-2 gap-2.5">
+                {WELLNESS_GOALS.map((g) => {
+                  const selected = goals.includes(g);
+                  return (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => toggleGoal(g)}
+                      className={cn(
+                        "p-3.5 rounded-2xl ring-1 text-left text-sm transition",
+                        selected
+                          ? "bg-primary/10 ring-primary font-medium"
+                          : "bg-card ring-black/5",
+                      )}
+                    >
+                      {content.wellnessGoal(g)}
+                    </button>
+                  );
+                })}
+              </div>
             </>
           )}
 
@@ -293,9 +289,7 @@ function OnboardingPage() {
                         onClick={() => setWindowId(w.id)}
                         className={cn(
                           "p-3.5 rounded-2xl ring-1 text-left transition",
-                          selected
-                            ? "bg-primary/10 ring-primary"
-                            : "bg-card ring-black/5",
+                          selected ? "bg-primary/10 ring-primary" : "bg-card ring-black/5",
                         )}
                       >
                         <p className="text-sm font-medium">{tr(w.labelKey)}</p>
@@ -327,7 +321,7 @@ function OnboardingPage() {
                             : "bg-card ring-black/5",
                         )}
                       >
-                      {tr(opt.labelKey)}
+                        {tr(opt.labelKey)}
                       </button>
                     );
                   })}

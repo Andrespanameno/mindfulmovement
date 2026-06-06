@@ -87,13 +87,22 @@ const dict: Record<string, { en: string; es: string }> = {
   "nav.profile": { en: "Profile", es: "Perfil" },
 
   "auth.signin.title": { en: "Welcome back to your center", es: "¡Qué bueno verte de nuevo!" },
-  "auth.signin.sub": { en: "Take a deep breath. Let's start your day with intention.", es: "Respira profundo. Comencemos el día con intención." },
+  "auth.signin.sub": {
+    en: "Take a deep breath. Let's start your day with intention.",
+    es: "Respira profundo. Comencemos el día con intención.",
+  },
   "auth.signin.cta": { en: "Enter your space", es: "Entrar a tu espacio" },
   "auth.signup.title": { en: "Begin your gentle journey", es: "Empieza tu camino, a tu ritmo" },
-  "auth.signup.sub": { en: "Small actions create big change. Create your space.", es: "Las acciones pequeñas hacen grandes cambios. Crea tu espacio." },
+  "auth.signup.sub": {
+    en: "Small actions create big change. Create your space.",
+    es: "Las acciones pequeñas hacen grandes cambios. Crea tu espacio.",
+  },
   "auth.signup.cta": { en: "Create account", es: "Crear cuenta" },
   "auth.forgot.title": { en: "Let's get you back in", es: "Recuperemos tu acceso" },
-  "auth.forgot.sub": { en: "We'll send a reset link to your email.", es: "Te enviaremos un enlace de recuperación a tu correo." },
+  "auth.forgot.sub": {
+    en: "We'll send a reset link to your email.",
+    es: "Te enviaremos un enlace de recuperación a tu correo.",
+  },
   "auth.forgot.cta": { en: "Send reset link", es: "Enviar enlace" },
   "auth.name": { en: "Your name", es: "Tu nombre" },
   "auth.email": { en: "Email address", es: "Correo electrónico" },
@@ -102,9 +111,18 @@ const dict: Record<string, { en: string; es: string }> = {
   "auth.new_here": { en: "New to Mindful Movement?", es: "¿Nuevo en Mindful Movement?" },
   "auth.begin": { en: "Begin journey and create an account", es: "Comenzar y crear una cuenta" },
   "auth.back_signin": { en: "Back to sign in", es: "Volver a iniciar sesión" },
-  "auth.invalid": { en: "Invalid email or password.", es: "El correo o la contraseña no coinciden." },
-  "auth.signup.success": { en: "Account created. Check your email to confirm, then sign in.", es: "Cuenta creada. Revisa tu correo para confirmar y luego inicia sesión." },
-  "auth.reset.success": { en: "Reset link sent. Check your email.", es: "Enlace enviado. Revisa tu correo." },
+  "auth.invalid": {
+    en: "Invalid email or password.",
+    es: "El correo o la contraseña no coinciden.",
+  },
+  "auth.signup.success": {
+    en: "Account created. Check your email to confirm, then sign in.",
+    es: "Cuenta creada. Revisa tu correo para confirmar y luego inicia sesión.",
+  },
+  "auth.reset.success": {
+    en: "Reset link sent. Check your email.",
+    es: "Enlace enviado. Revisa tu correo.",
+  },
   "auth.verify.title": { en: "Check your email", es: "Revisa tu correo" },
   "auth.verify.sub": {
     en: "We sent a verification link to {email}. Tap the link to verify your account and continue.",
@@ -112,9 +130,15 @@ const dict: Record<string, { en: string; es: string }> = {
   },
   "auth.verify.resend": { en: "Resend email", es: "Reenviar correo" },
   "auth.verify.resend_in": { en: "Resend in {s}s", es: "Reenviar en {s}s" },
-  "auth.verify.resend_success": { en: "Verification email sent.", es: "Correo de verificación enviado." },
+  "auth.verify.resend_success": {
+    en: "Verification email sent.",
+    es: "Correo de verificación enviado.",
+  },
   "auth.verify.verified": { en: "Email verified", es: "Correo verificado" },
-  "auth.verify.link_expired": { en: "Verification link expired", es: "El enlace de verificación caducó" },
+  "auth.verify.link_expired": {
+    en: "Verification link expired",
+    es: "El enlace de verificación caducó",
+  },
   "auth.verify.try_again": { en: "Try again", es: "Intentar de nuevo" },
   "auth.verify.not_confirmed": {
     en: "Please verify your email before continuing.",
@@ -156,10 +180,19 @@ const dict: Record<string, { en: string; es: string }> = {
   "home.title": { en: "Today is a fresh start", es: "Hoy empieza de nuevo" },
   "home.guided.eyebrow": { en: "Guided session", es: "Sesión guiada" },
   "home.guided.title": { en: "Start a 5-minute reset", es: "Date una pausa de 5 minutos" },
-  "home.guided.sub": { en: "A few gentle movements, timed for you.", es: "Unos movimientos suaves, a tu ritmo." },
+  "home.guided.sub": {
+    en: "A few gentle movements, timed for you.",
+    es: "Unos movimientos suaves, a tu ritmo.",
+  },
   "home.hydration.title": { en: "Hydration Goal", es: "Meta de hidratación" },
-  "home.hydration.reached": { en: "Goal reached. Beautifully done.", es: "¡Meta cumplida! Muy bien hecho." },
-  "home.hydration.remaining": { en: "{n} oz to reach your mark.", es: "{n} oz para alcanzar tu meta." },
+  "home.hydration.reached": {
+    en: "Goal reached. Beautifully done.",
+    es: "¡Meta cumplida! Muy bien hecho.",
+  },
+  "home.hydration.remaining": {
+    en: "{n} oz to reach your mark.",
+    es: "{n} oz para alcanzar tu meta.",
+  },
   "home.xp_today": { en: "XP Today", es: "XP de hoy" },
   "home.xp_tip": { en: "Every movement counts.", es: "Cada movimiento suma." },
 
@@ -167,39 +200,78 @@ const dict: Record<string, { en: string; es: string }> = {
   "move.title": { en: "Move a little", es: "Muévete un poco" },
   "move.featured": { en: "Featured", es: "Destacado" },
   "move.featured.title": { en: "Morning Awakening", es: "Despertar de la mañana" },
-  "move.featured.sub_default": { en: "A few minutes is all it takes to feel a shift.", es: "Con unos minutos ya vas a sentir el cambio." },
-  "move.featured.completed_one": { en: "1 session completed today. Keep flowing.", es: "Llevas 1 sesión hoy. Sigue así." },
-  "move.featured.completed_many": { en: "{n} sessions completed today. Keep flowing.", es: "Llevas {n} sesiones hoy. Sigue así." },
+  "move.featured.sub_default": {
+    en: "A few minutes is all it takes to feel a shift.",
+    es: "Con unos minutos ya vas a sentir el cambio.",
+  },
+  "move.featured.completed_one": {
+    en: "1 session completed today. Keep flowing.",
+    es: "Llevas 1 sesión hoy. Sigue así.",
+  },
+  "move.featured.completed_many": {
+    en: "{n} sessions completed today. Keep flowing.",
+    es: "Llevas {n} sesiones hoy. Sigue así.",
+  },
   "move.filter.all": { en: "All", es: "Todo" },
 
   "hydration.title": { en: "Hydration", es: "Hidratación" },
   "hydration.of_today": { en: "of {goal} oz today", es: "de {goal} oz hoy" },
   "hydration.of_today_u": { en: "of {goal} {unit} today", es: "de {goal} {unit} hoy" },
   "hydration.goal_complete": { en: "Goal complete", es: "Meta cumplida" },
-  "hydration.to_go": { en: "{n} oz to go · small sips, steady progress.", es: "Te faltan {n} oz · sorbos pequeños, vas muy bien." },
-  "hydration.to_go_u": { en: "{n} {unit} to go · small sips, steady progress.", es: "Te faltan {n} {unit} · sorbos pequeños, vas muy bien." },
+  "hydration.to_go": {
+    en: "{n} oz to go · small sips, steady progress.",
+    es: "Te faltan {n} oz · sorbos pequeños, vas muy bien.",
+  },
+  "hydration.to_go_u": {
+    en: "{n} {unit} to go · small sips, steady progress.",
+    es: "Te faltan {n} {unit} · sorbos pequeños, vas muy bien.",
+  },
   "hydration.quick_add": { en: "Quick add", es: "Agregar rápido" },
   "hydration.undo": { en: "Undo last {n} oz", es: "Deshacer las últimas {n} oz" },
   "hydration.undo_u": { en: "Undo last {n} {unit}", es: "Deshacer las últimas {n} {unit}" },
   "hydration.reminders_label": { en: "Hydration reminders", es: "Recordatorios de hidratación" },
-  "hydration.reminders_on": { en: "Gentle nudge every {n} min while open", es: "Recordatorio suave cada {n} min mientras tengas la app abierta" },
-  "hydration.reminders_off": { en: "Off, turn on to get a gentle nudge", es: "Desactivado. Actívalo para recibir un recordatorio suave" },
+  "hydration.reminders_on": {
+    en: "Gentle nudge every {n} min while open",
+    es: "Recordatorio suave cada {n} min mientras tengas la app abierta",
+  },
+  "hydration.reminders_off": {
+    en: "Off, turn on to get a gentle nudge",
+    es: "Desactivado. Actívalo para recibir un recordatorio suave",
+  },
   "hydration.toast.logged": { en: "+{n} oz logged", es: "+{n} oz anotadas" },
   "hydration.toast.logged_u": { en: "+{n} {unit} logged", es: "+{n} {unit} anotadas" },
-  "hydration.toast.xp": { en: "+{xp} XP · Small sips, big impact.", es: "+{xp} XP · Sorbos pequeños, gran diferencia." },
+  "hydration.toast.xp": {
+    en: "+{xp} XP · Small sips, big impact.",
+    es: "+{xp} XP · Sorbos pequeños, gran diferencia.",
+  },
   "hydration.toast.keep": { en: "Keep sipping gently.", es: "Sigue así, sin presiones." },
-  "hydration.toast.goal": { en: "Daily hydration goal reached 🌿", es: "¡Meta de hidratación cumplida! 🌿" },
-  "hydration.toast.goal_sub": { en: "Beautifully done. Your body thanks you.", es: "Muy bien hecho. Tu cuerpo te lo agradece." },
+  "hydration.toast.goal": {
+    en: "Daily hydration goal reached 🌿",
+    es: "¡Meta de hidratación cumplida! 🌿",
+  },
+  "hydration.toast.goal_sub": {
+    en: "Beautifully done. Your body thanks you.",
+    es: "Muy bien hecho. Tu cuerpo te lo agradece.",
+  },
   "hydration.toast.sip": { en: "Time for a sip 💧", es: "Momento para un sorbo 💧" },
-  "hydration.toast.sip_sub": { en: "A quick glass keeps you steady.", es: "Un vasito te ayuda a mantener el ritmo." },
+  "hydration.toast.sip_sub": {
+    en: "A quick glass keeps you steady.",
+    es: "Un vasito te ayuda a mantener el ritmo.",
+  },
   "hydration.keep_going": { en: "Keep Going", es: "Continuar" },
   "hydration.keep_going_started": { en: "New round started", es: "¡Comenzó una ronda nueva!" },
-  "hydration.keep_going_sub": { en: "Keep the momentum, every sip counts.", es: "Sigue así, cada sorbo suma." },
+  "hydration.keep_going_sub": {
+    en: "Keep the momentum, every sip counts.",
+    es: "Sigue así, cada sorbo suma.",
+  },
   "hydration.total_today": { en: "Total today", es: "Total de hoy" },
   "hydration.round": { en: "Round", es: "Ronda" },
 
   "progress.title": { en: "Your Journey", es: "Tu camino" },
-  "progress.sub": { en: "Small actions, real change, here's how it's adding up.", es: "Acciones pequeñas, cambios reales. Así vas avanzando." },
+  "progress.sub": {
+    en: "Small actions, real change, here's how it's adding up.",
+    es: "Acciones pequeñas, cambios reales. Así vas avanzando.",
+  },
   "progress.this_week": { en: "This week", es: "Esta semana" },
   "progress.this_month": { en: "This month", es: "Este mes" },
   "progress.highlights": { en: "Highlights", es: "Aspectos destacados" },
@@ -236,22 +308,70 @@ const dict: Record<string, { en: string; es: string }> = {
   "progress.day_label": { en: "Day {n}", es: "Día {n}" },
   "progress.streak_label": { en: "streak {n}", es: "constancia {n}" },
 
-  "progress.sum.sessions_one_week": { en: "You completed 1 mindful movement this week.", es: "Completaste 1 sesión de movimiento esta semana." },
-  "progress.sum.sessions_many_week": { en: "You completed {n} mindful movements this week.", es: "Completaste {n} sesiones de movimiento esta semana." },
-  "progress.sum.sessions_one_month": { en: "You completed 1 mindful movement this month.", es: "Completaste 1 sesión de movimiento este mes." },
-  "progress.sum.sessions_many_month": { en: "You completed {n} mindful movements this month.", es: "Completaste {n} sesiones de movimiento este mes." },
-  "progress.sum.hours_week": { en: "You accumulated {h} hours of intentional movement this week.", es: "Sumaste {h} horas de movimiento esta semana." },
-  "progress.sum.hours_month": { en: "You accumulated {h} hours of intentional movement this month.", es: "Sumaste {h} horas de movimiento este mes." },
-  "progress.sum.pushups": { en: "Your pushups improved from {a} to {b}.", es: "Tus flexiones mejoraron de {a} a {b}." },
-  "progress.sum.squats": { en: "Your squats improved from {a} to {b}.", es: "Tus sentadillas mejoraron de {a} a {b}." },
-  "progress.sum.hydration_week": { en: "Your hydration consistency improved this week (+{n} points).", es: "Te hidrataste con más constancia esta semana (+{n} puntos)." },
-  "progress.sum.hydration_month": { en: "Your hydration consistency improved this month (+{n} points).", es: "Te hidrataste con más constancia este mes (+{n} puntos)." },
-  "progress.sum.consistency_week": { en: "Your consistency improved this week (+{n}%).", es: "Vas con más constancia esta semana (+{n}%)." },
-  "progress.sum.consistency_month": { en: "Your consistency improved this month (+{n}%).", es: "Vas con más constancia este mes (+{n}%)." },
-  "progress.sum.breathing_one_week": { en: "You took 1 mindful breathing session this week.", es: "Hiciste 1 sesión de respiración esta semana." },
-  "progress.sum.breathing_many_week": { en: "You took {n} mindful breathing sessions this week.", es: "Hiciste {n} sesiones de respiración esta semana." },
-  "progress.sum.breathing_one_month": { en: "You took 1 mindful breathing session this month.", es: "Hiciste 1 sesión de respiración este mes." },
-  "progress.sum.breathing_many_month": { en: "You took {n} mindful breathing sessions this month.", es: "Hiciste {n} sesiones de respiración este mes." },
+  "progress.sum.sessions_one_week": {
+    en: "You completed 1 mindful movement this week.",
+    es: "Completaste 1 sesión de movimiento esta semana.",
+  },
+  "progress.sum.sessions_many_week": {
+    en: "You completed {n} mindful movements this week.",
+    es: "Completaste {n} sesiones de movimiento esta semana.",
+  },
+  "progress.sum.sessions_one_month": {
+    en: "You completed 1 mindful movement this month.",
+    es: "Completaste 1 sesión de movimiento este mes.",
+  },
+  "progress.sum.sessions_many_month": {
+    en: "You completed {n} mindful movements this month.",
+    es: "Completaste {n} sesiones de movimiento este mes.",
+  },
+  "progress.sum.hours_week": {
+    en: "You accumulated {h} hours of intentional movement this week.",
+    es: "Sumaste {h} horas de movimiento esta semana.",
+  },
+  "progress.sum.hours_month": {
+    en: "You accumulated {h} hours of intentional movement this month.",
+    es: "Sumaste {h} horas de movimiento este mes.",
+  },
+  "progress.sum.pushups": {
+    en: "Your pushups improved from {a} to {b}.",
+    es: "Tus flexiones mejoraron de {a} a {b}.",
+  },
+  "progress.sum.squats": {
+    en: "Your squats improved from {a} to {b}.",
+    es: "Tus sentadillas mejoraron de {a} a {b}.",
+  },
+  "progress.sum.hydration_week": {
+    en: "Your hydration consistency improved this week (+{n} points).",
+    es: "Te hidrataste con más constancia esta semana (+{n} puntos).",
+  },
+  "progress.sum.hydration_month": {
+    en: "Your hydration consistency improved this month (+{n} points).",
+    es: "Te hidrataste con más constancia este mes (+{n} puntos).",
+  },
+  "progress.sum.consistency_week": {
+    en: "Your consistency improved this week (+{n}%).",
+    es: "Vas con más constancia esta semana (+{n}%).",
+  },
+  "progress.sum.consistency_month": {
+    en: "Your consistency improved this month (+{n}%).",
+    es: "Vas con más constancia este mes (+{n}%).",
+  },
+  "progress.sum.breathing_one_week": {
+    en: "You took 1 mindful breathing session this week.",
+    es: "Hiciste 1 sesión de respiración esta semana.",
+  },
+  "progress.sum.breathing_many_week": {
+    en: "You took {n} mindful breathing sessions this week.",
+    es: "Hiciste {n} sesiones de respiración esta semana.",
+  },
+  "progress.sum.breathing_one_month": {
+    en: "You took 1 mindful breathing session this month.",
+    es: "Hiciste 1 sesión de respiración este mes.",
+  },
+  "progress.sum.breathing_many_month": {
+    en: "You took {n} mindful breathing sessions this month.",
+    es: "Hiciste {n} sesiones de respiración este mes.",
+  },
 
   "profile.edit": { en: "Edit profile", es: "Editar perfil" },
   "profile.day_streak": { en: "Streak", es: "Constancia" },
@@ -277,7 +397,10 @@ const dict: Record<string, { en: string; es: string }> = {
   "mv.undo": { en: "Undo", es: "Deshacer" },
   "mv.min_short": { en: "min", es: "min" },
   "mv.toast.undone": { en: "Undone · -{xp} XP", es: "Marcado como no hecho · -{xp} XP" },
-  "mv.toast.undone_sub": { en: "No worries, marked as not done.", es: "Sin problema, marcado como no hecho." },
+  "mv.toast.undone_sub": {
+    en: "No worries, marked as not done.",
+    es: "Sin problema, marcado como no hecho.",
+  },
   "mv.toast.xp": { en: "+{xp} XP", es: "+{xp} XP" },
 
   "edit.cancel": { en: "Cancel", es: "Cancelar" },
@@ -289,7 +412,10 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "Based on your profile, you'll receive reminders to start quick guided sessions throughout the day. Each session includes movement, breathing, hydration, and mindfulness activities. You can also choose individual movements anytime.",
     es: "Basándonos en tu perfil, recibirás recordatorios para iniciar sesiones guiadas rápidas durante el día. Cada sesión incluye movimiento, respiración, hidratación y actividades de atención plena. También puedes elegir movimientos individuales en cualquier momento.",
   },
-  "how.philosophy": { en: "Micro consistency. Macro results.", es: "Micro constancia. Macro Resultados." },
+  "how.philosophy": {
+    en: "Micro consistency. Macro results.",
+    es: "Micro constancia. Macro Resultados.",
+  },
 
   "privacy.title": { en: "Privacy Policy", es: "Política de privacidad" },
   "privacy.intro": {
@@ -321,7 +447,10 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "We may update this Privacy Policy from time to time. Any changes will be posted within the app, and we encourage you to review it periodically.",
     es: "Podemos actualizar esta Política de Privacidad de vez en cuando. Publicaremos cualquier cambio dentro de la app y te animamos a revisarla periódicamente.",
   },
-  "privacy.contact_pre": { en: "If you have any questions about this Privacy Policy, please contact us at ", es: "Si tienes preguntas sobre esta Política de Privacidad, contáctanos en " },
+  "privacy.contact_pre": {
+    en: "If you have any questions about this Privacy Policy, please contact us at ",
+    es: "Si tienes preguntas sobre esta Política de Privacidad, contáctanos en ",
+  },
   "privacy.contact_post": { en: ".", es: "." },
 
   "terms.title": { en: "Terms of Service", es: "Términos de servicio" },
@@ -339,7 +468,10 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. Please notify us immediately of any unauthorized use.",
     es: "Eres responsable de mantener la confidencialidad de tus credenciales y de toda la actividad bajo tu cuenta. Avísanos de inmediato si detectas un uso no autorizado.",
   },
-  "terms.h.ip": { en: "Content and Intellectual Property", es: "Contenido y propiedad intelectual" },
+  "terms.h.ip": {
+    en: "Content and Intellectual Property",
+    es: "Contenido y propiedad intelectual",
+  },
   "terms.p.ip": {
     en: "All content within the app, including text, graphics, and software, is the property of Mindful Movement or its licensors and is protected by applicable intellectual property laws.",
     es: "Todo el contenido de la app, incluidos textos, gráficos y software, es propiedad de Mindful Movement o sus licenciantes y está protegido por las leyes de propiedad intelectual aplicables.",
@@ -354,7 +486,10 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "We may modify these Terms of Service at any time. Continued use of the app after changes constitutes your acceptance of the revised terms.",
     es: "Podemos modificar estos Términos de Servicio en cualquier momento. El uso continuado de la app tras los cambios implica tu aceptación de los términos revisados.",
   },
-  "terms.contact_pre": { en: "If you have any questions about these Terms, please contact us at ", es: "Si tienes preguntas sobre estos Términos, contáctanos en " },
+  "terms.contact_pre": {
+    en: "If you have any questions about these Terms, please contact us at ",
+    es: "Si tienes preguntas sobre estos Términos, contáctanos en ",
+  },
 
   "settings.title": { en: "Settings", es: "Ajustes" },
   "settings.sub": { en: "Legal and app information.", es: "Información legal y de la app." },
@@ -363,7 +498,10 @@ const dict: Record<string, { en: string; es: string }> = {
   "settings.item.terms": { en: "Terms of Service", es: "Términos de servicio" },
   "settings.version": { en: "Mindful Movement v1.0.0", es: "Mindful Movement v1.0.0" },
   "settings.language.label": { en: "Language", es: "Idioma" },
-  "settings.language.hint": { en: "Choose your preferred language.", es: "Elige tu idioma preferido." },
+  "settings.language.hint": {
+    en: "Choose your preferred language.",
+    es: "Elige tu idioma preferido.",
+  },
   "settings.replay_tour": { en: "Replay welcome tour", es: "Repetir tutorial de bienvenida" },
   "settings.replay_preparing": { en: "Preparing…", es: "Preparando…" },
   "settings.delete_account": { en: "Delete account", es: "Eliminar cuenta" },
@@ -375,21 +513,45 @@ const dict: Record<string, { en: string; es: string }> = {
   "settings.delete_action": { en: "Delete account", es: "Eliminar cuenta" },
   "settings.deleting": { en: "Deleting…", es: "Eliminando…" },
   "settings.delete_success": { en: "Account deleted", es: "Cuenta eliminada" },
-  "settings.delete_error": { en: "Could not delete account: {message}", es: "No se pudo eliminar la cuenta: {message}" },
-  "settings.replay_error": { en: "Could not reset the tour. Please try again.", es: "No se pudo reiniciar el recorrido. Inténtalo de nuevo." },
+  "settings.delete_error": {
+    en: "Could not delete account: {message}",
+    es: "No se pudo eliminar la cuenta: {message}",
+  },
+  "settings.replay_error": {
+    en: "Could not reset the tour. Please try again.",
+    es: "No se pudo reiniciar el recorrido. Inténtalo de nuevo.",
+  },
 
   "support.title": { en: "Help & Support", es: "Ayuda y soporte" },
   "support.sub": { en: "We're here for you.", es: "Estamos aquí para ti." },
-  "support.body_pre": { en: "For customer support, please email us at ", es: "Para soporte, escríbenos a " },
-  "support.body_post": { en: ", and our team will get back to you within 24–48 hours. Thank you.", es: ", y nuestro equipo te responderá en 24–48 horas. Gracias." },
+  "support.body_pre": {
+    en: "For customer support, please email us at ",
+    es: "Para soporte, escríbenos a ",
+  },
+  "support.body_post": {
+    en: ", and our team will get back to you within 24–48 hours. Thank you.",
+    es: ", y nuestro equipo te responderá en 24–48 horas. Gracias.",
+  },
 
   "reminders.title": { en: "Reminders", es: "Recordatorios" },
-  "reminders.intro": { en: "Soft nudges to move, hydrate, and breathe, only when it fits your day.", es: "Recordatorios suaves para moverte, hidratarte y respirar, solo cuando encajen en tu día." },
+  "reminders.intro": {
+    en: "Soft nudges to move, hydrate, and breathe, only when it fits your day.",
+    es: "Recordatorios suaves para moverte, hidratarte y respirar, solo cuando encajen en tu día.",
+  },
   "reminders.gentle": { en: "Gentle reminders", es: "Recordatorios amables" },
-  "reminders.active_hours_status": { en: "Active during your hours", es: "Activos en tus horarios" },
+  "reminders.active_hours_status": {
+    en: "Active during your hours",
+    es: "Activos en tus horarios",
+  },
   "reminders.paused_status": { en: "All reminders paused", es: "Todos los recordatorios en pausa" },
-  "reminders.enable_browser": { en: "Enable browser notifications →", es: "Activar notificaciones del navegador →" },
-  "reminders.enable_browser_sub": { en: "Otherwise reminders show as soft in-app toasts.", es: "Si no, los recordatorios aparecerán dentro de la app." },
+  "reminders.enable_browser": {
+    en: "Enable browser notifications →",
+    es: "Activar notificaciones del navegador →",
+  },
+  "reminders.enable_browser_sub": {
+    en: "Otherwise reminders show as soft in-app toasts.",
+    es: "Si no, los recordatorios aparecerán dentro de la app.",
+  },
   "reminders.active_hours": { en: "Active hours", es: "Horas activas" },
   "reminders.start": { en: "Start", es: "Inicio" },
   "reminders.end": { en: "End", es: "Fin" },
@@ -403,11 +565,20 @@ const dict: Record<string, { en: string; es: string }> = {
   "reminders.hydration": { en: "Hydration", es: "Hidratación" },
   "reminders.hydration_desc": { en: "Sip-by-sip check-ins.", es: "Pequeños sorbos, a tu ritmo." },
   "reminders.breathing": { en: "Breathing", es: "Respiración" },
-  "reminders.breathing_desc": { en: "A few intentional breaths.", es: "Unas respiraciones tranquilas." },
+  "reminders.breathing_desc": {
+    en: "A few intentional breaths.",
+    es: "Unas respiraciones tranquilas.",
+  },
   "reminders.quiet_times": { en: "Quiet times", es: "Momentos en silencio" },
   "reminders.quiet_weekends": { en: "Quiet on weekends", es: "Silencio los fines de semana" },
-  "reminders.no_nudges_weekend": { en: "No nudges Sat & Sun.", es: "Sin recordatorios los sábados y domingos." },
-  "reminders.footer": { en: "Supportive, never demanding.", es: "Te acompañamos, sin presionarte." },
+  "reminders.no_nudges_weekend": {
+    en: "No nudges Sat & Sun.",
+    es: "Sin recordatorios los sábados y domingos.",
+  },
+  "reminders.footer": {
+    en: "Supportive, never demanding.",
+    es: "Te acompañamos, sin presionarte.",
+  },
   "reminders.notifs_on": { en: "Notifications on", es: "Notificaciones activadas" },
   "reminders.notifs_on_sub": { en: "We'll nudge you gently.", es: "Te avisaremos con suavidad." },
 
@@ -450,19 +621,37 @@ const dict: Record<string, { en: string; es: string }> = {
 
   "onb.step": { en: "Step {n} of 3", es: "Paso {n} de 3" },
   "onb.step1.title": { en: "What does your day look like?", es: "¿Cómo es tu día?" },
-  "onb.step1.sub": { en: "Pick the lifestyle that fits best. You can change this anytime.", es: "Elige el estilo de vida que mejor te describa. Puedes cambiarlo cuando quieras." },
+  "onb.step1.sub": {
+    en: "Pick the lifestyle that fits best. You can change this anytime.",
+    es: "Elige el estilo de vida que mejor te describa. Puedes cambiarlo cuando quieras.",
+  },
   "onb.step2.title": { en: "What feels most supportive?", es: "¿Qué te ayudaría más?" },
-  "onb.step2.sub": { en: "Choose any goals that matter to you. Skip if you'd rather explore.", es: "Elige los objetivos que más te importen. Puedes saltarlo si prefieres explorar." },
+  "onb.step2.sub": {
+    en: "Choose any goals that matter to you. Skip if you'd rather explore.",
+    es: "Elige los objetivos que más te importen. Puedes saltarlo si prefieres explorar.",
+  },
   "onb.step3.title": { en: "When should we check in?", es: "¿Cuándo te recordamos?" },
-  "onb.step3.sub": { en: "Gentle reminders, on your schedule.", es: "Recordatorios suaves, a tu ritmo." },
+  "onb.step3.sub": {
+    en: "Gentle reminders, on your schedule.",
+    es: "Recordatorios suaves, a tu ritmo.",
+  },
   "onb.start_rotation": { en: "We'll start your rotation with", es: "Empezaremos con" },
-  "onb.tune_later": { en: "You can fine-tune this anytime from your profile.", es: "Puedes ajustarlo cuando quieras desde tu perfil." },
+  "onb.tune_later": {
+    en: "You can fine-tune this anytime from your profile.",
+    es: "Puedes ajustarlo cuando quieras desde tu perfil.",
+  },
   "onb.reminder_window": { en: "Reminder window", es: "Horario de recordatorios" },
   "onb.how_often": { en: "How often?", es: "¿Con qué frecuencia?" },
   "onb.back": { en: "Back", es: "Atrás" },
   "onb.enter": { en: "Enter your space", es: "Entrar a tu espacio" },
-  "onb.choose_lifestyle": { en: "Choose a lifestyle to continue.", es: "Selecciona un estilo de vida para continuar." },
-  "onb.welcome": { en: "Welcome in. Your space is ready.", es: "¡Bienvenida/o! Tu espacio está listo." },
+  "onb.choose_lifestyle": {
+    en: "Choose a lifestyle to continue.",
+    es: "Selecciona un estilo de vida para continuar.",
+  },
+  "onb.welcome": {
+    en: "Welcome in. Your space is ready.",
+    es: "¡Bienvenida/o! Tu espacio está listo.",
+  },
   "onb.window.morning": { en: "Morning", es: "Mañana" },
   "onb.window.workday": { en: "Workday", es: "Jornada laboral" },
   "onb.window.afternoon": { en: "Afternoon", es: "Tarde" },
@@ -506,24 +695,45 @@ const dict: Record<string, { en: string; es: string }> = {
 
   "milestone.achieved": { en: "Achieved", es: "Logrado" },
 
-  "reset.head_title": { en: "Reset password — Mindful Movement", es: "Restablecer contraseña — Mindful Movement" },
-  "reset.head_desc": { en: "Set a new password for your Mindful Movement account.", es: "Crea una nueva contraseña para tu cuenta de Mindful Movement." },
+  "reset.head_title": {
+    en: "Reset password — Mindful Movement",
+    es: "Restablecer contraseña — Mindful Movement",
+  },
+  "reset.head_desc": {
+    en: "Set a new password for your Mindful Movement account.",
+    es: "Crea una nueva contraseña para tu cuenta de Mindful Movement.",
+  },
   "reset.title": { en: "Set a new password", es: "Crea una nueva contraseña" },
-  "reset.sub": { en: "Choose something you'll remember. Small steps, fresh start.", es: "Elige algo que recuerdes. Pequeños pasos, un nuevo comienzo." },
+  "reset.sub": {
+    en: "Choose something you'll remember. Small steps, fresh start.",
+    es: "Elige algo que recuerdes. Pequeños pasos, un nuevo comienzo.",
+  },
   "reset.verifying": { en: "Verifying your reset link…", es: "Estamos verificando tu enlace…" },
-  "reset.invalid": { en: "This reset link is expired or invalid. Please request a new password reset link.", es: "Este enlace ya no es válido o expiró. Solicita uno nuevo para continuar." },
+  "reset.invalid": {
+    en: "This reset link is expired or invalid. Please request a new password reset link.",
+    es: "Este enlace ya no es válido o expiró. Solicita uno nuevo para continuar.",
+  },
   "reset.back_signin": { en: "Back to sign in", es: "Volver a iniciar sesión" },
   "reset.label": { en: "New password", es: "Nueva contraseña" },
   "reset.updating": { en: "Updating…", es: "Guardando…" },
   "reset.submit": { en: "Update password", es: "Actualizar contraseña" },
-  "reset.success": { en: "Password updated. Welcome back.", es: "Contraseña actualizada. ¡Bienvenida/o de vuelta!" },
+  "reset.success": {
+    en: "Password updated. Welcome back.",
+    es: "Contraseña actualizada. ¡Bienvenida/o de vuelta!",
+  },
   "session.back_home": { en: "Back home", es: "Volver al inicio" },
   "session.view_progress": { en: "View progress", es: "Ver progreso" },
   "session.preparing": { en: "Preparing your session…", es: "Preparando tu sesión, un momento…" },
-  "session.finish_first": { en: "Finish the timer to continue", es: "Termina el tiempo para continuar" },
+  "session.finish_first": {
+    en: "Finish the timer to continue",
+    es: "Termina el tiempo para continuar",
+  },
 
   "edit.title": { en: "Edit profile", es: "Editar perfil" },
-  "edit.desc": { en: "Personalize Mindful Movement to fit your day.", es: "Personaliza Mindful Movement según tu día." },
+  "edit.desc": {
+    en: "Personalize Mindful Movement to fit your day.",
+    es: "Personaliza Mindful Movement según tu día.",
+  },
   "edit.name": { en: "Your name", es: "Tu nombre" },
   "edit.fitness": { en: "Fitness level", es: "Nivel físico" },
   "edit.fitness.placeholder": { en: "Select your level", es: "Elige tu nivel" },
@@ -535,7 +745,10 @@ const dict: Record<string, { en: string; es: string }> = {
   "edit.water": { en: "Daily water goal (oz)", es: "Meta diaria de agua (oz)" },
   "edit.water_oz": { en: "Daily water goal (oz)", es: "Meta diaria de agua (oz)" },
   "edit.water_ml": { en: "Daily water goal (mL)", es: "Meta diaria de agua (mL)" },
- "edit.water_invalid": { en: "Enter a daily water goal greater than 0", es: "Ingresa una meta de agua mayor a 0" },
+  "edit.water_invalid": {
+    en: "Enter a daily water goal greater than 0",
+    es: "Ingresa una meta de agua mayor a 0",
+  },
   "unit.oz": { en: "oz", es: "oz" },
   "unit.ml": { en: "mL", es: "mL" },
   "unit.ounces": { en: "Ounces", es: "Onzas" },
@@ -544,10 +757,16 @@ const dict: Record<string, { en: string; es: string }> = {
   "edit.updated": { en: "Profile updated", es: "Perfil actualizado" },
 
   "error.404_title": { en: "Page not found", es: "Página no encontrada" },
-  "error.404_sub": { en: "The page you're looking for doesn't exist or has been moved.", es: "La página que buscas no existe o fue movida." },
+  "error.404_sub": {
+    en: "The page you're looking for doesn't exist or has been moved.",
+    es: "La página que buscas no existe o fue movida.",
+  },
   "error.go_home": { en: "Go home", es: "Ir al inicio" },
   "error.title": { en: "This page didn't load", es: "Esta página no se pudo cargar" },
-  "error.sub": { en: "Something went wrong on our end. You can try refreshing or head back home.", es: "Algo falló de nuestro lado. Intenta recargar o vuelve al inicio." },
+  "error.sub": {
+    en: "Something went wrong on our end. You can try refreshing or head back home.",
+    es: "Algo falló de nuestro lado. Intenta recargar o vuelve al inicio.",
+  },
   "error.try_again": { en: "Try again", es: "Intentar de nuevo" },
 
   "breath.inhale": { en: "Inhale", es: "Inhala" },

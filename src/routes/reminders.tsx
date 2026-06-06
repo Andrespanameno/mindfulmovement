@@ -1,7 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/mm/AppShell";
-import { ArrowLeft, Bell, BellOff, Sparkles, Droplet, Wind, Check, FlaskConical } from "lucide-react";
+import {
+  ArrowLeft,
+  Bell,
+  BellOff,
+  Sparkles,
+  Droplet,
+  Wind,
+  Check,
+  FlaskConical,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   useReminderSettings,
@@ -22,7 +31,10 @@ export const Route = createFileRoute("/reminders")({
   head: () => ({
     meta: [
       { title: "Reminders — Mindful Movement" },
-      { name: "description", content: "Customize gentle movement, hydration, and breathing reminders." },
+      {
+        name: "description",
+        content: "Customize gentle movement, hydration, and breathing reminders.",
+      },
     ],
   }),
   component: RemindersPage,
@@ -33,9 +45,7 @@ const INTERVAL_OPTIONS: ReminderSettings["intervalMin"][] = [30, 60, 90, 120];
 function RemindersPage() {
   const { t, lang } = useI18n();
   const s = useReminderSettings();
-  const [permission, setPermission] = useState<NotificationPermission | "unsupported">(
-    "default",
-  );
+  const [permission, setPermission] = useState<NotificationPermission | "unsupported">("default");
   const [nativePerm, setNativePerm] = useState<NativePermissionState>("prompt");
   const native = isNative();
 
@@ -146,9 +156,7 @@ function RemindersPage() {
         <div className="size-10" />
       </header>
 
-      <p className="text-sm text-muted-foreground mb-6 text-pretty">
-        {t("reminders.intro")}
-      </p>
+      <p className="text-sm text-muted-foreground mb-6 text-pretty">{t("reminders.intro")}</p>
 
       <button
         onClick={toggleEnabled}
@@ -202,16 +210,18 @@ function RemindersPage() {
           </button>
         </>
       ) : (
-        permission !== "granted" && permission !== "unsupported" && s.enabled && (
-        <button
-          onClick={requestPermission}
-          className="w-full p-4 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary text-sm font-medium mb-6 text-left"
-        >
-          {t("reminders.enable_browser")}
-          <span className="block text-xs text-primary/70 font-normal mt-1">
-            {t("reminders.enable_browser_sub")}
-          </span>
-        </button>
+        permission !== "granted" &&
+        permission !== "unsupported" &&
+        s.enabled && (
+          <button
+            onClick={requestPermission}
+            className="w-full p-4 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary text-sm font-medium mb-6 text-left"
+          >
+            {t("reminders.enable_browser")}
+            <span className="block text-xs text-primary/70 font-normal mt-1">
+              {t("reminders.enable_browser_sub")}
+            </span>
+          </button>
         )
       )}
 
@@ -247,8 +257,12 @@ function RemindersPage() {
                     : "bg-card ring-black/5 text-foreground"
                 }`}
               >
-                <span className="text-base leading-none">{min < 60 ? `${min}m` : `${min / 60}h`}</span>
-                <span className={`text-[10px] mt-1 ${active ? "opacity-80" : "text-muted-foreground"}`}>
+                <span className="text-base leading-none">
+                  {min < 60 ? `${min}m` : `${min / 60}h`}
+                </span>
+                <span
+                  className={`text-[10px] mt-1 ${active ? "opacity-80" : "text-muted-foreground"}`}
+                >
                   {min === 60 ? t("reminders.hourly") : t("reminders.interval_label")}
                 </span>
               </button>
