@@ -284,28 +284,12 @@ const dict: Record<string, { en: string; es: string }> = {
   "edit.save": { en: "Save changes", es: "Guardar cambios" },
   "edit.saving": { en: "Saving…", es: "Guardando…" },
 
-  "how.title": { en: "How It Works", es: "Cómo funciona" },
+  "how.title": { en: "How Mindful Movement Works", es: "Cómo funciona Mindful Movement" },
   "how.intro": {
-    en: "Mindful Movement helps busy adults build healthier daily habits through small intentional movement sessions that fit naturally into real life.",
-    es: "Mindful Movement te ayuda, en medio de un día ocupado, a crear hábitos más saludables con sesiones cortas de movimiento que encajan naturalmente en tu rutina.",
+    en: "Based on your profile, you'll receive reminders to start quick guided sessions throughout the day. Each session includes movement, breathing, hydration, and mindfulness activities. You can also choose individual movements anytime.",
+    es: "Basándonos en tu perfil, recibirás recordatorios para iniciar sesiones guiadas rápidas durante el día. Cada sesión incluye movimiento, respiración, hidratación y actividades de atención plena. También puedes elegir movimientos individuales en cualquier momento.",
   },
-  "how.schedule": {
-    en: "Set your preferred reminder schedule and complete short guided movement resets throughout the day based on your lifestyle and routine.",
-    es: "Configura tus recordatorios y completa breves reinicios de movimiento guiado a lo largo del día según tu estilo de vida y rutina.",
-  },
-  "how.combines": { en: "The app combines:", es: "La app combina:" },
-  "how.feature.micro": { en: "Micro workouts", es: "Micro entrenamientos" },
-  "how.feature.mobility": { en: "Mobility", es: "Movilidad" },
-  "how.feature.posture": { en: "Posture resets", es: "Reinicios de postura" },
-  "how.feature.breathing": { en: "Breathing exercises", es: "Ejercicios de respiración" },
-  "how.feature.hydration": { en: "Hydration reminders", es: "Recordatorios de hidratación" },
-  "how.feature.prompts": { en: "Mindful wellness prompts", es: "Mensajes de bienestar" },
-  "how.track": {
-    en: "Track your consistency, movement, hydration, breathing, and progress over time, one small action at a time.",
-    es: "Sigue tu constancia, movimiento, hidratación, respiración y progreso a lo largo del tiempo, una pequeña acción a la vez.",
-  },
-  "how.philosophy_label": { en: "Core Philosophy", es: "Filosofía central" },
-  "how.philosophy": { en: "\"Micro consistency. Macro results.\"", es: "\"Micro constancia. Macro Resultados.\"" },
+  "how.philosophy": { en: "Micro consistency. Macro results.", es: "Micro constancia. Macro Resultados." },
 
   "privacy.title": { en: "Privacy Policy", es: "Política de privacidad" },
   "privacy.intro": {
