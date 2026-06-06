@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AppShell } from "@/components/mm/AppShell";
 import {
   ArrowLeft,
@@ -48,10 +48,13 @@ function RemindersPage() {
   const [permission, setPermission] = useState<NotificationPermission | "unsupported">("default");
   const [nativePerm, setNativePerm] = useState<NativePermissionState>("prompt");
   const native = isNative();
+  const openedSyncRef = useRef(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (native) {
+      if (openedSyncRef.current) return;
+      openedSyncRef.current = true;
       void getNativePermission().then((state) => {
         console.info("[reminders] opened settings, permission ->", state);
         setNativePerm(state);
