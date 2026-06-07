@@ -16,7 +16,6 @@ import { getMovementImage } from "@/lib/movementImages";
 import { useReminderSettings } from "@/lib/reminders";
 import { logHydration, QUICK_ADDS_OZ } from "@/lib/useSessionStore";
 import { formatAmount, mlToOz, QUICK_ADDS_ML, type HydrationUnit } from "@/lib/hydrationUnit";
-import { useProfile as _useProfile } from "@/lib/useProfile";
 import { Droplet } from "lucide-react";
 import { toast } from "sonner";
 
