@@ -208,7 +208,7 @@ export const movements: Movement[] = [
   m("wall-pushups", "Wall Push-Ups", "Ten slow wall push-ups.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy", icon: Hand, repsType: "pushups", reps: 10, instruction: "Keep your body straight and lower toward the wall with control." }),
   m("countertop-pushups", "Countertop Push-Ups", "Push-ups against the counter, at your own pace.", "strength-snacks", { duration: 3, xp: 35, difficulty: "Easy", icon: Hand, repsType: "pushups", reps: 10 }),
   m("calf-raises", "Calf Raises", "Two slow sets, breathing through each.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy", instruction: "Rise onto your toes, pause briefly, then lower slowly." }),
-  m("wall-sit", "Wall Sit", "A short hold, count steady breaths.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
+  m("wall-sit", "Wall Sit", "A short hold, count steady breaths, rest as needed.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
   m("mini-lunges", "Mini Lunges", "Short, balanced lunges on each side.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy" }),
   m("step-ups", "Step-Ups", "Step up and down on a stable surface.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy" }),
   m("standing-core", "Standing Core Bracing", "Engage and release your core, slowly.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
