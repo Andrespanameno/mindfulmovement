@@ -296,6 +296,17 @@ export interface BuildGuidedSessionOptions {
   recentIds?: string[] | null;    // ids picked in recent sessions (avoid repeats)
   allowBreath?: boolean;
   includeBreath?: boolean;
+  /**
+   * "What to Nudge" toggles. Each enabled toggle guarantees at least one
+   * activity of that type in the session. When all three are false we treat
+   * it as all-on (defensive: never produce an empty session). Toggles act as
+   * "must include" requirements — not as strict-only filters.
+   */
+  nudges?: {
+    movement?: boolean;
+    hydration?: boolean;
+    breath?: boolean;
+  } | null;
 }
 
 type DifficultyWeights = Record<MovementDifficulty, number>;
@@ -483,6 +494,23 @@ export function buildGuidedSession(
   const workStyle = opts.workStyle ?? null;
   const goals = opts.wellnessGoals ?? [];
 
+  // Normalize the "What to Nudge" toggles. If the caller didn't provide
+  // them, fall back to the legacy allow/includeBreath flags plus everything
+  // else on. If all three toggles are explicitly off, default back to all-on
+  // so the session is never empty.
+  const rawNudges = opts.nudges ?? null;
+  let nudgeMovement = rawNudges ? rawNudges.movement !== false : true;
+  let nudgeHydration = rawNudges ? rawNudges.hydration !== false : true;
+  let nudgeBreath = rawNudges
+    ? rawNudges.breath !== false
+    : allowBreath && includeBreath;
+  if (!nudgeMovement && !nudgeHydration && !nudgeBreath) {
+    nudgeMovement = nudgeHydration = nudgeBreath = true;
+  }
+  // allowBreath kept as a hard kill-switch (legacy callers).
+  if (!allowBreath) nudgeBreath = false;
+  const onlyMovement = nudgeMovement && !nudgeHydration && !nudgeBreath;
+
   const hasPrefs = !!(opts.preferredCategories && opts.preferredCategories.length > 0);
   const prefs = hasPrefs
     ? opts.preferredCategories!
@@ -491,6 +519,11 @@ export function buildGuidedSession(
   const diffW = difficultyWeightsFor(fitness);
   const workBias = workStyleCategoryBias(workStyle);
   const { boosts: goalBoosts, requireHydration } = goalCategoryBias(goals);
+  // Stress / breathing goals allow a second breath step in the fill pass.
+  const stressOrBreathGoal = (goals ?? []).some((g) => {
+    const s = (g || "").toLowerCase();
+    return s.includes("stress") || s.includes("breath");
+  });
 
   const weightOf = (mv: Movement): number => {
     const inPrefs = prefs.includes(mv.category);
@@ -519,15 +552,16 @@ export function buildGuidedSession(
 
   // 1. Reserve a breath step (always, when allowed). We slot it later.
   let breathPick: Movement | null = null;
-  if (allowBreath && includeBreath) {
+  if (nudgeBreath) {
     const breathPool = movements.filter((mv) => mv.category === "breath-calm");
     breathPick = drawFrom(breathPool);
     if (breathPick) seen.add(breathPick.id);
   }
 
-  // 2. If hydration goal is set, reserve a hydration step.
+  // 2. Reserve a hydration step when the hydration toggle is on OR when a
+  //    hydration wellness goal is set.
   let hydrationPick: Movement | null = null;
-  if (requireHydration) {
+  if (nudgeHydration || requireHydration) {
     const hydroPool = movements.filter((mv) => mv.category === "hydration-wellness");
     hydrationPick = drawFrom(hydroPool);
     if (hydrationPick) seen.add(hydrationPick.id);
@@ -535,7 +569,23 @@ export function buildGuidedSession(
 
   // 3. Fill the remaining slots from the non-breath pool with category variety.
   const targetCount = 4 + (Math.random() < 0.5 ? 0 : 1); // 4 or 5 total steps
-  const nonBreathPool = movements.filter((mv) => mv.category !== "breath-calm");
+  // Build the fill pool. Breath stays out by default (single-reserved step,
+  // unless stress/breath goal allows an extra). Hydration is also kept out
+  // of the fill pool because we cap at one hydration unless the profile
+  // explicitly justifies more. Movement-only mode strips both non-movement
+  // categories entirely so the session feels movement-focused.
+  const fillPool = movements.filter((mv) => {
+    if (mv.category === "breath-calm") {
+      return nudgeBreath && stressOrBreathGoal;
+    }
+    if (mv.category === "hydration-wellness") {
+      return false;
+    }
+    if (onlyMovement) {
+      return true;
+    }
+    return true;
+  });
 
   const reservedCount = (breathPick ? 1 : 0) + (hydrationPick ? 1 : 0);
   const slotsToFill = Math.max(2, targetCount - reservedCount);
@@ -544,13 +594,13 @@ export function buildGuidedSession(
     // Soften weight further for categories already used at least once, to
     // encourage variety. Don't hard-exclude — pool may be small.
     const localWeights = new Map(weights);
-    for (const mv of nonBreathPool) {
+    for (const mv of fillPool) {
       const usedTimes = usedCats.get(mv.category) ?? 0;
       if (usedTimes > 0) {
         localWeights.set(mv.id, (localWeights.get(mv.id) ?? 0) * (usedTimes === 1 ? 0.35 : 0.1));
       }
     }
-    const available = nonBreathPool.filter((mv) => !seen.has(mv.id));
+    const available = fillPool.filter((mv) => !seen.has(mv.id));
     if (available.length === 0) break;
     const next = weightedDraw(available, localWeights);
     if (!next) break;

@@ -89,6 +89,11 @@ function SessionPage() {
       recentIds: readRecentIds(),
       allowBreath: reminders.breath,
       includeBreath: reminders.breath,
+      nudges: {
+        movement: reminders.movement,
+        hydration: reminders.hydration,
+        breath: reminders.breath,
+      },
     }),
   );
   const [index, setIndex] = useState(0);
@@ -117,6 +122,11 @@ function SessionPage() {
         recentIds: readRecentIds(),
         allowBreath: reminders.breath,
         includeBreath: reminders.breath,
+        nudges: {
+          movement: reminders.movement,
+          hydration: reminders.hydration,
+          breath: reminders.breath,
+        },
       });
       setSteps(next);
       setRemaining(next[0]?.seconds ?? 60);
