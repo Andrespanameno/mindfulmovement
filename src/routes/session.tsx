@@ -19,6 +19,34 @@ import { mlToOz, QUICK_ADDS_ML, type HydrationUnit } from "@/lib/hydrationUnit";
 import { Droplet } from "lucide-react";
 import { toast } from "sonner";
 
+// Track recently-used movement ids across guided sessions so repeats are
+// avoided. Stored in localStorage; capped at the last N ids.
+const RECENT_IDS_KEY = "mm.recent_movement_ids";
+const RECENT_MAX = 12;
+
+function readRecentIds(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(RECENT_IDS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function pushRecentIds(ids: string[]) {
+  if (typeof window === "undefined") return;
+  try {
+    const prev = readRecentIds();
+    const next = [...ids, ...prev.filter((id) => !ids.includes(id))].slice(0, RECENT_MAX);
+    window.localStorage.setItem(RECENT_IDS_KEY, JSON.stringify(next));
+  } catch {
+    /* ignore */
+  }
+}
+
 export const Route = createFileRoute("/session")({
   head: () => ({
     meta: [
@@ -53,7 +81,12 @@ function SessionPage() {
 
   // Build once per mount so the session feels consistent through.
   const [steps, setSteps] = useState<SessionStep[]>(() =>
-    buildGuidedSession(profile?.preferred_categories, {
+    buildGuidedSession({
+      preferredCategories: profile?.preferred_categories,
+      fitnessLevel: profile?.fitness_level,
+      workStyle: profile?.work_style,
+      wellnessGoals: profile?.wellness_goals,
+      recentIds: readRecentIds(),
       allowBreath: reminders.breath,
       includeBreath: reminders.breath,
     }),
@@ -76,7 +109,12 @@ function SessionPage() {
   useEffect(() => {
     if (!profile) return;
     if (steps.length === 0) {
-      const next = buildGuidedSession(profile.preferred_categories, {
+      const next = buildGuidedSession({
+        preferredCategories: profile.preferred_categories,
+        fitnessLevel: profile.fitness_level,
+        workStyle: profile.work_style,
+        wellnessGoals: profile.wellness_goals,
+        recentIds: readRecentIds(),
         allowBreath: reminders.breath,
         includeBreath: reminders.breath,
       });
@@ -85,6 +123,12 @@ function SessionPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.id]);
+
+  // Once a session has been built, record its movement ids so the next
+  // guided session will down-weight them.
+  useEffect(() => {
+    if (steps.length > 0) pushRecentIds(steps.map((s) => s.movement.id));
+  }, [steps]);
 
   const current = steps[index];
   const totalSeconds = useMemo(() => steps.reduce((a, s) => a + s.seconds, 0), [steps]);

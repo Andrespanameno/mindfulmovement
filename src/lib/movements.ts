@@ -284,96 +284,318 @@ export interface SessionStep {
   seconds: number; // per-step duration in seconds (60–120)
 }
 
+// ---------------------------------------------------------------------------
+// Personalized guided-session generator
+// ---------------------------------------------------------------------------
+
+export interface BuildGuidedSessionOptions {
+  preferredCategories?: string[] | null;
+  fitnessLevel?: string | null;   // "beginner" | "casual" | "active" | "athletic"
+  workStyle?: string | null;      // "desk" | "hybrid" | "active" | "on-the-go"
+  wellnessGoals?: string[] | null;
+  recentIds?: string[] | null;    // ids picked in recent sessions (avoid repeats)
+  allowBreath?: boolean;
+  includeBreath?: boolean;
+}
+
+type DifficultyWeights = Record<MovementDifficulty, number>;
+
+function difficultyWeightsFor(level: string | null | undefined): DifficultyWeights {
+  switch ((level || "").toLowerCase()) {
+    case "beginner":
+      return { Gentle: 1.6, Easy: 0.7, Moderate: 0.15 };
+    case "active":
+      return { Gentle: 0.7, Easy: 1.1, Moderate: 1.3 };
+    case "athletic":
+    case "advanced":
+      return { Gentle: 0.5, Easy: 1.0, Moderate: 1.6 };
+    case "intermediate":
+    case "casual":
+    default:
+      return { Gentle: 1.0, Easy: 1.0, Moderate: 0.6 };
+  }
+}
+
+function durationEnvelopeFor(level: string | null | undefined): {
+  minSec: number; maxSec: number; totalCap: number;
+} {
+  switch ((level || "").toLowerCase()) {
+    case "beginner":
+      return { minSec: 60, maxSec: 90, totalCap: 300 };
+    case "active":
+      return { minSec: 60, maxSec: 120, totalCap: 360 };
+    case "athletic":
+    case "advanced":
+      return { minSec: 75, maxSec: 150, totalCap: 420 };
+    case "intermediate":
+    case "casual":
+    default:
+      return { minSec: 60, maxSec: 120, totalCap: 360 };
+  }
+}
+
+function workStyleCategoryBias(workStyle: string | null | undefined): Partial<Record<MovementCategory, number>> {
+  switch ((workStyle || "").toLowerCase()) {
+    case "desk":
+    case "remote":
+    case "remote-desk":
+      return {
+        "desk-posture": 1.9,
+        "stretch-mobility": 1.5,
+        "breath-calm": 1.3,
+        "quick-walks": 1.4,
+        "hydration-wellness": 1.2,
+      };
+    case "hybrid":
+      return {
+        "desk-posture": 1.5,
+        "stretch-mobility": 1.3,
+        "quick-walks": 1.3,
+        "breath-calm": 1.2,
+        "strength-snacks": 1.1,
+        "hydration-wellness": 1.1,
+      };
+    case "active":
+      return {
+        "low-energy": 1.7,
+        "stretch-mobility": 1.6,
+        "hydration-wellness": 1.4,
+        "breath-calm": 1.2,
+      };
+    case "on-the-go":
+    case "parent":
+      return {
+        "parent-friendly": 1.9,
+        "quick-walks": 1.3,
+        "breath-calm": 1.2,
+        "stretch-mobility": 1.1,
+      };
+    default:
+      return {};
+  }
+}
+
 /**
- * Build a 5–6 minute guided session of 3–5 short movements based on the
- * user's preferred categories. Always includes one breath/calm step when
- * possible. Per-step durations are clamped to 60–120s and the total is
- * capped at 360s (6 min).
+ * Returns additive category boosts and a flag telling the builder whether to
+ * guarantee a hydration step.
+ */
+function goalCategoryBias(goals: string[] | null | undefined): {
+  boosts: Partial<Record<MovementCategory, number>>;
+  requireHydration: boolean;
+} {
+  const boosts: Partial<Record<MovementCategory, number>> = {};
+  let requireHydration = false;
+  if (!goals || goals.length === 0) {
+    return { boosts, requireHydration };
+  }
+  const add = (cat: MovementCategory, n: number) => {
+    boosts[cat] = (boosts[cat] ?? 0) + n;
+  };
+  for (const raw of goals) {
+    const g = raw.toLowerCase();
+    if (g.includes("stress")) {
+      add("breath-calm", 0.9);
+      add("low-energy", 0.5);
+      add("stretch-mobility", 0.3);
+    }
+    if (g.includes("energy") || g.includes("move more") || g.includes("daily movement")) {
+      add("quick-walks", 0.8);
+      add("strength-snacks", 0.6);
+    }
+    if (g.includes("posture")) {
+      add("desk-posture", 0.9);
+      add("stretch-mobility", 0.6);
+    }
+    if (g.includes("mobility")) {
+      add("stretch-mobility", 0.9);
+      add("low-energy", 0.3);
+    }
+    if (g.includes("hydrat")) {
+      add("hydration-wellness", 1.0);
+      requireHydration = true;
+    }
+    if (g.includes("breath") || g.includes("mindful")) {
+      add("breath-calm", 0.7);
+    }
+    if (g.includes("sleep")) {
+      add("breath-calm", 0.5);
+      add("low-energy", 0.5);
+    }
+    if (g.includes("habit") || g.includes("consistency")) {
+      // tiny generic nudge toward easy wins
+      add("breath-calm", 0.2);
+      add("desk-posture", 0.2);
+    }
+  }
+  return { boosts, requireHydration };
+}
+
+/**
+ * Weighted random draw (without replacement) from a list of movements with
+ * associated weights. Returns null when no positive-weight item remains.
+ */
+function weightedDraw(
+  pool: Movement[],
+  weights: Map<string, number>,
+): Movement | null {
+  const total = pool.reduce((a, mv) => a + Math.max(0, weights.get(mv.id) ?? 0), 0);
+  if (total <= 0) return pool.length > 0 ? pool[Math.floor(Math.random() * pool.length)] : null;
+  let r = Math.random() * total;
+  for (const mv of pool) {
+    const w = Math.max(0, weights.get(mv.id) ?? 0);
+    if (r < w) return mv;
+    r -= w;
+  }
+  return pool[pool.length - 1] ?? null;
+}
+
+/**
+ * Build a personalized 5–6 minute guided session.
+ *
+ * Selection logic:
+ *   1. Build per-movement weights from:
+ *        base 1.0
+ *        × difficulty multiplier (from fitness level)
+ *        × preferred-category multiplier (1.5 if in prefs, 0.4 otherwise)
+ *        × work-style category bias (×1.1–×1.9 on relevant categories)
+ *        + goal-based additive category boost (e.g. stress → +breath/low-energy)
+ *        × recency penalty (×0.2 if id is in recentIds)
+ *   2. Always reserve one breath/calm step (drawn from breath pool) unless
+ *      breath is disabled.
+ *   3. If a hydration goal is present, reserve one hydration-wellness step.
+ *   4. Fill remaining slots with weighted draws, preferring category variety.
+ *   5. Convert to timed steps using a fitness-based per-step clamp and total
+ *      duration cap (beginner 5 min, casual/active 6 min, athletic 7 min).
  */
 export function buildGuidedSession(
-  preferredCategories: string[] | null | undefined,
-  opts?: { allowBreath?: boolean; includeBreath?: boolean },
+  optsOrCategories?: BuildGuidedSessionOptions | string[] | null,
+  legacyOpts?: { allowBreath?: boolean; includeBreath?: boolean },
 ): SessionStep[] {
-  const allowBreath = opts?.allowBreath !== false;
-  const includeBreath = opts?.includeBreath !== false;
-  const hasPrefs = !!(preferredCategories && preferredCategories.length > 0);
-  // When the user has no explicit preferences, fall back to every category
-  // EXCEPT parent-friendly — those movements only make sense for users whose
-  // lifestyle includes parenting (their lifestyle preset will include it).
+  // Back-compat: allow buildGuidedSession(preferredCategories, { ... }).
+  const opts: BuildGuidedSessionOptions = Array.isArray(optsOrCategories) || optsOrCategories == null
+    ? { preferredCategories: (optsOrCategories as string[] | null | undefined) ?? null, ...(legacyOpts ?? {}) }
+    : optsOrCategories;
+
+  const allowBreath = opts.allowBreath !== false;
+  const includeBreath = opts.includeBreath !== false;
+  const recentIds = opts.recentIds ?? [];
+  const fitness = opts.fitnessLevel ?? null;
+  const workStyle = opts.workStyle ?? null;
+  const goals = opts.wellnessGoals ?? [];
+
+  const hasPrefs = !!(opts.preferredCategories && opts.preferredCategories.length > 0);
   const prefs = hasPrefs
-    ? preferredCategories!
+    ? opts.preferredCategories!
     : ALL_CATEGORY_IDS.filter((c) => c !== "parent-friendly");
 
-  const pool = movements.filter((mv) => prefs.includes(mv.category));
-  const safe = pool.length > 0 ? pool : movements;
+  const diffW = difficultyWeightsFor(fitness);
+  const workBias = workStyleCategoryBias(workStyle);
+  const { boosts: goalBoosts, requireHydration } = goalCategoryBias(goals);
 
-  const shuffle = <T,>(arr: T[]): T[] => {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
+  const weightOf = (mv: Movement): number => {
+    const inPrefs = prefs.includes(mv.category);
+    const prefMult = hasPrefs ? (inPrefs ? 1.5 : 0.4) : 1.0;
+    const workMult = workBias[mv.category] ?? 1.0;
+    const goalAdd = goalBoosts[mv.category] ?? 0;
+    const diffMult = diffW[mv.difficulty] ?? 1.0;
+    const recencyMult = recentIds.includes(mv.id) ? 0.2 : 1.0;
+    // Combine: category strength, then movement-level modifiers.
+    const categoryWeight = prefMult * workMult + goalAdd;
+    return Math.max(0.01, categoryWeight * diffMult * recencyMult);
   };
 
-  // Try to include one breath step, even if not in prefs — keeps sessions calm.
-  const breath = allowBreath
-    ? movements.filter((mv) => mv.category === "breath-calm")
-    : [];
-  const nonBreath = safe.filter((mv) => mv.category !== "breath-calm");
+  const weights = new Map<string, number>();
+  for (const mv of movements) weights.set(mv.id, weightOf(mv));
 
   const picked: Movement[] = [];
   const seen = new Set<string>();
+  const usedCats = new Map<MovementCategory, number>();
 
-  // Aim for variety across categories.
-  const usedCats = new Set<string>();
-  for (const mv of shuffle(nonBreath)) {
-    if (seen.has(mv.id)) continue;
-    if (usedCats.has(mv.category) && picked.length >= 2) continue;
-    picked.push(mv);
-    seen.add(mv.id);
-    usedCats.add(mv.category);
-    if (picked.length >= 3) break;
+  const drawFrom = (pool: Movement[]): Movement | null => {
+    const available = pool.filter((mv) => !seen.has(mv.id));
+    if (available.length === 0) return null;
+    return weightedDraw(available, weights);
+  };
+
+  // 1. Reserve a breath step (always, when allowed). We slot it later.
+  let breathPick: Movement | null = null;
+  if (allowBreath && includeBreath) {
+    const breathPool = movements.filter((mv) => mv.category === "breath-calm");
+    breathPick = drawFrom(breathPool);
+    if (breathPick) seen.add(breathPick.id);
   }
 
-  // Insert a breath step in the middle for a built-in reset.
-  if (includeBreath && breath.length > 0) {
-    const b = shuffle(breath)[0];
-    if (!seen.has(b.id)) {
-      picked.splice(Math.min(2, picked.length), 0, b);
-      seen.add(b.id);
+  // 2. If hydration goal is set, reserve a hydration step.
+  let hydrationPick: Movement | null = null;
+  if (requireHydration) {
+    const hydroPool = movements.filter((mv) => mv.category === "hydration-wellness");
+    hydrationPick = drawFrom(hydroPool);
+    if (hydrationPick) seen.add(hydrationPick.id);
+  }
+
+  // 3. Fill the remaining slots from the non-breath pool with category variety.
+  const targetCount = 4 + (Math.random() < 0.5 ? 0 : 1); // 4 or 5 total steps
+  const nonBreathPool = movements.filter((mv) => mv.category !== "breath-calm");
+
+  const reservedCount = (breathPick ? 1 : 0) + (hydrationPick ? 1 : 0);
+  const slotsToFill = Math.max(2, targetCount - reservedCount);
+
+  for (let i = 0; i < slotsToFill; i++) {
+    // Soften weight further for categories already used at least once, to
+    // encourage variety. Don't hard-exclude — pool may be small.
+    const localWeights = new Map(weights);
+    for (const mv of nonBreathPool) {
+      const usedTimes = usedCats.get(mv.category) ?? 0;
+      if (usedTimes > 0) {
+        localWeights.set(mv.id, (localWeights.get(mv.id) ?? 0) * (usedTimes === 1 ? 0.35 : 0.1));
+      }
     }
+    const available = nonBreathPool.filter((mv) => !seen.has(mv.id));
+    if (available.length === 0) break;
+    const next = weightedDraw(available, localWeights);
+    if (!next) break;
+    picked.push(next);
+    seen.add(next.id);
+    usedCats.set(next.category, (usedCats.get(next.category) ?? 0) + 1);
   }
 
-  // Optionally add one more for a 5-movement session.
-  for (const mv of shuffle(nonBreath)) {
-    if (picked.length >= 5) break;
-    if (seen.has(mv.id)) continue;
-    picked.push(mv);
-    seen.add(mv.id);
+  // 4. Assemble final order: hydration near the start (after first movement),
+  //    breath roughly in the middle.
+  let ordered: Movement[] = [...picked];
+  if (hydrationPick) {
+    const insertAt = Math.min(1, ordered.length);
+    ordered.splice(insertAt, 0, hydrationPick);
+  }
+  if (breathPick) {
+    const mid = Math.min(Math.floor(ordered.length / 2) + 1, ordered.length);
+    ordered.splice(mid, 0, breathPick);
   }
 
-  // Convert to timed steps, clamp to 60–120s, cap total to 360s.
+  // 5. Convert to timed steps using fitness envelope.
+  const { minSec, maxSec, totalCap } = durationEnvelopeFor(fitness);
   const steps: SessionStep[] = [];
   let total = 0;
-  const cap = 360;
-  for (const mv of picked) {
+  for (const mv of ordered) {
     const raw = Math.round((mv.duration || 1) * 60);
-    let secs = Math.max(60, Math.min(120, raw));
-    if (total + secs > cap) secs = Math.max(45, cap - total);
+    let secs = Math.max(minSec, Math.min(maxSec, raw));
+    if (total + secs > totalCap) secs = Math.max(45, totalCap - total);
     if (secs < 30) break;
     steps.push({ movement: mv, seconds: secs });
     total += secs;
-    if (total >= cap) break;
+    if (total >= totalCap) break;
   }
 
-  // Guarantee at least 3 steps.
+  // Guarantee at least 3 steps (defensive: data is large enough that this rarely triggers).
   if (steps.length < 3) {
-    const fallbackPool = allowBreath ? safe : safe.filter((mv) => mv.category !== "breath-calm");
-    for (const mv of shuffle(fallbackPool)) {
-      if (steps.length >= 3) break;
-      if (steps.find((s) => s.movement.id === mv.id)) continue;
-      steps.push({ movement: mv, seconds: 60 });
+    const fallback = movements.filter(
+      (mv) => !steps.find((s) => s.movement.id === mv.id) && (allowBreath || mv.category !== "breath-calm"),
+    );
+    for (let i = steps.length; i < 3 && fallback.length > 0; i++) {
+      const mv = weightedDraw(fallback, weights) ?? fallback[0];
+      if (!mv) break;
+      steps.push({ movement: mv, seconds: minSec });
+      const idx = fallback.indexOf(mv);
+      if (idx >= 0) fallback.splice(idx, 1);
     }
   }
 
