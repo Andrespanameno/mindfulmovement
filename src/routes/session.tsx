@@ -175,6 +175,23 @@ function SessionPage() {
   if (done) {
     const completed = steps.length;
     const totalXp = steps.reduce((a, s) => a + s.movement.xp, 0);
+    const showHydrationPrompt = reminders.hydration;
+    const quickAdds = unit === "ml" ? QUICK_ADDS_ML : QUICK_ADDS_OZ;
+    const handleHydrationAdd = (amount: number) => {
+      const oz = unit === "ml" ? mlToOz(amount) : amount;
+      logHydration(oz);
+      void (async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+        const { error } = await supabase.from("hydration_logs").insert({ user_id: user.id, ounces: oz });
+        if (error) console.error("[hydration_logs] insert failed:", error.message);
+      })();
+      setHydrationLogged(true);
+      toast.success(t("hydration.toast.logged_u", {
+        n: amount,
+        unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
+      }));
+    };
     return (
       <AppShell>
         <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
@@ -190,6 +207,40 @@ function SessionPage() {
             <span className="size-1 rounded-full bg-muted-foreground/40" />
             <span className="inline-flex items-center gap-1"><Sparkles className="size-3.5 text-accent" /> +{totalXp} XP</span>
           </div>
+          {showHydrationPrompt && !hydrationLogged && (
+            <div className="w-full max-w-sm rounded-3xl bg-card ring-1 ring-black/5 p-5 mb-6">
+              <div className="flex items-center justify-center gap-2 mb-1 text-primary">
+                <Droplet className="size-4" />
+                <p className="text-sm font-semibold">{t("session.hydration.prompt")}</p>
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">{t("session.hydration.sub")}</p>
+              <div className="grid grid-cols-3 gap-2 mb-3">
+                {quickAdds.map((amount) => (
+                  <button
+                    key={amount}
+                    onClick={() => handleHydrationAdd(amount)}
+                    className="h-14 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary font-semibold flex flex-col items-center justify-center gap-0.5 active:scale-[0.97] transition"
+                  >
+                    <span className="text-base leading-none">{amount}</span>
+                    <span className="text-[10px] font-medium uppercase tracking-wider opacity-70">
+                      {unit === "ml" ? "mL" : "oz"}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setHydrationLogged(true)}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                {t("session.hydration.skip")}
+              </button>
+            </div>
+          )}
+          {showHydrationPrompt && hydrationLogged && (
+            <div className="w-full max-w-sm rounded-2xl bg-primary/10 ring-1 ring-primary/20 p-3 mb-6 text-sm text-primary inline-flex items-center justify-center gap-2">
+              <Check className="size-4" /> {t("session.hydration.logged")}
+            </div>
+          )}
           <div className="flex gap-3">
             <Link to="/home" className="h-10 px-5 rounded-full bg-foreground text-background text-sm font-medium grid place-items-center">
               {t("session.back_home")}
