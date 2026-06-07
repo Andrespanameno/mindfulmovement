@@ -296,6 +296,17 @@ export interface BuildGuidedSessionOptions {
   recentIds?: string[] | null;    // ids picked in recent sessions (avoid repeats)
   allowBreath?: boolean;
   includeBreath?: boolean;
+  /**
+   * "What to Nudge" toggles. Each enabled toggle guarantees at least one
+   * activity of that type in the session. When all three are false we treat
+   * it as all-on (defensive: never produce an empty session). Toggles act as
+   * "must include" requirements — not as strict-only filters.
+   */
+  nudges?: {
+    movement?: boolean;
+    hydration?: boolean;
+    breath?: boolean;
+  } | null;
 }
 
 type DifficultyWeights = Record<MovementDifficulty, number>;
