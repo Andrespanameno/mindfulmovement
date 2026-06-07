@@ -206,7 +206,7 @@ export const movements: Movement[] = [
   m("squats", "Mindful Squats", "Slow, intentional squats.", "strength-snacks", { duration: 3, xp: 35, difficulty: "Easy", icon: Dumbbell, repsType: "squats", reps: 12 }),
   m("chair-squats", "Chair Squats", "Sit-stand reps with control.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy", repsType: "squats", reps: 10, instruction: "Sit back toward the chair, then stand tall with control." }),
   m("wall-pushups", "Wall Push-Ups", "Ten slow wall push-ups.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy", icon: Hand, repsType: "pushups", reps: 10, instruction: "Keep your body straight and lower toward the wall with control." }),
-  m("countertop-pushups", "Countertop Push-Ups", "Ten push-ups against the counter.", "strength-snacks", { duration: 3, xp: 35, difficulty: "Easy", icon: Hand, repsType: "pushups", reps: 10 }),
+  m("countertop-pushups", "Countertop Push-Ups", "Push-ups against the counter, at your own pace.", "strength-snacks", { duration: 3, xp: 35, difficulty: "Easy", icon: Hand, repsType: "pushups", reps: 10 }),
   m("calf-raises", "Calf Raises", "Two slow sets, breathing through each.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy", instruction: "Rise onto your toes, pause briefly, then lower slowly." }),
   m("wall-sit", "Wall Sit", "A short hold, count steady breaths.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
   m("mini-lunges", "Mini Lunges", "Short, balanced lunges on each side.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy" }),
