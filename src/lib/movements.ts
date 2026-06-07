@@ -193,7 +193,7 @@ export const movements: Movement[] = [
   m("standing-mobility", "Standing Mobility Flow", "A smooth flow from head to toe.", "stretch-mobility", { duration: 4, xp: 40, difficulty: "Easy" }),
 
   // LOW-ENERGY & RECOVERY RESETS
-  m("deep-breathing", "Deep Breathing", "Slow your breath, return to center.", "low-energy", { duration: 2, xp: 20, instruction: "Breathe in slowly, then exhale with control." }),
+  m("deep-breathing", "Deep Breathing", "Slow your breath, return to center.", "low-energy", { duration: 2, xp: 20, instruction: "Stand up, breathe in slowly, then exhale with control." }),
   m("mindful-standing", "Mindful Standing Reset", "Stand tall, soften, breathe.", "low-energy", { duration: 1, xp: 15, instruction: "Sit or stand tall, relax your shoulders, and align your spine." }),
   m("one-min-stretch", "1-Minute Stretch", "Whatever your body asks for, gently.", "low-energy", { duration: 1, xp: 10 }),
   m("hydration-breath", "Hydration + Breath Reset", "A sip of water and three slow breaths.", "low-energy", { duration: 2, xp: 20, icon: Droplet }),
