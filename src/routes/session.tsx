@@ -13,6 +13,11 @@ import { useI18n } from "@/lib/i18n";
 import { useContent } from "@/lib/i18n-content";
 import { MovementVisual } from "@/components/mm/MovementVisual";
 import { getMovementImage } from "@/lib/movementImages";
+import { useReminderSettings } from "@/lib/reminders";
+import { logHydration, QUICK_ADDS_OZ } from "@/lib/useSessionStore";
+import { mlToOz, QUICK_ADDS_ML, type HydrationUnit } from "@/lib/hydrationUnit";
+import { Droplet } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/session")({
   head: () => ({
@@ -35,6 +40,9 @@ function SessionPage() {
   const content = useContent();
   const { profile } = useProfile();
   const navigate = useNavigate();
+  const reminders = useReminderSettings();
+  const unit: HydrationUnit = profile?.hydration_unit ?? "oz";
+  const [hydrationLogged, setHydrationLogged] = useState(false);
 
   // Mark a guided session as active so reminder surfaces (native taps and
   // in-app toasts) can de-duplicate against an in-progress session.
@@ -44,7 +52,12 @@ function SessionPage() {
   }, []);
 
   // Build once per mount so the session feels consistent through.
-  const [steps, setSteps] = useState<SessionStep[]>(() => buildGuidedSession(profile?.preferred_categories));
+  const [steps, setSteps] = useState<SessionStep[]>(() =>
+    buildGuidedSession(profile?.preferred_categories, {
+      allowBreath: reminders.breath,
+      includeBreath: reminders.breath,
+    }),
+  );
   const [index, setIndex] = useState(0);
   const [remaining, setRemaining] = useState(steps[0]?.seconds ?? 60);
   const [running, setRunning] = useState(true);
@@ -63,7 +76,10 @@ function SessionPage() {
   useEffect(() => {
     if (!profile) return;
     if (steps.length === 0) {
-      const next = buildGuidedSession(profile.preferred_categories);
+      const next = buildGuidedSession(profile.preferred_categories, {
+        allowBreath: reminders.breath,
+        includeBreath: reminders.breath,
+      });
       setSteps(next);
       setRemaining(next[0]?.seconds ?? 60);
     }
@@ -159,6 +175,23 @@ function SessionPage() {
   if (done) {
     const completed = steps.length;
     const totalXp = steps.reduce((a, s) => a + s.movement.xp, 0);
+    const showHydrationPrompt = reminders.hydration;
+    const quickAdds = unit === "ml" ? QUICK_ADDS_ML : QUICK_ADDS_OZ;
+    const handleHydrationAdd = (amount: number) => {
+      const oz = unit === "ml" ? mlToOz(amount) : amount;
+      logHydration(oz);
+      void (async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+        const { error } = await supabase.from("hydration_logs").insert({ user_id: user.id, ounces: oz });
+        if (error) console.error("[hydration_logs] insert failed:", error.message);
+      })();
+      setHydrationLogged(true);
+      toast.success(t("hydration.toast.logged_u", {
+        n: amount,
+        unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
+      }));
+    };
     return (
       <AppShell>
         <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
@@ -174,6 +207,40 @@ function SessionPage() {
             <span className="size-1 rounded-full bg-muted-foreground/40" />
             <span className="inline-flex items-center gap-1"><Sparkles className="size-3.5 text-accent" /> +{totalXp} XP</span>
           </div>
+          {showHydrationPrompt && !hydrationLogged && (
+            <div className="w-full max-w-sm rounded-3xl bg-card ring-1 ring-black/5 p-5 mb-6">
+              <div className="flex items-center justify-center gap-2 mb-1 text-primary">
+                <Droplet className="size-4" />
+                <p className="text-sm font-semibold">{t("session.hydration.prompt")}</p>
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">{t("session.hydration.sub")}</p>
+              <div className="grid grid-cols-3 gap-2 mb-3">
+                {quickAdds.map((amount) => (
+                  <button
+                    key={amount}
+                    onClick={() => handleHydrationAdd(amount)}
+                    className="h-14 rounded-2xl bg-primary/10 ring-1 ring-primary/20 text-primary font-semibold flex flex-col items-center justify-center gap-0.5 active:scale-[0.97] transition"
+                  >
+                    <span className="text-base leading-none">{amount}</span>
+                    <span className="text-[10px] font-medium uppercase tracking-wider opacity-70">
+                      {unit === "ml" ? "mL" : "oz"}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setHydrationLogged(true)}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                {t("session.hydration.skip")}
+              </button>
+            </div>
+          )}
+          {showHydrationPrompt && hydrationLogged && (
+            <div className="w-full max-w-sm rounded-2xl bg-primary/10 ring-1 ring-primary/20 p-3 mb-6 text-sm text-primary inline-flex items-center justify-center gap-2">
+              <Check className="size-4" /> {t("session.hydration.logged")}
+            </div>
+          )}
           <div className="flex gap-3">
             <Link to="/home" className="h-10 px-5 rounded-full bg-foreground text-background text-sm font-medium grid place-items-center">
               {t("session.back_home")}

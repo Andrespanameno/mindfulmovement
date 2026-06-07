@@ -728,6 +728,16 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "Finish the timer to continue",
     es: "Termina el tiempo para continuar",
   },
+  "session.hydration.prompt": {
+    en: "Would you like to log water?",
+    es: "¿Quieres registrar agua?",
+  },
+  "session.hydration.sub": {
+    en: "Quick add to round out your reset.",
+    es: "Agrega rápido para completar tu reset.",
+  },
+  "session.hydration.skip": { en: "Skip", es: "Omitir" },
+  "session.hydration.logged": { en: "Hydration logged", es: "Hidratación registrada" },
 
   "edit.title": { en: "Edit profile", es: "Editar perfil" },
   "edit.desc": {

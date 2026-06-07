@@ -292,7 +292,10 @@ export interface SessionStep {
  */
 export function buildGuidedSession(
   preferredCategories: string[] | null | undefined,
+  opts?: { allowBreath?: boolean; includeBreath?: boolean },
 ): SessionStep[] {
+  const allowBreath = opts?.allowBreath !== false;
+  const includeBreath = opts?.includeBreath !== false;
   const hasPrefs = !!(preferredCategories && preferredCategories.length > 0);
   // When the user has no explicit preferences, fall back to every category
   // EXCEPT parent-friendly — those movements only make sense for users whose
@@ -314,7 +317,9 @@ export function buildGuidedSession(
   };
 
   // Try to include one breath step, even if not in prefs — keeps sessions calm.
-  const breath = movements.filter((mv) => mv.category === "breath-calm");
+  const breath = allowBreath
+    ? movements.filter((mv) => mv.category === "breath-calm")
+    : [];
   const nonBreath = safe.filter((mv) => mv.category !== "breath-calm");
 
   const picked: Movement[] = [];
@@ -332,7 +337,7 @@ export function buildGuidedSession(
   }
 
   // Insert a breath step in the middle for a built-in reset.
-  if (breath.length > 0) {
+  if (includeBreath && breath.length > 0) {
     const b = shuffle(breath)[0];
     if (!seen.has(b.id)) {
       picked.splice(Math.min(2, picked.length), 0, b);
@@ -364,7 +369,8 @@ export function buildGuidedSession(
 
   // Guarantee at least 3 steps.
   if (steps.length < 3) {
-    for (const mv of shuffle(safe)) {
+    const fallbackPool = allowBreath ? safe : safe.filter((mv) => mv.category !== "breath-calm");
+    for (const mv of shuffle(fallbackPool)) {
       if (steps.length >= 3) break;
       if (steps.find((s) => s.movement.id === mv.id)) continue;
       steps.push({ movement: mv, seconds: 60 });
