@@ -582,7 +582,7 @@ export function buildGuidedSession(
       return false;
     }
     if (onlyMovement) {
-      return mv.category !== "breath-calm" && mv.category !== "hydration-wellness";
+      return true;
     }
     return true;
   });
