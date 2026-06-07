@@ -228,7 +228,7 @@ export const movements: Movement[] = [
   m("shoulder-drop-breath", "Shoulder Drop Breathing", "Inhale, exhale, soften the shoulders.", "breath-calm", { duration: 2, xp: 20 }),
   m("slow-nasal", "Slow Nasal Breathing", "Long, quiet breaths through the nose.", "breath-calm", { duration: 3, xp: 25 }),
   m("tension-release-breath", "Tension Release Breathing", "Breathe into the tight spots, then release.", "breath-calm", { duration: 3, xp: 25 }),
-  m("mindful-breath-reset", "Mindful Breathing Reset", "Three intentional breaths, right now.", "breath-calm", { duration: 1, xp: 15 }),
+  m("mindful-breath-reset", "Mindful Breathing Reset", "Continuous intentional breaths, right now.", "breath-calm", { duration: 1, xp: 15 }),
 
   // HYDRATION & WELLNESS CHECK-INS
   m("hydration-reminder", "Hydration Check", "A glass of water, slow and steady.", "hydration-wellness", { duration: 1, xp: 10, icon: Droplet }),
