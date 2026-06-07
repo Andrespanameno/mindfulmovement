@@ -203,7 +203,7 @@ export const movements: Movement[] = [
   m("slow-breathing-pause", "Slow Breathing Pause", "Pause. Inhale. Long exhale. Repeat.", "low-energy", { duration: 2, xp: 20 }),
 
   // STRENGTH SNACKS
-  m("squats", "Mindful Squats", "Twelve slow, intentional squats.", "strength-snacks", { duration: 3, xp: 35, difficulty: "Easy", icon: Dumbbell, repsType: "squats", reps: 12 }),
+  m("squats", "Mindful Squats", "Slow, intentional squats.", "strength-snacks", { duration: 3, xp: 35, difficulty: "Easy", icon: Dumbbell, repsType: "squats", reps: 12 }),
   m("chair-squats", "Chair Squats", "Sit-stand reps with control.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy", repsType: "squats", reps: 10, instruction: "Sit back toward the chair, then stand tall with control." }),
   m("wall-pushups", "Wall Push-Ups", "Ten slow wall push-ups.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy", icon: Hand, repsType: "pushups", reps: 10, instruction: "Keep your body straight and lower toward the wall with control." }),
   m("countertop-pushups", "Countertop Push-Ups", "Ten push-ups against the counter.", "strength-snacks", { duration: 3, xp: 35, difficulty: "Easy", icon: Hand, repsType: "pushups", reps: 10 }),
