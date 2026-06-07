@@ -40,6 +40,9 @@ function SessionPage() {
   const content = useContent();
   const { profile } = useProfile();
   const navigate = useNavigate();
+  const reminders = useReminderSettings();
+  const unit: HydrationUnit = profile?.hydration_unit ?? "oz";
+  const [hydrationLogged, setHydrationLogged] = useState(false);
 
   // Mark a guided session as active so reminder surfaces (native taps and
   // in-app toasts) can de-duplicate against an in-progress session.
@@ -49,7 +52,12 @@ function SessionPage() {
   }, []);
 
   // Build once per mount so the session feels consistent through.
-  const [steps, setSteps] = useState<SessionStep[]>(() => buildGuidedSession(profile?.preferred_categories));
+  const [steps, setSteps] = useState<SessionStep[]>(() =>
+    buildGuidedSession(profile?.preferred_categories, {
+      allowBreath: reminders.breath,
+      includeBreath: reminders.breath,
+    }),
+  );
   const [index, setIndex] = useState(0);
   const [remaining, setRemaining] = useState(steps[0]?.seconds ?? 60);
   const [running, setRunning] = useState(true);
@@ -68,7 +76,10 @@ function SessionPage() {
   useEffect(() => {
     if (!profile) return;
     if (steps.length === 0) {
-      const next = buildGuidedSession(profile.preferred_categories);
+      const next = buildGuidedSession(profile.preferred_categories, {
+        allowBreath: reminders.breath,
+        includeBreath: reminders.breath,
+      });
       setSteps(next);
       setRemaining(next[0]?.seconds ?? 60);
     }
