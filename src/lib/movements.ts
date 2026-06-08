@@ -172,7 +172,7 @@ export const movements: Movement[] = [
   m("seated-marches", "Seated Marches", "March in place from your chair.", "desk-posture", { duration: 2, xp: 20 }),
 
   // QUICK WALKS & ENERGY BOOSTS
-  m("walk-3min", "3-Minute Walk", "Step away from the screen and reset.", "quick-walks", { duration: 3, xp: 30, difficulty: "Easy" }),
+  m("walk-3min", "Short Walk", "Step away from the screen and reset.", "quick-walks", { duration: 3, xp: 30, difficulty: "Easy" }),
   m("hallway-walk", "Hallway Walk", "A short loop to clear the head.", "quick-walks", { duration: 2, xp: 20, difficulty: "Easy" }),
   m("march-in-place", "March in Place", "Lift the knees, swing the arms.", "quick-walks", { duration: 2, xp: 20, difficulty: "Easy", instruction: "Lift your knees gently and keep a steady rhythm." }),
   m("side-steps", "Side Steps", "Light lateral movement to wake the hips.", "quick-walks", { duration: 2, xp: 20, difficulty: "Easy" }),
