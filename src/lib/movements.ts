@@ -211,7 +211,7 @@ export const movements: Movement[] = [
   m("wall-sit", "Wall Sit", "A short hold, count steady breaths, rest as needed.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
   m("mini-lunges", "Mini Lunges", "Short, balanced lunges on each side.", "strength-snacks", { duration: 2, xp: 30, difficulty: "Easy" }),
   m("step-ups", "Step-Ups", "Step up and down on a stable surface.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy" }),
-  m("standing-core", "Standing Core Bracing", "Engage and release your core, slowly.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
+  m("standing-core", "Standing Core Bracing", "Squeeze and release your core, slowly.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
 
   // PARENT-FRIENDLY MOVEMENT
   m("stroller-walk", "Stroller Walk", "Walk a few blocks with the stroller.", "parent-friendly", { duration: 5, xp: 45, difficulty: "Easy" }),
