@@ -179,7 +179,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "home.greeting.evening": { en: "Good evening, {name}", es: "Buenas noches, {name}" },
   "home.title": { en: "Today is a fresh start", es: "Hoy empieza de nuevo" },
   "home.guided.eyebrow": { en: "Guided session", es: "Sesión guiada" },
-  "home.guided.title": { en: "Start a 5-minute reset", es: "Date una pausa de 5 minutos" },
+  "home.guided.title": { en: "Start a short reset", es: "Date una pausa corta" },
   "home.guided.sub": {
     en: "A few gentle movements, timed for you.",
     es: "Unos movimientos suaves, a tu ritmo.",
