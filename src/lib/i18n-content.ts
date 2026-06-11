@@ -10,7 +10,6 @@ export const LIFESTYLE_ES: Record<string, { label: string; description: string }
   "office-desk": { label: "Trabajo en oficina", description: "Pensado para largas horas sentado frente a la pantalla." },
   "remote-desk": { label: "Home office", description: "Recordatorios suaves para tus días trabajando desde casa." },
   "stay-at-home-parent": { label: "Mamá o papá en casa", description: "Movimientos que se acomodan a la crianza y a la rutina del hogar." },
-  "busy-parent-fulltime": { label: "Mamá o papá con trabajo de tiempo completo", description: "Pausas cortas entre reuniones y tiempo en familia." },
   "active-on-feet": { label: "Trabajo activo o de pie", description: "Movimientos para recuperarte y mantener la movilidad." },
   "hybrid": { label: "Esquema híbrido", description: "Se adapta a tus días en casa y en la oficina." },
   "student": { label: "Estudiante", description: "Pausas útiles entre clases y momentos de estudio." },

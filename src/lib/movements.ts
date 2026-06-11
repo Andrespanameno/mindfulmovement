@@ -123,6 +123,13 @@ export interface Movement {
   repsType?: "pushups" | "squats";
   reps?: number;
   instruction?: string;
+  /**
+   * Optional restriction: if set, only users whose lifestyle id appears in
+   * this list may receive this movement (via guided sessions, today's
+   * invitation, the Move list, or any personalized recommendation).
+   * When omitted, the movement is eligible for ALL lifestyles.
+   */
+  eligibleLifestyles?: string[];
 }
 
 function tintFor(cat: MovementCategory): string {
@@ -142,6 +149,7 @@ function m(
     repsType?: "pushups" | "squats";
     reps?: number;
     instruction?: string;
+    eligibleLifestyles?: string[];
   } = {},
 ): Movement {
   return {
@@ -157,6 +165,7 @@ function m(
     repsType: opts.repsType,
     reps: opts.reps,
     instruction: opts.instruction,
+    eligibleLifestyles: opts.eligibleLifestyles,
   };
 }
 
@@ -213,14 +222,14 @@ export const movements: Movement[] = [
   m("step-ups", "Step-Ups", "Step up and down on a stable surface.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy" }),
   m("standing-core", "Standing Core Bracing", "Squeeze and release your core, slowly.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
 
-  // PARENT-FRIENDLY MOVEMENT
-  m("stroller-walk", "Stroller Walk", "Walk a few blocks with the stroller.", "parent-friendly", { duration: 5, xp: 45, difficulty: "Easy" }),
-  m("toddler-carry-walk", "Toddler Carry Walk", "Gentle walking laps with a little one.", "parent-friendly", { duration: 4, xp: 40, difficulty: "Easy" }),
-  m("toy-pickup-squats", "Toy Pickup Squats", "Turn tidy-up time into mindful squats.", "parent-friendly", { duration: 3, xp: 30, difficulty: "Easy" }),
-  m("dance-with-child", "Dance With Your Child", "One song, lots of smiles.", "parent-friendly", { duration: 3, xp: 35, difficulty: "Easy", icon: SparklesIcon }),
-  m("playground-laps", "Playground Laps", "Walk the perimeter while they play.", "parent-friendly", { duration: 5, xp: 45, difficulty: "Easy" }),
-  m("family-break", "Family Movement Break", "A two-minute stretch with everyone.", "parent-friendly", { duration: 2, xp: 25, icon: HeartHandshake }),
-  m("baby-bounce-calf", "Baby-Bounce Calf Raises", "Soothe and strengthen at the same time.", "parent-friendly", { duration: 2, xp: 25, difficulty: "Easy" }),
+  // PARENT-FRIENDLY MOVEMENT — restricted to the Stay-at-Home Parent lifestyle.
+  m("stroller-walk", "Stroller Walk", "Walk a few blocks with the stroller.", "parent-friendly", { duration: 5, xp: 45, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("toddler-carry-walk", "Toddler Carry Walk", "Gentle walking laps with a little one.", "parent-friendly", { duration: 4, xp: 40, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("toy-pickup-squats", "Toy Pickup Squats", "Turn tidy-up time into mindful squats.", "parent-friendly", { duration: 3, xp: 30, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("dance-with-child", "Dance With Your Child", "One song, lots of smiles.", "parent-friendly", { duration: 3, xp: 35, difficulty: "Easy", icon: SparklesIcon, eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("playground-laps", "Playground Laps", "Walk the perimeter while they play.", "parent-friendly", { duration: 5, xp: 45, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("family-break", "Family Movement Break", "A two-minute stretch with everyone.", "parent-friendly", { duration: 2, xp: 25, icon: HeartHandshake, eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("baby-bounce-calf", "Baby-Bounce Calf Raises", "Soothe and strengthen at the same time.", "parent-friendly", { duration: 2, xp: 25, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
 
   // BREATH & CALM
   m("box-breathing", "Box Breathing", "Inhale 4, hold 4, exhale 4, hold 4.", "breath-calm", { duration: 3, xp: 30, instruction: "Follow the square: inhale, hold, exhale, hold." }),
@@ -244,6 +253,33 @@ export function getMovement(id: string): Movement | undefined {
 }
 
 /**
+ * Returns true when the given movement is allowed for the given lifestyle id.
+ * Movements without an `eligibleLifestyles` list are universally eligible.
+ * Unknown / removed lifestyle ids are treated as a non-parent generic profile,
+ * so they will NOT match parent-only movements.
+ */
+export function isMovementEligibleForLifestyle(
+  mv: Movement,
+  lifestyle: string | null | undefined,
+): boolean {
+  if (!mv.eligibleLifestyles || mv.eligibleLifestyles.length === 0) return true;
+  if (!lifestyle) return false;
+  return mv.eligibleLifestyles.includes(lifestyle);
+}
+
+/**
+ * Filter a list of movements down to those eligible for the user's lifestyle
+ * profile. This is Step 1 of the recommendation pipeline (lifestyle eligibility)
+ * and runs BEFORE category preference, personalization weights, or randomization.
+ */
+export function filterMovementsByLifestyle<T extends Movement>(
+  list: T[],
+  lifestyle: string | null | undefined,
+): T[] {
+  return list.filter((mv) => isMovementEligibleForLifestyle(mv, lifestyle));
+}
+
+/**
  * Pick the next movement to suggest based on the user's preferred categories
  * and a recent-history list (ids shown in the last few cycles). Returns a
  * fresh pick when possible, or a category match outside the recents, or any
@@ -252,13 +288,16 @@ export function getMovement(id: string): Movement | undefined {
 export function pickNextMovement(
   preferredCategories: string[] | null | undefined,
   recentIds: string[] = [],
+  lifestyle?: string | null,
 ): Movement {
   const prefs =
     preferredCategories && preferredCategories.length > 0
       ? preferredCategories
       : ALL_CATEGORY_IDS;
-  const pool = movements.filter((mv) => prefs.includes(mv.category));
-  const safe = pool.length > 0 ? pool : movements;
+  // Step 1: lifestyle eligibility. Step 2: category preferences.
+  const eligible = filterMovementsByLifestyle(movements, lifestyle);
+  const pool = eligible.filter((mv) => prefs.includes(mv.category));
+  const safe = pool.length > 0 ? pool : eligible.length > 0 ? eligible : movements;
   const fresh = safe.filter((mv) => !recentIds.includes(mv.id));
   const finalPool = fresh.length > 0 ? fresh : safe;
   return finalPool[Math.floor(Math.random() * finalPool.length)];
@@ -292,6 +331,12 @@ export interface BuildGuidedSessionOptions {
   preferredCategories?: string[] | null;
   fitnessLevel?: string | null;   // "beginner" | "casual" | "active" | "athletic"
   workStyle?: string | null;      // "desk" | "hybrid" | "active" | "on-the-go"
+  /**
+   * Lifestyle profile id (e.g. "hybrid", "stay-at-home-parent"). Used to
+   * gate movements via `eligibleLifestyles` BEFORE any category or weight
+   * logic runs — so parent-only movements never leak into other profiles.
+   */
+  lifestyle?: string | null;
   wellnessGoals?: string[] | null;
   recentIds?: string[] | null;    // ids picked in recent sessions (avoid repeats)
   allowBreath?: boolean;
@@ -492,6 +537,7 @@ export function buildGuidedSession(
   const recentIds = opts.recentIds ?? [];
   const fitness = opts.fitnessLevel ?? null;
   const workStyle = opts.workStyle ?? null;
+  const lifestyle = opts.lifestyle ?? null;
   const goals = opts.wellnessGoals ?? [];
 
   // Normalize the "What to Nudge" toggles. If the caller didn't provide
@@ -510,6 +556,10 @@ export function buildGuidedSession(
   // allowBreath kept as a hard kill-switch (legacy callers).
   if (!allowBreath) nudgeBreath = false;
   const onlyMovement = nudgeMovement && !nudgeHydration && !nudgeBreath;
+
+  // Step 1: lifestyle eligibility — filter the global movement pool BEFORE
+  // building weights, so non-parent profiles can never draw a parent movement.
+  const eligibleMovements = filterMovementsByLifestyle(movements, lifestyle);
 
   const hasPrefs = !!(opts.preferredCategories && opts.preferredCategories.length > 0);
   const prefs = hasPrefs
@@ -538,7 +588,7 @@ export function buildGuidedSession(
   };
 
   const weights = new Map<string, number>();
-  for (const mv of movements) weights.set(mv.id, weightOf(mv));
+  for (const mv of eligibleMovements) weights.set(mv.id, weightOf(mv));
 
   const picked: Movement[] = [];
   const seen = new Set<string>();
@@ -553,7 +603,7 @@ export function buildGuidedSession(
   // 1. Reserve a breath step (always, when allowed). We slot it later.
   let breathPick: Movement | null = null;
   if (nudgeBreath) {
-    const breathPool = movements.filter((mv) => mv.category === "breath-calm");
+    const breathPool = eligibleMovements.filter((mv) => mv.category === "breath-calm");
     breathPick = drawFrom(breathPool);
     if (breathPick) seen.add(breathPick.id);
   }
@@ -562,7 +612,7 @@ export function buildGuidedSession(
   //    hydration wellness goal is set.
   let hydrationPick: Movement | null = null;
   if (nudgeHydration || requireHydration) {
-    const hydroPool = movements.filter((mv) => mv.category === "hydration-wellness");
+    const hydroPool = eligibleMovements.filter((mv) => mv.category === "hydration-wellness");
     hydrationPick = drawFrom(hydroPool);
     if (hydrationPick) seen.add(hydrationPick.id);
   }
@@ -574,7 +624,7 @@ export function buildGuidedSession(
   // of the fill pool because we cap at one hydration unless the profile
   // explicitly justifies more. Movement-only mode strips both non-movement
   // categories entirely so the session feels movement-focused.
-  const fillPool = movements.filter((mv) => {
+  const fillPool = eligibleMovements.filter((mv) => {
     if (mv.category === "breath-calm") {
       return nudgeBreath && stressOrBreathGoal;
     }
@@ -637,7 +687,7 @@ export function buildGuidedSession(
 
   // Guarantee at least 3 steps (defensive: data is large enough that this rarely triggers).
   if (steps.length < 3) {
-    const fallback = movements.filter(
+    const fallback = eligibleMovements.filter(
       (mv) => !steps.find((s) => s.movement.id === mv.id) && (allowBreath || mv.category !== "breath-calm"),
     );
     for (let i = steps.length; i < 3 && fallback.length > 0; i++) {
