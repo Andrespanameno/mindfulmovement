@@ -1,6 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Play, Pause, SkipForward, X, Check, Sparkles } from "lucide-react";
+import { App as CapacitorApp } from "@capacitor/app";
+import { isNative } from "@/lib/native";
 import { AppShell } from "@/components/mm/AppShell";
 import { buildGuidedSession, type SessionStep } from "@/lib/movements";
 import { useProfile } from "@/lib/useProfile";
@@ -98,13 +100,32 @@ function SessionPage() {
     }),
   );
   const [index, setIndex] = useState(0);
-  const [remaining, setRemaining] = useState(steps[0]?.seconds ?? 60);
   const [running, setRunning] = useState(true);
   const [done, setDone] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const loggedRef = useRef<Set<string>>(new Set());
   const [imgFailed, setImgFailed] = useState(false);
+
+  // Timestamp-based timer state. `runStartAt` is the wall-clock ms when the
+  // current running segment began; `elapsedBeforeMs` accumulates time from
+  // prior running segments within the same step (across pauses).
+  const currentStepSeconds = steps[index]?.seconds ?? 0;
+  const [runStartAt, setRunStartAt] = useState<number | null>(() => Date.now());
+  const [elapsedBeforeMs, setElapsedBeforeMs] = useState(0);
+  const [nowTs, setNowTs] = useState(() => Date.now());
+
+  const computeRemaining = useCallback(
+    (now: number) => {
+      const stepSec = currentStepSeconds;
+      if (stepSec <= 0) return 0;
+      const runningMs = running && runStartAt != null ? Math.max(0, now - runStartAt) : 0;
+      const usedSec = Math.floor((elapsedBeforeMs + runningMs) / 1000);
+      return Math.max(0, stepSec - usedSec);
+    },
+    [currentStepSeconds, running, runStartAt, elapsedBeforeMs],
+  );
+  const remaining = computeRemaining(nowTs);
 
   // Reset image error state when the current step changes
   useEffect(() => {
@@ -131,7 +152,10 @@ function SessionPage() {
         },
       });
       setSteps(next);
-      setRemaining(next[0]?.seconds ?? 60);
+      setElapsedBeforeMs(0);
+      setRunStartAt(Date.now());
+      setNowTs(Date.now());
+      setRunning(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.id]);
@@ -200,31 +224,98 @@ function SessionPage() {
       setRunning(false);
       return;
     }
-    const next = steps[index + 1];
     setIndex(index + 1);
-    setRemaining(next.seconds);
+    setElapsedBeforeMs(0);
+    setRunStartAt(Date.now());
+    setNowTs(Date.now());
     setConfirmed(false);
     setRunning(true);
   };
 
-  // Ticker
+  // Pause/resume: when running flips, capture or release the running segment.
+  const toggleRunning = () => {
+    const now = Date.now();
+    if (running) {
+      if (runStartAt != null) {
+        setElapsedBeforeMs((e) => e + Math.max(0, now - runStartAt));
+      }
+      setRunStartAt(null);
+      setNowTs(now);
+      setRunning(false);
+    } else {
+      setRunStartAt(now);
+      setNowTs(now);
+      setRunning(true);
+    }
+  };
+
+  // Ticker — drives re-renders; remaining is computed from timestamps so
+  // background throttling / missed ticks self-correct on the next render.
   useEffect(() => {
     if (!running || done) return;
+    setNowTs(Date.now());
     intervalRef.current = setInterval(() => {
-      setRemaining((r) => {
-        if (r <= 1) return 0;
-        return r - 1;
-      });
-    }, 1000);
+      setNowTs(Date.now());
+    }, 250);
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     };
   }, [running, done, index]);
 
-  // Stop the ticker when a step's timer hits zero; user must tap Done to continue.
+  // When step timer hits zero, bank elapsed and pause; user taps Done.
   useEffect(() => {
-    if (remaining === 0 && running) setRunning(false);
-  }, [remaining, running]);
+    if (remaining === 0 && running) {
+      const now = Date.now();
+      if (runStartAt != null) {
+        setElapsedBeforeMs((e) => e + Math.max(0, now - runStartAt));
+      }
+      setRunStartAt(null);
+      setRunning(false);
+    }
+  }, [remaining, running, runStartAt]);
+
+  // Force a recompute when the page/app returns from background or when
+  // navigated into from a notification tap.
+  useEffect(() => {
+    const refresh = () => setNowTs(Date.now());
+    const onVis = () => {
+      if (typeof document !== "undefined" && document.visibilityState === "visible") {
+        refresh();
+      }
+    };
+    window.addEventListener("focus", refresh);
+    window.addEventListener("pageshow", refresh);
+    document.addEventListener("visibilitychange", onVis);
+
+    let removeAppListener: (() => void) | null = null;
+    if (isNative()) {
+      const handle = CapacitorApp.addListener("appStateChange", (s) => {
+        if (s.isActive) refresh();
+      });
+      removeAppListener = () => {
+        void Promise.resolve(handle).then((h) => h.remove());
+      };
+    }
+    // Initial kick after mount (covers notification-driven navigation).
+    refresh();
+    return () => {
+      window.removeEventListener("focus", refresh);
+      window.removeEventListener("pageshow", refresh);
+      document.removeEventListener("visibilitychange", onVis);
+      removeAppListener?.();
+    };
+  }, []);
+
+  // Reset timer bookkeeping whenever the step index changes.
+  useEffect(() => {
+    setElapsedBeforeMs(0);
+    setRunStartAt((prev) => (running ? Date.now() : prev));
+    setNowTs(Date.now());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index]);
 
   const handleExit = () => navigate({ to: "/home" });
 
@@ -414,7 +505,7 @@ function SessionPage() {
         {remaining > 0 ? (
           <>
             <button
-              onClick={() => setRunning((r) => !r)}
+              onClick={toggleRunning}
               aria-label={running ? t("session.aria.pause") : t("session.aria.resume")}
               className="h-12 px-6 rounded-full bg-foreground text-background text-sm font-medium inline-flex items-center gap-2 active:scale-95 transition-transform"
             >
