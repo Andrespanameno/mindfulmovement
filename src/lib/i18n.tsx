@@ -407,10 +407,10 @@ const dict: Record<string, { en: string; es: string }> = {
   "edit.save": { en: "Save changes", es: "Guardar cambios" },
   "edit.saving": { en: "Saving…", es: "Guardando…" },
 
-  "how.title": { en: "How Mindful Movement Works", es: "Cómo funciona Mindful Movement" },
+  "how.title": { en: "How Mindful Movement Works", es: "Cómo funciona Mindful Movement App" },
   "how.intro": {
     en: "Based on your profile, you'll receive reminders to start quick guided sessions throughout the day. Each session includes movement, breathing, hydration, and mindfulness activities. You can also choose individual movements anytime.",
-    es: "Basándonos en tu perfil, recibirás recordatorios para iniciar sesiones guiadas rápidas durante el día. Cada sesión incluye movimiento, respiración, hidratación y actividades de atención plena. También puedes elegir movimientos individuales en cualquier momento.",
+    es: "Basándonos en tu perfil, recibirás recordatorios para iniciar sesiones cortas y guiadas durante el día. Cada sesión incluye movimiento, respiración, hidratación y/o actividades de atención plena. También puedes elegir movimientos individuales en cualquier momento.",
   },
   "how.philosophy": {
     en: "Micro consistency. Macro results.",
