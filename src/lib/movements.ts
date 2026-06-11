@@ -331,6 +331,12 @@ export interface BuildGuidedSessionOptions {
   preferredCategories?: string[] | null;
   fitnessLevel?: string | null;   // "beginner" | "casual" | "active" | "athletic"
   workStyle?: string | null;      // "desk" | "hybrid" | "active" | "on-the-go"
+  /**
+   * Lifestyle profile id (e.g. "hybrid", "stay-at-home-parent"). Used to
+   * gate movements via `eligibleLifestyles` BEFORE any category or weight
+   * logic runs — so parent-only movements never leak into other profiles.
+   */
+  lifestyle?: string | null;
   wellnessGoals?: string[] | null;
   recentIds?: string[] | null;    // ids picked in recent sessions (avoid repeats)
   allowBreath?: boolean;
@@ -531,6 +537,7 @@ export function buildGuidedSession(
   const recentIds = opts.recentIds ?? [];
   const fitness = opts.fitnessLevel ?? null;
   const workStyle = opts.workStyle ?? null;
+  const lifestyle = opts.lifestyle ?? null;
   const goals = opts.wellnessGoals ?? [];
 
   // Normalize the "What to Nudge" toggles. If the caller didn't provide
@@ -549,6 +556,10 @@ export function buildGuidedSession(
   // allowBreath kept as a hard kill-switch (legacy callers).
   if (!allowBreath) nudgeBreath = false;
   const onlyMovement = nudgeMovement && !nudgeHydration && !nudgeBreath;
+
+  // Step 1: lifestyle eligibility — filter the global movement pool BEFORE
+  // building weights, so non-parent profiles can never draw a parent movement.
+  const eligibleMovements = filterMovementsByLifestyle(movements, lifestyle);
 
   const hasPrefs = !!(opts.preferredCategories && opts.preferredCategories.length > 0);
   const prefs = hasPrefs
@@ -577,7 +588,7 @@ export function buildGuidedSession(
   };
 
   const weights = new Map<string, number>();
-  for (const mv of movements) weights.set(mv.id, weightOf(mv));
+  for (const mv of eligibleMovements) weights.set(mv.id, weightOf(mv));
 
   const picked: Movement[] = [];
   const seen = new Set<string>();
@@ -592,7 +603,7 @@ export function buildGuidedSession(
   // 1. Reserve a breath step (always, when allowed). We slot it later.
   let breathPick: Movement | null = null;
   if (nudgeBreath) {
-    const breathPool = movements.filter((mv) => mv.category === "breath-calm");
+    const breathPool = eligibleMovements.filter((mv) => mv.category === "breath-calm");
     breathPick = drawFrom(breathPool);
     if (breathPick) seen.add(breathPick.id);
   }
@@ -601,7 +612,7 @@ export function buildGuidedSession(
   //    hydration wellness goal is set.
   let hydrationPick: Movement | null = null;
   if (nudgeHydration || requireHydration) {
-    const hydroPool = movements.filter((mv) => mv.category === "hydration-wellness");
+    const hydroPool = eligibleMovements.filter((mv) => mv.category === "hydration-wellness");
     hydrationPick = drawFrom(hydroPool);
     if (hydrationPick) seen.add(hydrationPick.id);
   }
@@ -613,7 +624,7 @@ export function buildGuidedSession(
   // of the fill pool because we cap at one hydration unless the profile
   // explicitly justifies more. Movement-only mode strips both non-movement
   // categories entirely so the session feels movement-focused.
-  const fillPool = movements.filter((mv) => {
+  const fillPool = eligibleMovements.filter((mv) => {
     if (mv.category === "breath-calm") {
       return nudgeBreath && stressOrBreathGoal;
     }
@@ -676,7 +687,7 @@ export function buildGuidedSession(
 
   // Guarantee at least 3 steps (defensive: data is large enough that this rarely triggers).
   if (steps.length < 3) {
-    const fallback = movements.filter(
+    const fallback = eligibleMovements.filter(
       (mv) => !steps.find((s) => s.movement.id === mv.id) && (allowBreath || mv.category !== "breath-calm"),
     );
     for (let i = steps.length; i < 3 && fallback.length > 0; i++) {
