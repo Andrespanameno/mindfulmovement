@@ -113,7 +113,7 @@ export const WELLNESS_GOALS_ES: Record<string, string> = {
 
 export const MOVEMENT_ES: Record<string, { title: string; description: string; instruction?: string }> = {
   "shoulder-rolls": { title: "Círculos de hombros", description: "Rotaciones lentas para liberar tensión en la espalda alta.", instruction: "Rota los hombros lentamente para liberar tensión." },
-  "chin-tucks": { title: "Retracciones de mentón", description: "Reinicia el cuello después de tanto tiempo frente a la pantalla." },
+  "chin-tucks": { title: "Retracciones de mentón", description: "Reinicia el cuello después de pasar tiempo frente a la pantalla." },
   "seated-spinal-twist": { title: "Torsión de columna sentado", description: "Una torsión suave para soltar la columna." },
   "wrist-stretches": { title: "Estiramiento de muñecas", description: "Estiramientos suaves para las muñecas tensas." },
   "chest-opener": { title: "Apertura de pecho", description: "Abre el pecho y contrarresta la encorvadura." },
