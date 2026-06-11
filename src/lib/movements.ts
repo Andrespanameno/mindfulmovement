@@ -222,14 +222,14 @@ export const movements: Movement[] = [
   m("step-ups", "Step-Ups", "Step up and down on a stable surface.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy" }),
   m("standing-core", "Standing Core Bracing", "Squeeze and release your core, slowly.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
 
-  // PARENT-FRIENDLY MOVEMENT
-  m("stroller-walk", "Stroller Walk", "Walk a few blocks with the stroller.", "parent-friendly", { duration: 5, xp: 45, difficulty: "Easy" }),
-  m("toddler-carry-walk", "Toddler Carry Walk", "Gentle walking laps with a little one.", "parent-friendly", { duration: 4, xp: 40, difficulty: "Easy" }),
-  m("toy-pickup-squats", "Toy Pickup Squats", "Turn tidy-up time into mindful squats.", "parent-friendly", { duration: 3, xp: 30, difficulty: "Easy" }),
-  m("dance-with-child", "Dance With Your Child", "One song, lots of smiles.", "parent-friendly", { duration: 3, xp: 35, difficulty: "Easy", icon: SparklesIcon }),
-  m("playground-laps", "Playground Laps", "Walk the perimeter while they play.", "parent-friendly", { duration: 5, xp: 45, difficulty: "Easy" }),
-  m("family-break", "Family Movement Break", "A two-minute stretch with everyone.", "parent-friendly", { duration: 2, xp: 25, icon: HeartHandshake }),
-  m("baby-bounce-calf", "Baby-Bounce Calf Raises", "Soothe and strengthen at the same time.", "parent-friendly", { duration: 2, xp: 25, difficulty: "Easy" }),
+  // PARENT-FRIENDLY MOVEMENT — restricted to the Stay-at-Home Parent lifestyle.
+  m("stroller-walk", "Stroller Walk", "Walk a few blocks with the stroller.", "parent-friendly", { duration: 5, xp: 45, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("toddler-carry-walk", "Toddler Carry Walk", "Gentle walking laps with a little one.", "parent-friendly", { duration: 4, xp: 40, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("toy-pickup-squats", "Toy Pickup Squats", "Turn tidy-up time into mindful squats.", "parent-friendly", { duration: 3, xp: 30, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("dance-with-child", "Dance With Your Child", "One song, lots of smiles.", "parent-friendly", { duration: 3, xp: 35, difficulty: "Easy", icon: SparklesIcon, eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("playground-laps", "Playground Laps", "Walk the perimeter while they play.", "parent-friendly", { duration: 5, xp: 45, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("family-break", "Family Movement Break", "A two-minute stretch with everyone.", "parent-friendly", { duration: 2, xp: 25, icon: HeartHandshake, eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("baby-bounce-calf", "Baby-Bounce Calf Raises", "Soothe and strengthen at the same time.", "parent-friendly", { duration: 2, xp: 25, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
 
   // BREATH & CALM
   m("box-breathing", "Box Breathing", "Inhale 4, hold 4, exhale 4, hold 4.", "breath-calm", { duration: 3, xp: 30, instruction: "Follow the square: inhale, hold, exhale, hold." }),
