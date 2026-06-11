@@ -238,7 +238,7 @@ export const MESSAGE_ES: Record<string, string> = {
   "Today is a gentle invitation to begin again.": "Hoy es un buen momento para empezar de nuevo.",
   "Consistency is kinder than intensity.": "La constancia es más amable que la intensidad.",
   "Movement is a quiet form of self-care.": "El movimiento es una forma callada de cuidarte.",
-  "A calm breath is always within reach.": "Una respiración calmada siempre está al alcance.",
+  "A calm breath is always within reach.": "Una respiración tranquila siempre está al alcance.",
   "Tiny resets create steady momentum.": "Las pausas pequeñas te dan ritmo constante.",
   "Stillness counts. Motion counts. Both matter.": "La quietud cuenta. El movimiento cuenta. Ambos importan.",
   "Hydration is a small act of devotion to yourself.": "La hidratación es un pequeño acto de devoción hacia ti.",
