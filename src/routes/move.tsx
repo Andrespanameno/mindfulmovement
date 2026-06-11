@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { useMemo, useState } from "react";
-import { movements, CATEGORIES, type MovementCategory } from "@/lib/movements";
+import { movements, CATEGORIES, filterMovementsByLifestyle, type MovementCategory } from "@/lib/movements";
 import { MovementCard } from "@/components/mm/MovementCard";
 import { useSessionStore } from "@/lib/useSessionStore";
 import { useProfile } from "@/lib/useProfile";
@@ -89,6 +89,13 @@ function MovePage() {
   const { completedToday } = useSessionStore();
   const { profile } = useProfile();
   const prefs = profile?.preferred_categories ?? [];
+  // Step 1 of the recommendation pipeline: only show movements eligible for
+  // this user's lifestyle profile. Parent-only movements never appear for
+  // non-parent profiles, regardless of category filter or preferences.
+  const lifestyleEligible = useMemo(
+    () => filterMovementsByLifestyle(movements, profile?.lifestyle),
+    [profile?.lifestyle],
+  );
 
   const { dailySubtitle, featuredTitle, featuredMessage } = useMemo(() => {
     const now = new Date();
@@ -111,13 +118,13 @@ function MovePage() {
   ];
 
   const filtered = useMemo(() => {
-    if (active !== "All") return movements.filter((m) => m.category === active);
-    if (prefs.length === 0) return movements;
+    if (active !== "All") return lifestyleEligible.filter((m) => m.category === active);
+    if (prefs.length === 0) return lifestyleEligible;
     // Preferred categories first, then the rest — keeps variety without hiding anything.
-    const preferred = movements.filter((m) => prefs.includes(m.category));
-    const others = movements.filter((m) => !prefs.includes(m.category));
+    const preferred = lifestyleEligible.filter((m) => prefs.includes(m.category));
+    const others = lifestyleEligible.filter((m) => !prefs.includes(m.category));
     return [...preferred, ...others];
-  }, [active, prefs]);
+  }, [active, prefs, lifestyleEligible]);
 
   return (
     <AppShell>
