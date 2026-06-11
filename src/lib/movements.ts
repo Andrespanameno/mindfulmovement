@@ -253,6 +253,33 @@ export function getMovement(id: string): Movement | undefined {
 }
 
 /**
+ * Returns true when the given movement is allowed for the given lifestyle id.
+ * Movements without an `eligibleLifestyles` list are universally eligible.
+ * Unknown / removed lifestyle ids are treated as a non-parent generic profile,
+ * so they will NOT match parent-only movements.
+ */
+export function isMovementEligibleForLifestyle(
+  mv: Movement,
+  lifestyle: string | null | undefined,
+): boolean {
+  if (!mv.eligibleLifestyles || mv.eligibleLifestyles.length === 0) return true;
+  if (!lifestyle) return false;
+  return mv.eligibleLifestyles.includes(lifestyle);
+}
+
+/**
+ * Filter a list of movements down to those eligible for the user's lifestyle
+ * profile. This is Step 1 of the recommendation pipeline (lifestyle eligibility)
+ * and runs BEFORE category preference, personalization weights, or randomization.
+ */
+export function filterMovementsByLifestyle<T extends Movement>(
+  list: T[],
+  lifestyle: string | null | undefined,
+): T[] {
+  return list.filter((mv) => isMovementEligibleForLifestyle(mv, lifestyle));
+}
+
+/**
  * Pick the next movement to suggest based on the user's preferred categories
  * and a recent-history list (ids shown in the last few cycles). Returns a
  * fresh pick when possible, or a category match outside the recents, or any
@@ -261,13 +288,16 @@ export function getMovement(id: string): Movement | undefined {
 export function pickNextMovement(
   preferredCategories: string[] | null | undefined,
   recentIds: string[] = [],
+  lifestyle?: string | null,
 ): Movement {
   const prefs =
     preferredCategories && preferredCategories.length > 0
       ? preferredCategories
       : ALL_CATEGORY_IDS;
-  const pool = movements.filter((mv) => prefs.includes(mv.category));
-  const safe = pool.length > 0 ? pool : movements;
+  // Step 1: lifestyle eligibility. Step 2: category preferences.
+  const eligible = filterMovementsByLifestyle(movements, lifestyle);
+  const pool = eligible.filter((mv) => prefs.includes(mv.category));
+  const safe = pool.length > 0 ? pool : eligible.length > 0 ? eligible : movements;
   const fresh = safe.filter((mv) => !recentIds.includes(mv.id));
   const finalPool = fresh.length > 0 ? fresh : safe;
   return finalPool[Math.floor(Math.random() * finalPool.length)];
