@@ -234,23 +234,19 @@ function SessionPage() {
 
   // Pause/resume: when running flips, capture or release the running segment.
   const toggleRunning = () => {
-    setRunning((r) => {
-      const now = Date.now();
-      if (r) {
-        // pausing: bank the running segment
-        if (runStartAt != null) {
-          setElapsedBeforeMs((e) => e + Math.max(0, now - runStartAt));
-        }
-        setRunStartAt(null);
-        setNowTs(now);
-        return false;
-      } else {
-        // resuming
-        setRunStartAt(now);
-        setNowTs(now);
-        return true;
+    const now = Date.now();
+    if (running) {
+      if (runStartAt != null) {
+        setElapsedBeforeMs((e) => e + Math.max(0, now - runStartAt));
       }
-    });
+      setRunStartAt(null);
+      setNowTs(now);
+      setRunning(false);
+    } else {
+      setRunStartAt(now);
+      setNowTs(now);
+      setRunning(true);
+    }
   };
 
   // Ticker — drives re-renders; remaining is computed from timestamps so
