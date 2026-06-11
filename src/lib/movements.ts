@@ -123,6 +123,13 @@ export interface Movement {
   repsType?: "pushups" | "squats";
   reps?: number;
   instruction?: string;
+  /**
+   * Optional restriction: if set, only users whose lifestyle id appears in
+   * this list may receive this movement (via guided sessions, today's
+   * invitation, the Move list, or any personalized recommendation).
+   * When omitted, the movement is eligible for ALL lifestyles.
+   */
+  eligibleLifestyles?: string[];
 }
 
 function tintFor(cat: MovementCategory): string {
@@ -142,6 +149,7 @@ function m(
     repsType?: "pushups" | "squats";
     reps?: number;
     instruction?: string;
+    eligibleLifestyles?: string[];
   } = {},
 ): Movement {
   return {
@@ -157,6 +165,7 @@ function m(
     repsType: opts.repsType,
     reps: opts.reps,
     instruction: opts.instruction,
+    eligibleLifestyles: opts.eligibleLifestyles,
   };
 }
 
