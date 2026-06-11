@@ -182,7 +182,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "home.guided.title": { en: "Start a short reset", es: "Date una pausa corta" },
   "home.guided.sub": {
     en: "A few gentle movements, timed for you.",
-    es: "Unos movimientos suaves, a tu ritmo.",
+    es: "Movimientos suaves, a tu ritmo.",
   },
   "home.hydration.title": { en: "Hydration Goal", es: "Meta de hidratación" },
   "home.hydration.reached": {
