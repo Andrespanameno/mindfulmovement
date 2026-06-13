@@ -35,7 +35,7 @@ export const Route = createFileRoute("/progress")({
 });
 
 const DAY_LABELS_EN = ["S", "M", "T", "W", "T", "F", "S"];
-const DAY_LABELS_ES = ["D", "L", "M", "X", "J", "V", "S"];
+const DAY_LABELS_ES = ["D", "L", "M", "M", "J", "V", "S"];
 
 function ProgressPage() {
   const { t, lang } = useI18n();
