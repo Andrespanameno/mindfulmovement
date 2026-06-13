@@ -270,7 +270,7 @@ export const MESSAGE_ES: Record<string, string> = {
   "Consistency, not intensity, built this.": "La constancia, no la intensidad, construyó esto.",
   "Every entry here is a moment you chose yourself.": "Cada entrada aquí es un momento que elegiste tú.",
   "Progress is the gentle sum of showing up.": "El progreso es la suma suave de presentarse.",
-  "You are building something quiet and real.": "Estás construyendo algo silencioso y real.",
+  "You are building something quiet and real.": "Estás construyendo algo en silencio y es real.",
   "Your journey does not need to be loud to be meaningful.": "Tu camino no necesita ser ruidoso para ser significativo.",
   "Small actions, steady proof.": "Acciones pequeñas, prueba constante.",
   "A rhythm is forming, one mindful day at a time.": "Se está formando un ritmo, un día consciente a la vez.",
