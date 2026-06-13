@@ -190,8 +190,8 @@ const dict: Record<string, { en: string; es: string }> = {
     es: "¡Meta cumplida! Muy bien hecho.",
   },
   "home.hydration.remaining": {
-    en: "{n} oz to reach your mark.",
-    es: "{n} oz para alcanzar tu meta.",
+    en: "{n} to reach your mark.",
+    es: "{n} para alcanzar tu meta.",
   },
   "home.xp_today": { en: "XP Today", es: "XP de hoy" },
   "home.xp_tip": { en: "Every movement counts.", es: "Cada movimiento suma." },

@@ -8,7 +8,7 @@ import { useMotivationalMessage } from "@/hooks/useMotivationalMessage";
 import { useI18n } from "@/lib/i18n";
 import { useProfile } from "@/lib/useProfile";
 import { HydrationUnitToggle } from "@/components/mm/HydrationUnitToggle";
-import { formatAmount, mlToOz, QUICK_ADDS_ML, type HydrationUnit } from "@/lib/hydrationUnit";
+import { formatAmount, mlToOz, ML_PER_OZ, QUICK_ADDS_ML, type HydrationUnit } from "@/lib/hydrationUnit";
 import {
   useSessionStore,
   logHydration,
@@ -43,6 +43,15 @@ function HydrationPage() {
     profile?.daily_water_goal_display_unit === unit
       ? Number(profile.daily_water_goal_display)
       : formatAmount(goalOz, unit);
+  // Single source of truth for the goal in oz, derived from the user's
+  // exact saved display value when available — avoids the int-rounded
+  // `daily_water_goal` column (which turns 1000 mL → 34 oz → 1005 mL).
+  const effectiveGoalOz: number =
+    profile?.daily_water_goal_display != null && profile?.daily_water_goal_display_unit
+      ? profile.daily_water_goal_display_unit === "ml"
+        ? Number(profile.daily_water_goal_display) / ML_PER_OZ
+        : Number(profile.daily_water_goal_display)
+      : goalOz;
   const setUnit = (next: HydrationUnit) => {
     if (next === unit) return;
     void updateProfile({ hydration_unit: next });
@@ -76,11 +85,13 @@ function HydrationPage() {
 
   const roundOunces = Math.max(0, ouncesToday - bonusBaseline);
   const roundNumber = roundsCompleted + 1;
-  const pct = Math.min(100, Math.round((roundOunces / goalOz) * 100));
-  const roundComplete = roundOunces >= goalOz;
+  const pct = Math.min(100, Math.round((roundOunces / effectiveGoalOz) * 100));
+  // Small tolerance so display "1000 of 1000 mL" reads as complete even
+  // when the internal oz sum is 999.99…
+  const roundComplete = roundOunces >= effectiveGoalOz - 0.05;
   const r = 86;
   const c = 2 * Math.PI * r;
-  const reachedRef = useRef(ouncesToday >= goalOz);
+  const reachedRef = useRef(ouncesToday >= effectiveGoalOz - 0.05);
 
   const startNewRound = () => {
     const newBaseline = ouncesToday;
@@ -135,15 +146,15 @@ function HydrationPage() {
   };
 
   useEffect(() => {
-    if (roundOunces >= goalOz && !reachedRef.current) {
+    if (roundOunces >= effectiveGoalOz - 0.05 && !reachedRef.current) {
       reachedRef.current = true;
       toast.success(t("hydration.toast.goal"), {
         description: hydrationMsg?.message ?? t("hydration.toast.goal_sub"),
       });
       nextHydrationMsg();
     }
-    if (roundOunces < goalOz) reachedRef.current = false;
-  }, [roundOunces, goalOz, hydrationMsg, nextHydrationMsg]);
+    if (roundOunces < effectiveGoalOz - 0.05) reachedRef.current = false;
+  }, [roundOunces, effectiveGoalOz, hydrationMsg, nextHydrationMsg]);
 
   // Gentle reminders while the page is open
   useEffect(() => {
@@ -151,13 +162,13 @@ function HydrationPage() {
     const id = window.setInterval(() => {
       const last = lastReminderAt ?? 0;
       const due = Date.now() - last >= reminderIntervalMin * 60 * 1000;
-      if (due && ouncesToday < goalOz) {
+      if (due && ouncesToday < effectiveGoalOz - 0.05) {
         toast(t("hydration.toast.sip"), { description: t("hydration.toast.sip_sub") });
         markReminderShown();
       }
     }, 30 * 1000);
     return () => window.clearInterval(id);
-  }, [remindersEnabled, reminderIntervalMin, lastReminderAt, ouncesToday, goalOz]);
+  }, [remindersEnabled, reminderIntervalMin, lastReminderAt, ouncesToday, effectiveGoalOz]);
 
   return (
     <AppShell>
@@ -213,7 +224,7 @@ function HydrationPage() {
           {roundComplete
             ? t("home.hydration.reached")
             : t("hydration.to_go_u", {
-                n: formatAmount(Math.max(0, goalOz - roundOunces), unit),
+                n: Math.max(0, goalDisplay - formatAmount(roundOunces, unit)),
                 unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
               })}
         </p>
@@ -261,7 +272,7 @@ function HydrationPage() {
 
       <div className="grid grid-cols-8 gap-1.5 mb-8">
         {Array.from({ length: 8 }).map((_, i) => {
-          const segment = goalOz / 8;
+          const segment = effectiveGoalOz / 8;
           const filled = roundOunces >= (i + 1) * segment;
           return (
             <div
