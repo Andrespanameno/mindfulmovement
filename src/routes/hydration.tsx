@@ -224,7 +224,7 @@ function HydrationPage() {
           {roundComplete
             ? t("home.hydration.reached")
             : t("hydration.to_go_u", {
-                n: formatAmount(Math.max(0, goalOz - roundOunces), unit),
+                n: Math.max(0, goalDisplay - formatAmount(roundOunces, unit)),
                 unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
               })}
         </p>
@@ -272,7 +272,7 @@ function HydrationPage() {
 
       <div className="grid grid-cols-8 gap-1.5 mb-8">
         {Array.from({ length: 8 }).map((_, i) => {
-          const segment = goalOz / 8;
+          const segment = effectiveGoalOz / 8;
           const filled = roundOunces >= (i + 1) * segment;
           return (
             <div
