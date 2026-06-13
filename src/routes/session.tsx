@@ -81,6 +81,13 @@ function SessionPage() {
     return () => setGuidedSessionActive(false);
   }, []);
 
+  // Once the user reaches the completion screen, the session is no longer
+  // "in progress" — clear the dedup flag immediately so any stale native
+  // notification state cannot interfere with completion-screen navigation.
+  useEffect(() => {
+    if (done) setGuidedSessionActive(false);
+  }, [done]);
+
   // Build once per mount so the session feels consistent through.
   const [steps, setSteps] = useState<SessionStep[]>(() =>
     buildGuidedSession({
@@ -319,6 +326,19 @@ function SessionPage() {
 
   const handleExit = () => navigate({ to: "/home" });
 
+  // Programmatic navigation for the completion screen. Using onClick +
+  // navigate (instead of <Link>) avoids cases where a late native event
+  // (notification tap replay, focus-change touch) swallows the first tap on
+  // an <a> element after a notification-launched session.
+  const goHome = () => {
+    setGuidedSessionActive(false);
+    navigate({ to: "/home", replace: true });
+  };
+  const goProgress = () => {
+    setGuidedSessionActive(false);
+    navigate({ to: "/progress", replace: true });
+  };
+
   if (done) {
     const completed = steps.length;
     const totalXp = steps.reduce((a, s) => a + s.movement.xp, 0);
@@ -389,12 +409,20 @@ function SessionPage() {
             </div>
           )}
           <div className="flex gap-3">
-            <Link to="/home" className="h-10 px-5 rounded-full bg-foreground text-background text-sm font-medium grid place-items-center">
+            <button
+              type="button"
+              onClick={goHome}
+              className="h-10 px-5 rounded-full bg-foreground text-background text-sm font-medium grid place-items-center"
+            >
               {t("session.back_home")}
-            </Link>
-            <Link to="/progress" className="h-10 px-5 rounded-full bg-card ring-1 ring-black/5 text-sm font-medium grid place-items-center">
+            </button>
+            <button
+              type="button"
+              onClick={goProgress}
+              className="h-10 px-5 rounded-full bg-card ring-1 ring-black/5 text-sm font-medium grid place-items-center"
+            >
               {t("session.view_progress")}
-            </Link>
+            </button>
           </div>
         </div>
       </AppShell>
