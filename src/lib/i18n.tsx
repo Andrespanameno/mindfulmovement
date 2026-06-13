@@ -694,6 +694,9 @@ const dict: Record<string, { en: string; es: string }> = {
   "mv.aria.mark_done": { en: "Mark done", es: "Marcar como hecho" },
 
   "milestone.achieved": { en: "Achieved", es: "Logrado" },
+  "milestone.next": { en: "Next Achievement", es: "Próximo logro" },
+  "milestone.all_done": { en: "All achievements unlocked!", es: "¡Todos los logros desbloqueados!" },
+  "milestone.locked": { en: "Locked", es: "Bloqueado" },
 
   "reset.head_title": {
     en: "Reset password — Mindful Movement",

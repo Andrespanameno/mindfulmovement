@@ -267,3 +267,44 @@ export const xpEncouragements = [
   "Consistency over intensity.",
   "Gentle progress, real change.",
 ];
+
+export interface MilestoneProgress {
+  current: number;
+  target: number;
+  unit?: string;
+}
+
+/**
+ * Returns numerical progress toward a milestone (used for locked cards
+ * and the "Next Achievement" highlight). Returns null if progress is
+ * not meaningful to display (e.g. binary milestones).
+ */
+export function getMilestoneProgress(
+  m: Milestone,
+  s: MilestoneState,
+): MilestoneProgress | null {
+  if (m.id === "first-move") return { current: Math.min(s.totalXp, 1), target: 1, unit: "XP" };
+  if (m.id === "hydrated") return { current: Math.min(s.ouncesToday, 64), target: 64, unit: "oz" };
+
+  // Parse "<group>-<n>" ids
+  const match = m.id.match(/^([a-z]+)-(\d+)$/);
+  if (!match) return null;
+  const group = match[1];
+  const target = Number(match[2]);
+  switch (group) {
+    case "streak":
+      return { current: s.bestStreak, target, unit: "days" };
+    case "xp":
+      return { current: s.totalXp, target, unit: "XP" };
+    case "sessions":
+      return { current: s.totalSessions, target, unit: "sessions" };
+    case "minutes":
+      return { current: s.totalMinutes, target, unit: "min" };
+    case "hydration":
+      return { current: s.hydrationGoalReachedDates.length, target, unit: "days" };
+    case "breathing":
+      return { current: s.totalBreathing, target, unit: "sessions" };
+    default:
+      return null;
+  }
+}
