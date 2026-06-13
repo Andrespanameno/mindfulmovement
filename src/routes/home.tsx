@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { Droplet, ArrowRight, Sparkles, Play } from "lucide-react";
 import { useSessionStore, HYDRATION_GOAL_OZ } from "@/lib/useSessionStore";
+import { formatAmount, ML_PER_OZ, type HydrationUnit } from "@/lib/hydrationUnit";
 import { XPBar } from "@/components/mm/XPBar";
 import { StreakBadge } from "@/components/mm/StreakBadge";
 import { ThemeToggle } from "@/components/mm/ThemeToggle";
@@ -34,7 +35,24 @@ function HomePage() {
   const { profile } = useProfile();
   const { user } = useAuth();
   const { t } = useI18n();
-  const hydrationPct = Math.min(100, Math.round((ouncesToday / HYDRATION_GOAL_OZ) * 100));
+  const unit: HydrationUnit = profile?.hydration_unit ?? "oz";
+  const goalOzRaw = profile?.daily_water_goal ?? HYDRATION_GOAL_OZ;
+  // Same source-of-truth derivation as the Hydration page so 1000 mL stays
+  // 1000 mL (and doesn't drift to 1005 via int-oz round-tripping).
+  const effectiveGoalOz: number =
+    profile?.daily_water_goal_display != null && profile?.daily_water_goal_display_unit
+      ? profile.daily_water_goal_display_unit === "ml"
+        ? Number(profile.daily_water_goal_display) / ML_PER_OZ
+        : Number(profile.daily_water_goal_display)
+      : goalOzRaw;
+  const goalDisplay: number =
+    profile?.daily_water_goal_display != null &&
+    profile?.daily_water_goal_display_unit === unit
+      ? Number(profile.daily_water_goal_display)
+      : formatAmount(goalOzRaw, unit);
+  const hydrationPct = Math.min(100, Math.round((ouncesToday / effectiveGoalOz) * 100));
+  const remainingDisplay = Math.max(0, goalDisplay - formatAmount(ouncesToday, unit));
+  const reached = ouncesToday >= effectiveGoalOz - 0.05;
 
   const displayName = profile?.full_name || user?.email?.split("@")[0] || "there";
   const initials = (profile?.full_name || user?.email || "U")
@@ -92,9 +110,11 @@ function HomePage() {
               <Droplet className="size-4 text-primary" /> {t("home.hydration.title")}
             </h3>
             <p className="text-sm text-muted-foreground text-pretty mt-1">
-              {ouncesToday >= HYDRATION_GOAL_OZ
+              {reached
                 ? t("home.hydration.reached")
-                : t("home.hydration.remaining", { n: HYDRATION_GOAL_OZ - ouncesToday })}
+                : t("home.hydration.remaining", {
+                    n: `${remainingDisplay} ${t(unit === "ml" ? "unit.ml" : "unit.oz")}`,
+                  })}
             </p>
           </div>
           <ArrowRight className="size-4 text-muted-foreground shrink-0" />
