@@ -81,13 +81,6 @@ function SessionPage() {
     return () => setGuidedSessionActive(false);
   }, []);
 
-  // Once the user reaches the completion screen, the session is no longer
-  // "in progress" — clear the dedup flag immediately so any stale native
-  // notification state cannot interfere with completion-screen navigation.
-  useEffect(() => {
-    if (done) setGuidedSessionActive(false);
-  }, [done]);
-
   // Build once per mount so the session feels consistent through.
   const [steps, setSteps] = useState<SessionStep[]>(() =>
     buildGuidedSession({
@@ -138,6 +131,13 @@ function SessionPage() {
   useEffect(() => {
     setImgFailed(false);
   }, [index]);
+
+  // Once the user reaches the completion screen, the session is no longer
+  // "in progress" — clear the dedup flag immediately so any stale native
+  // notification state cannot interfere with completion-screen navigation.
+  useEffect(() => {
+    if (done) setGuidedSessionActive(false);
+  }, [done]);
 
   // Rebuild when profile loads (if initial render had no prefs yet).
   useEffect(() => {
