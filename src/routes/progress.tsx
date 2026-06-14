@@ -50,7 +50,6 @@ function ProgressPage() {
   const daily = range === "week" ? insights.daily7 : insights.daily30;
   const maxMin = Math.max(1, ...daily.map((d) => d.minutes));
   const streakSeries = streakHistoryFromDaily(insights.daily30);
-  const peakStreak = streakSeries.reduce((m, x) => Math.max(m, x.longest), 0);
   const hours = (summary.minutes / 60).toFixed(1);
   const hydrationDelta =
     range === "week" ? insights.weeklyConsistencyTrend : insights.monthlyConsistencyTrend;
