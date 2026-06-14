@@ -304,8 +304,8 @@ const dict: Record<string, { en: string; es: string }> = {
   "progress.ready": { en: "Ready when you are", es: "Cuando tú quieras" },
   "progress.from_prev": { en: "from {n} last period", es: "antes eran {n}" },
   "progress.vs_prev": { en: "vs prev", es: "vs. periodo anterior" },
-  "progress.pp_week": { en: "pp wk/wk", es: "pts respecto a la semana pasada" },
-  "progress.pp_month": { en: "pp mo/mo", es: "pts respecto al mes pasado" },
+  "progress.pp_week": { en: "pp wk/wk", es: "pts comparado a la semana pasada" },
+  "progress.pp_month": { en: "pp mo/mo", es: "pts comparado al mes pasado" },
   "progress.day_label": { en: "Day {n}", es: "Día {n}" },
   "progress.streak_label": { en: "streak {n}", es: "constancia {n}" },
 
