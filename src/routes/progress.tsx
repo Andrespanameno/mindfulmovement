@@ -73,30 +73,11 @@ function ProgressPage() {
     if (summary.minutes > 0) {
       out.push(t(`progress.sum.hours_${range}`, { h: hours }));
     }
-    if (pushupGrowth.to > pushupGrowth.from) {
-      out.push(t("progress.sum.pushups", { a: pushupGrowth.from, b: pushupGrowth.to }));
-    }
-    if (squatGrowth.to > squatGrowth.from) {
-      out.push(t("progress.sum.squats", { a: squatGrowth.from, b: squatGrowth.to }));
-    }
-    if (hydrationDelta > 0) {
-      out.push(t(`progress.sum.hydration_${range}`, { n: hydrationDelta }));
-    } else if (sessionsTrend > 0) {
+    if (sessionsTrend > 0) {
       out.push(t(`progress.sum.consistency_${range}`, { n: sessionsTrend }));
     }
-    if (summary.breathing > 0) {
-      const b = summary.breathing;
-      out.push(
-        t(
-          b === 1
-            ? `progress.sum.breathing_one_${range}`
-            : `progress.sum.breathing_many_${range}`,
-          { n: b },
-        ),
-      );
-    }
     return out;
-  }, [t, range, summary, hours, pushupGrowth, squatGrowth, hydrationDelta, sessionsTrend]);
+  }, [t, range, summary, hours, sessionsTrend]);
 
   return (
     <AppShell>
