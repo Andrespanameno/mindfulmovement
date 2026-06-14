@@ -50,7 +50,6 @@ function ProgressPage() {
   const daily = range === "week" ? insights.daily7 : insights.daily30;
   const maxMin = Math.max(1, ...daily.map((d) => d.minutes));
   const streakSeries = streakHistoryFromDaily(insights.daily30);
-  const peakStreak = streakSeries.reduce((m, x) => Math.max(m, x.longest), 0);
   const hours = (summary.minutes / 60).toFixed(1);
   const hydrationDelta =
     range === "week" ? insights.weeklyConsistencyTrend : insights.monthlyConsistencyTrend;
@@ -259,9 +258,12 @@ function ProgressPage() {
         </div>
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1">
-            <Flame className="size-3 text-accent" /> {t("progress.current_best", { c: session.streak, b: session.bestStreak })}
+            <Flame className="size-3 text-accent" />
+            {t(session.streak === 1 ? "progress.current_streak_one" : "progress.current_streak_other", { n: session.streak })}
           </span>
-          <span>{t(peakStreak === 1 ? "progress.peak_one" : "progress.peak_other", { n: peakStreak })}</span>
+          <span>
+            {t(session.bestStreak === 1 ? "progress.best_streak_one" : "progress.best_streak_other", { n: session.bestStreak })}
+          </span>
         </div>
       </div>
 
