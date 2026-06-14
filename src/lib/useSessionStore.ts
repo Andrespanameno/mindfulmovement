@@ -266,13 +266,15 @@ export function completeMovement(movement: Movement) {
     const afterActivity = applyActivity(s, movement.xp);
     const t = today();
     const day = ensureDay(afterActivity.history, t);
-    const isBreathing = movement.category === "breath-calm";
+    const isBreathing = isBreathingMovement(movement);
+    const pushupReps = pushupRepsFor(movement);
+    const squatReps = squatRepsFor(movement);
     const updated: DailyEntry = {
       ...day,
       sessions: day.sessions + 1,
       minutes: day.minutes + movement.duration,
-      pushups: day.pushups + (movement.repsType === "pushups" ? movement.reps ?? 0 : 0),
-      squats: day.squats + (movement.repsType === "squats" ? movement.reps ?? 0 : 0),
+      pushups: day.pushups + pushupReps,
+      squats: day.squats + squatReps,
       breathing: day.breathing + (isBreathing ? 1 : 0),
       xp: day.xp + movement.xp,
     };
@@ -281,10 +283,8 @@ export function completeMovement(movement: Movement) {
       completedToday: [...s.completedToday, movement.id],
       totalSessions: s.totalSessions + 1,
       totalMinutes: s.totalMinutes + movement.duration,
-      totalPushups:
-        s.totalPushups + (movement.repsType === "pushups" ? movement.reps ?? 0 : 0),
-      totalSquats:
-        s.totalSquats + (movement.repsType === "squats" ? movement.reps ?? 0 : 0),
+      totalPushups: s.totalPushups + pushupReps,
+      totalSquats: s.totalSquats + squatReps,
       totalBreathing: s.totalBreathing + (isBreathing ? 1 : 0),
       history: trimHistory({ ...afterActivity.history, [t]: updated }),
     };
@@ -296,9 +296,9 @@ export function uncompleteMovement(movement: Movement) {
     if (!s.completedToday.includes(movement.id)) return s;
     const t = today();
     const day = ensureDay(s.history, t);
-    const pushups = movement.repsType === "pushups" ? movement.reps ?? 0 : 0;
-    const squats = movement.repsType === "squats" ? movement.reps ?? 0 : 0;
-    const isBreathing = movement.category === "breath-calm";
+    const pushups = pushupRepsFor(movement);
+    const squats = squatRepsFor(movement);
+    const isBreathing = isBreathingMovement(movement);
     const updatedDay: DailyEntry = {
       ...day,
       sessions: Math.max(0, day.sessions - 1),
