@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Movement } from "./movements";
+import { isBreathingMovement, pushupRepsFor, squatRepsFor } from "./movements";
 
 const KEY = "mm-session-state";
 
