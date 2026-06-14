@@ -252,6 +252,51 @@ export function getMovement(id: string): Movement | undefined {
   return movements.find((mv) => mv.id === id);
 }
 
+// ---------------------------------------------------------------------------
+// Movement-kind classification (pushup / squat / breathing)
+// ---------------------------------------------------------------------------
+// Lifetime totals on the Progress page count three explicit kinds of work:
+// pushups, squats, and breathing sessions. Most movements declare their kind
+// implicitly via `repsType` / category, but a few breathing prompts live
+// outside the "breath-calm" category and a few rep-based movements (e.g.
+// "Toy Pickup Squats") historically lacked rep metadata. These helpers are
+// the single source of truth so the local store and the backend re-hydrate
+// agree on what counts.
+
+const BREATHING_MOVEMENT_IDS = new Set<string>([
+  "deep-breathing",
+  "slow-breathing-pause",
+]);
+
+type MovementLike = {
+  id?: string | null;
+  category?: string | null;
+  repsType?: string | null;
+  reps?: number | null;
+};
+
+export function isPushupMovement(m: MovementLike): boolean {
+  return m.repsType === "pushups";
+}
+
+export function isSquatMovement(m: MovementLike): boolean {
+  return m.repsType === "squats";
+}
+
+export function isBreathingMovement(m: MovementLike): boolean {
+  if (m.category === "breath-calm") return true;
+  if (m.id && BREATHING_MOVEMENT_IDS.has(m.id)) return true;
+  return false;
+}
+
+export function pushupRepsFor(m: MovementLike): number {
+  return isPushupMovement(m) ? m.reps ?? 0 : 0;
+}
+
+export function squatRepsFor(m: MovementLike): number {
+  return isSquatMovement(m) ? m.reps ?? 0 : 0;
+}
+
 /**
  * Returns true when the given movement is allowed for the given lifestyle id.
  * Movements without an `eligibleLifestyles` list are universally eligible.
