@@ -225,7 +225,7 @@ export const movements: Movement[] = [
   // PARENT-FRIENDLY MOVEMENT — restricted to the Stay-at-Home Parent lifestyle.
   m("stroller-walk", "Stroller Walk", "Walk a few blocks with the stroller.", "parent-friendly", { duration: 5, xp: 45, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
   m("toddler-carry-walk", "Toddler Carry Walk", "Gentle walking laps with a little one.", "parent-friendly", { duration: 4, xp: 40, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
-  m("toy-pickup-squats", "Toy Pickup Squats", "Turn tidy-up time into mindful squats.", "parent-friendly", { duration: 3, xp: 30, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
+  m("toy-pickup-squats", "Toy Pickup Squats", "Turn tidy-up time into mindful squats.", "parent-friendly", { duration: 3, xp: 30, difficulty: "Easy", repsType: "squats", reps: 10, eligibleLifestyles: ["stay-at-home-parent"] }),
   m("dance-with-child", "Dance With Your Child", "One song, lots of smiles.", "parent-friendly", { duration: 3, xp: 35, difficulty: "Easy", icon: SparklesIcon, eligibleLifestyles: ["stay-at-home-parent"] }),
   m("playground-laps", "Playground Laps", "Walk the perimeter while they play.", "parent-friendly", { duration: 5, xp: 45, difficulty: "Easy", eligibleLifestyles: ["stay-at-home-parent"] }),
   m("family-break", "Family Movement Break", "A two-minute stretch with everyone.", "parent-friendly", { duration: 2, xp: 25, icon: HeartHandshake, eligibleLifestyles: ["stay-at-home-parent"] }),
@@ -250,6 +250,51 @@ export const movements: Movement[] = [
 
 export function getMovement(id: string): Movement | undefined {
   return movements.find((mv) => mv.id === id);
+}
+
+// ---------------------------------------------------------------------------
+// Movement-kind classification (pushup / squat / breathing)
+// ---------------------------------------------------------------------------
+// Lifetime totals on the Progress page count three explicit kinds of work:
+// pushups, squats, and breathing sessions. Most movements declare their kind
+// implicitly via `repsType` / category, but a few breathing prompts live
+// outside the "breath-calm" category and a few rep-based movements (e.g.
+// "Toy Pickup Squats") historically lacked rep metadata. These helpers are
+// the single source of truth so the local store and the backend re-hydrate
+// agree on what counts.
+
+const BREATHING_MOVEMENT_IDS = new Set<string>([
+  "deep-breathing",
+  "slow-breathing-pause",
+]);
+
+type MovementLike = {
+  id?: string | null;
+  category?: string | null;
+  repsType?: string | null;
+  reps?: number | null;
+};
+
+export function isPushupMovement(m: MovementLike): boolean {
+  return m.repsType === "pushups";
+}
+
+export function isSquatMovement(m: MovementLike): boolean {
+  return m.repsType === "squats";
+}
+
+export function isBreathingMovement(m: MovementLike): boolean {
+  if (m.category === "breath-calm") return true;
+  if (m.id && BREATHING_MOVEMENT_IDS.has(m.id)) return true;
+  return false;
+}
+
+export function pushupRepsFor(m: MovementLike): number {
+  return isPushupMovement(m) ? m.reps ?? 0 : 0;
+}
+
+export function squatRepsFor(m: MovementLike): number {
+  return isSquatMovement(m) ? m.reps ?? 0 : 0;
 }
 
 /**

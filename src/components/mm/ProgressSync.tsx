@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { hydrateHistory, HYDRATION_GOAL_OZ, localDateKey } from "@/lib/useSessionStore";
 import type { DailyEntry } from "@/lib/useSessionStore";
+import { isBreathingMovement, isPushupMovement, isSquatMovement } from "@/lib/movements";
 
 const LOOKBACK_DAYS = 90;
 
@@ -50,7 +51,7 @@ export function ProgressSync() {
       const [movementsRes, hydrationRes] = await Promise.all([
         supabase
           .from("movement_sessions")
-          .select("category, duration_min, reps, reps_type, xp, completed_at")
+          .select("movement_id, category, duration_min, reps, reps_type, xp, completed_at")
           .eq("user_id", user.id)
           .gte("completed_at", sinceIso),
         supabase
@@ -81,9 +82,15 @@ export function ProgressSync() {
       for (const row of movementsRes.data ?? []) {
         const k = dateKey(row.completed_at);
         const day = history[k] ?? emptyDay(k);
-        const isBreathing = row.category === "Breathing";
-        const pushups = row.reps_type === "pushups" ? row.reps ?? 0 : 0;
-        const squats = row.reps_type === "squats" ? row.reps ?? 0 : 0;
+        const kindRow = {
+          id: row.movement_id,
+          category: row.category,
+          repsType: row.reps_type,
+          reps: row.reps,
+        };
+        const isBreathing = isBreathingMovement(kindRow);
+        const pushups = isPushupMovement(kindRow) ? row.reps ?? 0 : 0;
+        const squats = isSquatMovement(kindRow) ? row.reps ?? 0 : 0;
         day.sessions += 1;
         day.minutes += row.duration_min ?? 0;
         day.pushups += pushups;
