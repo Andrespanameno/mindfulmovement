@@ -148,18 +148,21 @@ function ProgressPage() {
           label={t("progress.pushups")}
           value={summary.pushups}
           prev={prev.pushups}
+          range={range}
         />
         <Stat
           icon={<Dumbbell className="size-4 text-accent" />}
           label={t("progress.squats")}
           value={summary.squats}
           prev={prev.squats}
+          range={range}
         />
         <Stat
           icon={<Wind className="size-4 text-accent" />}
           label={t("progress.breathing")}
           value={summary.breathing}
           prev={prev.breathing}
+          range={range}
         />
         <Stat
           icon={<Droplet className="size-4 text-primary" />}
@@ -303,6 +306,7 @@ function Stat({
   hint,
   trend,
   prev,
+  range,
 }: {
   icon?: ReactNode;
   label: string;
@@ -310,6 +314,7 @@ function Stat({
   hint?: string;
   trend?: number;
   prev?: number;
+  range?: "week" | "month";
 }) {
   const { t } = useI18n();
   const showTrend = typeof trend === "number" && Number.isFinite(trend);
@@ -342,7 +347,7 @@ function Stat({
       )}
       {!showTrend && showDelta && (
         <p className="text-[11px] text-muted-foreground mt-1">
-          {prev === 0 && value === 0 ? t("progress.ready") : t("progress.from_prev", { n: prev })}
+          {prev === 0 && value === 0 ? t("progress.ready") : t(`progress.from_prev_${range}`, { n: prev })}
         </p>
       )}
       {hint && !showTrend && !showDelta && (
