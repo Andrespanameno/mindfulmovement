@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Movement } from "./movements";
-import { isBreathingMovement, pushupRepsFor, squatRepsFor } from "./movements";
+import { isBreathingMovement, isPushupMovement, isSquatMovement } from "./movements";
 
 const KEY = "mm-session-state";
 
@@ -268,14 +268,14 @@ export function completeMovement(movement: Movement) {
     const t = today();
     const day = ensureDay(afterActivity.history, t);
     const isBreathing = isBreathingMovement(movement);
-    const pushupReps = pushupRepsFor(movement);
-    const squatReps = squatRepsFor(movement);
+    const pushupCount = isPushupMovement(movement) ? 1 : 0;
+    const squatCount = isSquatMovement(movement) ? 1 : 0;
     const updated: DailyEntry = {
       ...day,
       sessions: day.sessions + 1,
       minutes: day.minutes + movement.duration,
-      pushups: day.pushups + pushupReps,
-      squats: day.squats + squatReps,
+      pushups: day.pushups + pushupCount,
+      squats: day.squats + squatCount,
       breathing: day.breathing + (isBreathing ? 1 : 0),
       xp: day.xp + movement.xp,
     };
@@ -284,8 +284,8 @@ export function completeMovement(movement: Movement) {
       completedToday: [...s.completedToday, movement.id],
       totalSessions: s.totalSessions + 1,
       totalMinutes: s.totalMinutes + movement.duration,
-      totalPushups: s.totalPushups + pushupReps,
-      totalSquats: s.totalSquats + squatReps,
+      totalPushups: s.totalPushups + pushupCount,
+      totalSquats: s.totalSquats + squatCount,
       totalBreathing: s.totalBreathing + (isBreathing ? 1 : 0),
       history: trimHistory({ ...afterActivity.history, [t]: updated }),
     };
@@ -297,8 +297,8 @@ export function uncompleteMovement(movement: Movement) {
     if (!s.completedToday.includes(movement.id)) return s;
     const t = today();
     const day = ensureDay(s.history, t);
-    const pushups = pushupRepsFor(movement);
-    const squats = squatRepsFor(movement);
+    const pushups = isPushupMovement(movement) ? 1 : 0;
+    const squats = isSquatMovement(movement) ? 1 : 0;
     const isBreathing = isBreathingMovement(movement);
     const updatedDay: DailyEntry = {
       ...day,
