@@ -662,25 +662,16 @@ export function buildGuidedSession(
     if (hydrationPick) seen.add(hydrationPick.id);
   }
 
-  // 3. Fill the remaining slots from the non-breath pool with category variety.
+  // 3. Fill the remaining slots from the movement pool with category variety.
+  // Hard cap: at most one breath step and one hydration step per session
+  // (already reserved above). Exclude both categories from the fill pool so
+  // we never double up, regardless of goals or toggles.
+  void stressOrBreathGoal;
+  void onlyMovement;
   const targetCount = 4 + (Math.random() < 0.5 ? 0 : 1); // 4 or 5 total steps
-  // Build the fill pool. Breath stays out by default (single-reserved step,
-  // unless stress/breath goal allows an extra). Hydration is also kept out
-  // of the fill pool because we cap at one hydration unless the profile
-  // explicitly justifies more. Movement-only mode strips both non-movement
-  // categories entirely so the session feels movement-focused.
-  const fillPool = eligibleMovements.filter((mv) => {
-    if (mv.category === "breath-calm") {
-      return nudgeBreath && stressOrBreathGoal;
-    }
-    if (mv.category === "hydration-wellness") {
-      return false;
-    }
-    if (onlyMovement) {
-      return true;
-    }
-    return true;
-  });
+  const fillPool = eligibleMovements.filter(
+    (mv) => mv.category !== "breath-calm" && mv.category !== "hydration-wellness",
+  );
 
   const reservedCount = (breathPick ? 1 : 0) + (hydrationPick ? 1 : 0);
   const slotsToFill = Math.max(2, targetCount - reservedCount);
@@ -705,7 +696,8 @@ export function buildGuidedSession(
   }
 
   // 4. Assemble final order: hydration near the start (after first movement),
-  //    breath roughly in the middle.
+  //    breath roughly in the middle, then enforce no adjacent non-movement
+  //    steps so breath and hydration never land back-to-back.
   let ordered: Movement[] = [...picked];
   if (hydrationPick) {
     const insertAt = Math.min(1, ordered.length);
@@ -714,6 +706,25 @@ export function buildGuidedSession(
   if (breathPick) {
     const mid = Math.min(Math.floor(ordered.length / 2) + 1, ordered.length);
     ordered.splice(mid, 0, breathPick);
+  }
+  const isNonMovement = (mv: Movement) =>
+    mv.category === "breath-calm" || mv.category === "hydration-wellness";
+  for (let i = 0; i < ordered.length - 1; i++) {
+    if (!isNonMovement(ordered[i]) || !isNonMovement(ordered[i + 1])) continue;
+    let swapIdx = -1;
+    for (let j = i + 2; j < ordered.length; j++) {
+      if (!isNonMovement(ordered[j])) { swapIdx = j; break; }
+    }
+    if (swapIdx === -1) {
+      for (let j = i - 1; j >= 0; j--) {
+        if (!isNonMovement(ordered[j])) { swapIdx = j; break; }
+      }
+    }
+    if (swapIdx >= 0) {
+      const tmp = ordered[i + 1];
+      ordered[i + 1] = ordered[swapIdx];
+      ordered[swapIdx] = tmp;
+    }
   }
 
   // 5. Convert to timed steps using fitness envelope.
