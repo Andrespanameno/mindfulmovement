@@ -148,18 +148,21 @@ function ProgressPage() {
           label={t("progress.pushups")}
           value={summary.pushups}
           prev={prev.pushups}
+          range={range}
         />
         <Stat
           icon={<Dumbbell className="size-4 text-accent" />}
           label={t("progress.squats")}
           value={summary.squats}
           prev={prev.squats}
+          range={range}
         />
         <Stat
           icon={<Wind className="size-4 text-accent" />}
           label={t("progress.breathing")}
           value={summary.breathing}
           prev={prev.breathing}
+          range={range}
         />
         <Stat
           icon={<Droplet className="size-4 text-primary" />}
@@ -310,6 +313,7 @@ function Stat({
   hint?: string;
   trend?: number;
   prev?: number;
+  range?: "week" | "month";
 }) {
   const { t } = useI18n();
   const showTrend = typeof trend === "number" && Number.isFinite(trend);
