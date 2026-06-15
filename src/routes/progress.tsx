@@ -342,7 +342,7 @@ function Stat({
       )}
       {!showTrend && showDelta && (
         <p className="text-[11px] text-muted-foreground mt-1">
-          {prev === 0 && value === 0 ? t("progress.ready") : t("progress.from_prev", { n: prev })}
+          {prev === 0 && value === 0 ? t("progress.ready") : t(`progress.from_prev_${range}`, { n: prev })}
         </p>
       )}
       {hint && !showTrend && !showDelta && (
