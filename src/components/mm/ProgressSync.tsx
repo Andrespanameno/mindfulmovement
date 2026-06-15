@@ -89,8 +89,8 @@ export function ProgressSync() {
           reps: row.reps,
         };
         const isBreathing = isBreathingMovement(kindRow);
-        const pushups = isPushupMovement(kindRow) ? row.reps ?? 0 : 0;
-        const squats = isSquatMovement(kindRow) ? row.reps ?? 0 : 0;
+        const pushups = isPushupMovement(kindRow) ? 1 : 0;
+        const squats = isSquatMovement(kindRow) ? 1 : 0;
         day.sessions += 1;
         day.minutes += row.duration_min ?? 0;
         day.pushups += pushups;
