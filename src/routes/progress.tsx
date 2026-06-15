@@ -306,6 +306,7 @@ function Stat({
   hint,
   trend,
   prev,
+  range,
 }: {
   icon?: ReactNode;
   label: string;
