@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { AppShell } from "@/components/mm/AppShell";
 import { Droplet, Undo2, ArrowLeft, Bell, BellOff, Check, Plus } from "lucide-react";
-import { toast } from "sonner";
+import { notify } from "@/lib/notify";
 import { supabase } from "@/integrations/supabase/client";
 import { useMotivationalMessage } from "@/hooks/useMotivationalMessage";
 import { useI18n } from "@/lib/i18n";
@@ -103,7 +103,7 @@ function HydrationPage() {
       window.localStorage.setItem(roundsStorageKey, String(newRounds));
     }
     reachedRef.current = false;
-    toast.success(t("hydration.keep_going_started"), {
+    notify.success(t("hydration.keep_going_started"), {
       description: t("hydration.keep_going_sub"),
     });
   };
@@ -139,7 +139,7 @@ function HydrationPage() {
     );
     logHydration(oz);
     const displayN = unit === "ml" ? Math.round(oz * 29.5735) : oz;
-    toast.success(t("hydration.toast.logged_u", { n: displayN, unit: t(unit === "ml" ? "unit.ml" : "unit.oz") }), {
+    notify.success(t("hydration.toast.logged_u", { n: displayN, unit: t(unit === "ml" ? "unit.ml" : "unit.oz") }), {
       description: xp > 0 ? t("hydration.toast.xp", { xp }) : t("hydration.toast.keep"),
     });
     void persistHydration(oz);
@@ -148,7 +148,7 @@ function HydrationPage() {
   useEffect(() => {
     if (roundOunces >= effectiveGoalOz - 0.05 && !reachedRef.current) {
       reachedRef.current = true;
-      toast.success(t("hydration.toast.goal"), {
+      notify.success(t("hydration.toast.goal"), {
         description: hydrationMsg?.message ?? t("hydration.toast.goal_sub"),
       });
       nextHydrationMsg();
@@ -163,7 +163,7 @@ function HydrationPage() {
       const last = lastReminderAt ?? 0;
       const due = Date.now() - last >= reminderIntervalMin * 60 * 1000;
       if (due && ouncesToday < effectiveGoalOz - 0.05) {
-        toast(t("hydration.toast.sip"), { description: t("hydration.toast.sip_sub") });
+        notify(t("hydration.toast.sip"), { description: t("hydration.toast.sip_sub") });
         markReminderShown();
       }
     }, 30 * 1000);

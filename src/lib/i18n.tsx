@@ -792,6 +792,19 @@ const dict: Record<string, { en: string; es: string }> = {
   "notif.hydration.title": { en: "Hydration check", es: "Pausa de hidratación" },
   "notif.breath.title": { en: "Breath check", es: "Pausa para respirar" },
   "notif.action_start": { en: "Start", es: "Empezar" },
+
+  "reminders.in_app_section": {
+    en: "In-app messages",
+    es: "Mensajes dentro de la app",
+  },
+  "reminders.in_app_title": {
+    en: "Internal app notifications",
+    es: "Notificaciones internas de la app",
+  },
+  "reminders.in_app_desc": {
+    en: "Show in-app messages for completed goals, logged hydration, progress updates, and gentle confirmations.",
+    es: "Muestra mensajes dentro de la app para metas completadas, hidratación registrada, progreso y confirmaciones.",
+  },
 };
 
 function format(str: string, vars?: Record<string, string | number>): string {

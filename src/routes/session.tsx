@@ -19,7 +19,7 @@ import { useReminderSettings } from "@/lib/reminders";
 import { logHydration, QUICK_ADDS_OZ } from "@/lib/useSessionStore";
 import { mlToOz, QUICK_ADDS_ML, type HydrationUnit } from "@/lib/hydrationUnit";
 import { Droplet } from "lucide-react";
-import { toast } from "sonner";
+import { notify } from "@/lib/notify";
 
 // Track recently-used movement ids across guided sessions so repeats are
 // avoided. Stored in localStorage; capped at the last N ids.
@@ -354,7 +354,7 @@ function SessionPage() {
         if (error) console.error("[hydration_logs] insert failed:", error.message);
       })();
       setHydrationLogged(true);
-      toast.success(t("hydration.toast.logged_u", {
+      notify.success(t("hydration.toast.logged_u", {
         n: amount,
         unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
       }));
