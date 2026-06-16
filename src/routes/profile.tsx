@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { Bell, Settings, HelpCircle, LogOut, ChevronRight, Pencil } from "lucide-react";
+import { Bell, Settings, HelpCircle, LogOut, ChevronRight, Pencil, MessageSquare, Check } from "lucide-react";
 import { useSessionStore } from "@/lib/useSessionStore";
 import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
@@ -46,6 +46,11 @@ function ProfilePage() {
   const c = useContent();
   const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);
+  const inAppOn = profile?.in_app_notifications !== false;
+  const toggleInApp = () => {
+    if (!profile) return;
+    void updateProfile({ in_app_notifications: !inAppOn });
+  };
   const displayName =
     profile?.full_name ??
     (user?.user_metadata?.full_name as string | undefined) ??
@@ -147,6 +152,36 @@ function ProfilePage() {
                   </button>
                 );
               })}
+              {g.titleKey === "profile.group.wellness" && (
+                <button
+                  onClick={toggleInApp}
+                  disabled={!profile}
+                  className="w-full flex items-center gap-3 px-4 py-3.5 text-left disabled:opacity-60"
+                >
+                  <div className="size-8 rounded-lg bg-secondary grid place-items-center">
+                    <MessageSquare className="size-4" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{c.t("reminders.in_app_title")}</p>
+                    <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">
+                      {c.t("reminders.in_app_desc")}
+                    </p>
+                  </div>
+                  <span
+                    className={`relative inline-flex h-6 w-10 rounded-full transition-colors ${
+                      inAppOn ? "bg-primary" : "bg-secondary"
+                    }`}
+                  >
+                    <span
+                      className={`absolute top-0.5 size-5 rounded-full bg-background shadow-sm transition-all flex items-center justify-center ${
+                        inAppOn ? "left-[18px]" : "left-0.5"
+                      }`}
+                    >
+                      {inAppOn && <Check className="size-3 text-primary" />}
+                    </span>
+                  </span>
+                </button>
+              )}
             </div>
           </div>
         ))}
