@@ -376,6 +376,7 @@ function SessionPage() {
             <span className="inline-flex items-center gap-1"><Sparkles className="size-3.5 text-accent" /> +{totalXp} XP</span>
           </div>
           {showHydrationPrompt && !hydrationLogged && (
+          {showHydrationPrompt && !hydrationLogged && !hydrationSkipped && (
             <div className="w-full max-w-sm rounded-3xl bg-card ring-1 ring-black/5 p-5 mb-6">
               <div className="flex items-center justify-center gap-2 mb-1 text-primary">
                 <Droplet className="size-4" />
