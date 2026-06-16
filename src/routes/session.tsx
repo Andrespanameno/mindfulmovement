@@ -73,6 +73,7 @@ function SessionPage() {
   const reminders = useReminderSettings();
   const unit: HydrationUnit = profile?.hydration_unit ?? "oz";
   const [hydrationLogged, setHydrationLogged] = useState(false);
+  const [hydrationSkipped, setHydrationSkipped] = useState(false);
 
   // Mark a guided session as active so reminder surfaces (native taps and
   // in-app toasts) can de-duplicate against an in-progress session.
@@ -374,7 +375,7 @@ function SessionPage() {
             <span className="size-1 rounded-full bg-muted-foreground/40" />
             <span className="inline-flex items-center gap-1"><Sparkles className="size-3.5 text-accent" /> +{totalXp} XP</span>
           </div>
-          {showHydrationPrompt && !hydrationLogged && (
+          {showHydrationPrompt && !hydrationLogged && !hydrationSkipped && (
             <div className="w-full max-w-sm rounded-3xl bg-card ring-1 ring-black/5 p-5 mb-6">
               <div className="flex items-center justify-center gap-2 mb-1 text-primary">
                 <Droplet className="size-4" />
@@ -396,7 +397,7 @@ function SessionPage() {
                 ))}
               </div>
               <button
-                onClick={() => setHydrationLogged(true)}
+                onClick={() => setHydrationSkipped(true)}
                 className="text-xs text-muted-foreground hover:text-foreground"
               >
                 {t("session.hydration.skip")}
@@ -406,6 +407,11 @@ function SessionPage() {
           {showHydrationPrompt && hydrationLogged && (
             <div className="w-full max-w-sm rounded-2xl bg-primary/10 ring-1 ring-primary/20 p-3 mb-6 text-sm text-primary inline-flex items-center justify-center gap-2">
               <Check className="size-4" /> {t("session.hydration.logged")}
+            </div>
+          )}
+          {showHydrationPrompt && hydrationSkipped && !hydrationLogged && (
+            <div className="w-full max-w-sm rounded-2xl bg-muted ring-1 ring-black/5 p-3 mb-6 text-sm text-muted-foreground inline-flex items-center justify-center gap-2">
+              {t("session.hydration.skipped")}
             </div>
           )}
           <div className="flex gap-3">

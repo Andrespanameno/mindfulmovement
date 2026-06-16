@@ -743,6 +743,7 @@ const dict: Record<string, { en: string; es: string }> = {
   },
   "session.hydration.skip": { en: "Skip", es: "Omitir" },
   "session.hydration.logged": { en: "Hydration logged", es: "Hidratación registrada" },
+  "session.hydration.skipped": { en: "No water intake recorded", es: "No se registró consumo de agua" },
 
   "edit.title": { en: "Edit profile", es: "Editar perfil" },
   "edit.desc": {
