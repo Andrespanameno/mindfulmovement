@@ -10,7 +10,6 @@ import {
   Wind,
   Check,
   FlaskConical,
-  MessageSquare,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -20,7 +19,6 @@ import {
   type ReminderSettings,
 } from "@/lib/reminders";
 import { useI18n } from "@/lib/i18n";
-import { useProfile } from "@/lib/useProfile";
 import { isNative } from "@/lib/native";
 import {
   ensureNativePermissionAndSync,
@@ -47,12 +45,6 @@ const INTERVAL_OPTIONS: ReminderSettings["intervalMin"][] = [30, 60, 90, 120];
 function RemindersPage() {
   const { t, lang } = useI18n();
   const s = useReminderSettings();
-  const { profile, updateProfile } = useProfile();
-  const inAppOn = profile?.in_app_notifications !== false;
-  const toggleInApp = () => {
-    if (!profile) return;
-    void updateProfile({ in_app_notifications: !inAppOn });
-  };
   const [permission, setPermission] = useState<NotificationPermission | "unsupported">("default");
   const [nativePerm, setNativePerm] = useState<NativePermissionState>("prompt");
   const native = isNative();
@@ -318,23 +310,6 @@ function RemindersPage() {
             <p className="text-xs text-muted-foreground">{t("reminders.no_nudges_weekend")}</p>
           </div>
           <Toggle on={s.quietWeekends} />
-        </button>
-      </Section>
-
-      <Section title={t("reminders.in_app_section")}>
-        <button
-          onClick={toggleInApp}
-          disabled={!profile}
-          className="w-full p-4 rounded-2xl bg-card ring-1 ring-black/5 flex items-center gap-3 text-left disabled:opacity-60"
-        >
-          <div className="size-10 rounded-xl bg-secondary grid place-items-center text-foreground">
-            <MessageSquare className="size-4" />
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-medium">{t("reminders.in_app_title")}</p>
-            <p className="text-xs text-muted-foreground">{t("reminders.in_app_desc")}</p>
-          </div>
-          <Toggle on={inAppOn} />
         </button>
       </Section>
 
