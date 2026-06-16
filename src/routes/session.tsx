@@ -354,7 +354,7 @@ function SessionPage() {
         if (error) console.error("[hydration_logs] insert failed:", error.message);
       })();
       setHydrationLogged(true);
-      toast.success(t("hydration.toast.logged_u", {
+      notify.success(t("hydration.toast.logged_u", {
         n: amount,
         unit: t(unit === "ml" ? "unit.ml" : "unit.oz"),
       }));

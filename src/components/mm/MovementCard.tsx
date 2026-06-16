@@ -94,7 +94,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
     completeMovement(movement);
     setJustDone(true);
     const rawMsg = encouragements[Math.floor(Math.random() * encouragements.length)];
-    toast.success(t("mv.toast.xp", { xp: movement.xp }), { description: c.encouragement(rawMsg) });
+    notify.success(t("mv.toast.xp", { xp: movement.xp }), { description: c.encouragement(rawMsg) });
     setTimeout(() => setJustDone(false), 1400);
 
     // Persist to backend (fire-and-forget; UI already updated optimistically)
@@ -130,7 +130,7 @@ export function MovementCard({ movement, variant = "full" }: Props) {
   const handleUndo = () => {
     if (!done) return;
     uncompleteMovement(movement);
-    toast(t("mv.toast.undone", { xp: movement.xp }), { description: t("mv.toast.undone_sub") });
+    notify(t("mv.toast.undone", { xp: movement.xp }), { description: t("mv.toast.undone_sub") });
     setSecondsLeft(totalSeconds);
     setStarted(false);
     setRunning(false);
