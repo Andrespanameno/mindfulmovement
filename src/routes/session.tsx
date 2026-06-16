@@ -73,6 +73,7 @@ function SessionPage() {
   const reminders = useReminderSettings();
   const unit: HydrationUnit = profile?.hydration_unit ?? "oz";
   const [hydrationLogged, setHydrationLogged] = useState(false);
+  const [hydrationSkipped, setHydrationSkipped] = useState(false);
 
   // Mark a guided session as active so reminder surfaces (native taps and
   // in-app toasts) can de-duplicate against an in-progress session.
