@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { AppShell } from "@/components/mm/AppShell";
 import { Droplet, Undo2, ArrowLeft, Bell, BellOff, Check, Plus } from "lucide-react";
-import { toast } from "sonner";
+import { notify } from "@/lib/notify";
 import { supabase } from "@/integrations/supabase/client";
 import { useMotivationalMessage } from "@/hooks/useMotivationalMessage";
 import { useI18n } from "@/lib/i18n";

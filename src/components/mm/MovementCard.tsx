@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Clock, Sparkles, Check, Undo2, Play, Pause, Square } from "lucide-react";
-import { toast } from "sonner";
+import { notify } from "@/lib/notify";
 import type { Movement } from "@/lib/movements";
 import { encouragements } from "@/lib/movements";
 import { completeMovement, uncompleteMovement, useSessionStore } from "@/lib/useSessionStore";
