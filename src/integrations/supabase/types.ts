@@ -232,6 +232,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_preset: string | null
           created_at: string
           daily_water_goal: number
           daily_water_goal_display: number | null
@@ -252,6 +253,7 @@ export type Database = {
           work_style: string | null
         }
         Insert: {
+          avatar_preset?: string | null
           created_at?: string
           daily_water_goal?: number
           daily_water_goal_display?: number | null
@@ -272,6 +274,7 @@ export type Database = {
           work_style?: string | null
         }
         Update: {
+          avatar_preset?: string | null
           created_at?: string
           daily_water_goal?: number
           daily_water_goal_display?: number | null
