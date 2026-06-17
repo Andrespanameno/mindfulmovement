@@ -80,7 +80,7 @@ function ProfilePage() {
             <img
               src={avatarUrl}
               alt=""
-              className="absolute inset-0 w-full h-full object-cover block max-w-none max-h-none p-0 m-0"
+              className="absolute inset-0 w-full h-full object-cover block rounded-full max-w-none max-h-none p-0 m-0"
             />
           ) : (
             initial
