@@ -75,7 +75,7 @@ function ProfilePage() {
   return (
     <AppShell>
       <header className="flex flex-col items-center text-center mb-8">
-        <div className="size-24 rounded-full bg-secondary ring-1 ring-black/5 mb-3 grid place-items-center text-2xl font-semibold text-muted-foreground overflow-hidden">
+        <div className="size-24 rounded-full bg-secondary mb-3 grid place-items-center text-2xl font-semibold text-muted-foreground overflow-hidden">
           {avatarUrl ? (
             <img src={avatarUrl} alt="" className="size-full object-cover" />
           ) : (
