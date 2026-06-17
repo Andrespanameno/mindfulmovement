@@ -55,7 +55,7 @@ export function AvatarPickerDialog({ open, onOpenChange, current, initial, onSel
                   } bg-secondary grid place-items-center`}
                 >
                   {opt.url ? (
-                    <img src={opt.url} alt="" className="size-full object-cover" loading="lazy" />
+                    <img src={opt.url} alt="" className="absolute inset-0 w-full h-full object-cover block rounded-full max-w-none max-h-none p-0 m-0" loading="lazy" />
                   ) : (
                     <span className="text-2xl font-semibold text-muted-foreground">{initial}</span>
                   )}
