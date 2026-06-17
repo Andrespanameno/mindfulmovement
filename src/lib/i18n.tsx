@@ -376,6 +376,12 @@ const dict: Record<string, { en: string; es: string }> = {
   },
 
   "profile.edit": { en: "Edit profile", es: "Editar perfil" },
+  "profile.avatar.edit": { en: "Edit Profile Picture", es: "Editar foto de perfil" },
+  "profile.avatar.title": { en: "Choose Profile Picture", es: "Elegir foto de perfil" },
+  "profile.avatar.initials": { en: "Initials", es: "Iniciales" },
+  "profile.avatar.bamboo": { en: "Bamboo", es: "Bambú" },
+  "profile.avatar.pebbles": { en: "Pebbles", es: "Piedras" },
+  "profile.avatar.water_drop": { en: "Water Drop", es: "Gota de agua" },
   "profile.day_streak": { en: "Streak", es: "Constancia" },
   "profile.total_xp": { en: "Total XP", es: "XP total" },
   "profile.today": { en: "Today", es: "Hoy" },
