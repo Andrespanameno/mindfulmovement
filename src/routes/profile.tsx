@@ -5,6 +5,7 @@ import { useSessionStore } from "@/lib/useSessionStore";
 import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
 import { EditProfileDialog } from "@/components/mm/EditProfileDialog";
+import { AvatarPickerDialog, AVATAR_PRESETS } from "@/components/mm/AvatarPickerDialog";
 import { getLifestyle } from "@/lib/lifestyles";
 import { useContent } from "@/lib/i18n-content";
 import { useState } from "react";
@@ -46,6 +47,7 @@ function ProfilePage() {
   const c = useContent();
   const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);
+  const [avatarOpen, setAvatarOpen] = useState(false);
   const inAppOn = profile?.in_app_notifications !== false;
   const toggleInApp = () => {
     if (!profile) return;
@@ -58,6 +60,7 @@ function ProfilePage() {
     "Friend";
   const initial = displayName.charAt(0).toUpperCase();
   const lifestyle = getLifestyle(profile?.lifestyle);
+  const avatarUrl = profile?.avatar_preset ? AVATAR_PRESETS[profile.avatar_preset] : null;
 
   const handleSignOut = async () => {
     await signOut();
@@ -72,9 +75,20 @@ function ProfilePage() {
   return (
     <AppShell>
       <header className="flex flex-col items-center text-center mb-8">
-        <div className="size-24 rounded-full bg-secondary ring-1 ring-black/5 mb-4 grid place-items-center text-2xl font-semibold text-muted-foreground">
-          {initial}
+        <div className="size-24 rounded-full bg-secondary ring-1 ring-black/5 mb-3 grid place-items-center text-2xl font-semibold text-muted-foreground overflow-hidden">
+          {avatarUrl ? (
+            <img src={avatarUrl} alt="" className="size-full object-cover" />
+          ) : (
+            initial
+          )}
         </div>
+        <button
+          onClick={() => setAvatarOpen(true)}
+          disabled={!profile}
+          className="mb-3 text-xs font-medium text-primary hover:underline disabled:opacity-50"
+        >
+          {c.t("profile.avatar.edit")}
+        </button>
         <h1 className="text-xl font-semibold">{displayName}</h1>
         <p className="text-sm text-muted-foreground">{user?.email}</p>
         <button
@@ -200,6 +214,15 @@ function ProfilePage() {
           onOpenChange={setEditOpen}
           profile={profile}
           onSave={updateProfile}
+        />
+      )}
+      {profile && (
+        <AvatarPickerDialog
+          open={avatarOpen}
+          onOpenChange={setAvatarOpen}
+          current={profile.avatar_preset ?? null}
+          initial={initial}
+          onSelect={(preset) => updateProfile({ avatar_preset: preset })}
         />
       )}
     </AppShell>
