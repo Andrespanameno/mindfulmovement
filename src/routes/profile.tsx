@@ -222,7 +222,9 @@ function ProfilePage() {
           onOpenChange={setAvatarOpen}
           current={profile.avatar_preset ?? null}
           initial={initial}
-          onSelect={(preset) => updateProfile({ avatar_preset: preset })}
+          onSelect={async (preset) => {
+            await updateProfile({ avatar_preset: preset });
+          }}
         />
       )}
     </AppShell>
