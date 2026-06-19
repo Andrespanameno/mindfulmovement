@@ -9,7 +9,6 @@ import {
   Droplet,
   Wind,
   Check,
-  FlaskConical,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
