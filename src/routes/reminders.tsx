@@ -174,18 +174,6 @@ function RemindersPage() {
             </button>
           ) : null}
 
-          <button
-            onClick={sendTestNotification}
-            className="w-full p-4 rounded-2xl bg-card ring-1 ring-black/5 flex items-center gap-3 mb-6 text-left"
-          >
-            <div className="size-10 rounded-xl bg-secondary grid place-items-center text-foreground">
-              <FlaskConical className="size-4" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium">{t("reminders.test_button")}</p>
-              <p className="text-xs text-muted-foreground">{t("reminders.test_button_sub")}</p>
-            </div>
-          </button>
         </>
       ) : (
         permission !== "granted" &&
