@@ -120,29 +120,6 @@ function RemindersPage() {
     }
   };
 
-  const sendTestNotification = async () => {
-    if (!native) return;
-
-    const result = await ensureNativePermissionAndSync(s, lang);
-    console.info("[reminders] test notification permission ->", result);
-    setNativePerm(result);
-
-    if (result === "denied") {
-      toast.message(t("reminders.native_denied_title"), {
-        description: t("reminders.native_denied_body"),
-      });
-      return;
-    }
-
-    if (result !== "granted") return;
-
-    const ok = await scheduleTestNotification(lang);
-    if (ok) {
-      toast.success(t("reminders.test_scheduled"), {
-        description: t("reminders.test_scheduled_sub"),
-      });
-    }
-  };
 
   return (
     <AppShell>
