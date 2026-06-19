@@ -22,7 +22,6 @@ import { isNative } from "@/lib/native";
 import {
   ensureNativePermissionAndSync,
   getNativePermission,
-  scheduleTestNotification,
   type NativePermissionState,
 } from "@/lib/nativeNotifications";
 
