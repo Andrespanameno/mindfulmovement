@@ -9,7 +9,6 @@ import {
   Droplet,
   Wind,
   Check,
-  FlaskConical,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -23,7 +22,6 @@ import { isNative } from "@/lib/native";
 import {
   ensureNativePermissionAndSync,
   getNativePermission,
-  scheduleTestNotification,
   type NativePermissionState,
 } from "@/lib/nativeNotifications";
 
@@ -122,29 +120,6 @@ function RemindersPage() {
     }
   };
 
-  const sendTestNotification = async () => {
-    if (!native) return;
-
-    const result = await ensureNativePermissionAndSync(s, lang);
-    console.info("[reminders] test notification permission ->", result);
-    setNativePerm(result);
-
-    if (result === "denied") {
-      toast.message(t("reminders.native_denied_title"), {
-        description: t("reminders.native_denied_body"),
-      });
-      return;
-    }
-
-    if (result !== "granted") return;
-
-    const ok = await scheduleTestNotification(lang);
-    if (ok) {
-      toast.success(t("reminders.test_scheduled"), {
-        description: t("reminders.test_scheduled_sub"),
-      });
-    }
-  };
 
   return (
     <AppShell>
@@ -199,18 +174,6 @@ function RemindersPage() {
             </button>
           ) : null}
 
-          <button
-            onClick={sendTestNotification}
-            className="w-full p-4 rounded-2xl bg-card ring-1 ring-black/5 flex items-center gap-3 mb-6 text-left"
-          >
-            <div className="size-10 rounded-xl bg-secondary grid place-items-center text-foreground">
-              <FlaskConical className="size-4" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium">{t("reminders.test_button")}</p>
-              <p className="text-xs text-muted-foreground">{t("reminders.test_button_sub")}</p>
-            </div>
-          </button>
         </>
       ) : (
         permission !== "granted" &&

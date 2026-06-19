@@ -610,22 +610,6 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "Open iOS Settings → Notifications → Mindful Movement to turn them on. You'll still see reminders inside the app.",
     es: "Abre Ajustes de iOS → Notificaciones → Mindful Movement para activarlas. Seguirás viendo los recordatorios dentro de la app.",
   },
-  "reminders.test_button": {
-    en: "Test notification",
-    es: "Probar notificación",
-  },
-  "reminders.test_button_sub": {
-    en: "Requests permission if needed, then sends one in 10 seconds.",
-    es: "Solicita permiso si hace falta y luego envía una en 10 segundos.",
-  },
-  "reminders.test_scheduled": {
-    en: "Test notification scheduled",
-    es: "Notificación de prueba programada",
-  },
-  "reminders.test_scheduled_sub": {
-    en: "You should see it in about 10 seconds.",
-    es: "Deberías verla en unos 10 segundos.",
-  },
 
   "onb.step": { en: "Step {n} of 3", es: "Paso {n} de 3" },
   "onb.step1.title": { en: "What does your day look like?", es: "¿Cómo es tu día?" },
