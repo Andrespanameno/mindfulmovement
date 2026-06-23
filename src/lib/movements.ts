@@ -209,7 +209,7 @@ export const movements: Movement[] = [
   m("seated-mobility", "Seated Mobility Flow", "Relax your body without standing up.", "low-energy", { duration: 1, xp: 25 }),
   m("gentle-arm-raises", "Gentle Arm Raises", "Slow arm raises, breathing in time.", "low-energy", { duration: 2, xp: 20 }),
   m("recovery-walk", "Recovery Walk", "A slow, restorative walk, no pace required.", "low-energy", { duration: 4, xp: 30, difficulty: "Easy" }),
-  m("slow-breathing-pause", "Slow Breathing Pause", "Pause. Inhale. Long exhale. Repeat.", "low-energy", { duration: 2, xp: 20 }),
+  m("slow-breathing-pause", "Slow Breathing Pause", "Stand up and pause. Inhale. Long exhale. Repeat.", "low-energy", { duration: 2, xp: 20 }),
 
   // STRENGTH SNACKS
   m("squats", "Mindful Squats", "Slow, intentional squats.", "strength-snacks", { duration: 2, xp: 35, difficulty: "Easy", icon: Dumbbell, repsType: "squats", reps: 12 }),
