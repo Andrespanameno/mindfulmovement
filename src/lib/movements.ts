@@ -203,10 +203,10 @@ export const movements: Movement[] = [
 
   // LOW-ENERGY & RECOVERY RESETS
   m("deep-breathing", "Deep Breathing", "Slow your breath, return to center.", "low-energy", { duration: 2, xp: 20, instruction: "Stand up, breathe in slowly, then exhale with control." }),
-  m("mindful-standing", "Mindful Standing Reset", "Stand tall, soften, breathe.", "low-energy", { duration: 1, xp: 15, instruction: "Sit or stand tall, relax your shoulders, and align your spine." }),
+  m("mindful-standing", "Mindful Standing Reset", "Stand tall, soften, breathe.", "low-energy", { duration: 1, xp: 15, instruction: "Stand up, relax your shoulders, and align your spine." }),
   m("one-min-stretch", "Stretch", "Whatever your body asks for, gently.", "low-energy", { duration: 1, xp: 10 }),
-  m("hydration-breath", "Hydration + Breath Reset", "Drink water and take deep breaths.", "low-energy", { duration: 1, xp: 20, icon: Droplet }),
-  m("seated-mobility", "Seated Mobility Flow", "Relax your body without standing up.", "low-energy", { duration: 1, xp: 25 }),
+  m("hydration-breath", "Hydration + Breath Reset", "Drink water and take deep breaths. Be present.", "low-energy", { duration: 1, xp: 20, icon: Droplet }),
+  m("seated-mobility", "Seated Mobility Flow", "Move and relax your body without standing up.", "low-energy", { duration: 1, xp: 25 }),
   m("gentle-arm-raises", "Gentle Arm Raises", "Slow arm raises, breathing in time.", "low-energy", { duration: 2, xp: 20 }),
   m("recovery-walk", "Recovery Walk", "A slow, restorative walk, no pace required.", "low-energy", { duration: 4, xp: 30, difficulty: "Easy" }),
   m("slow-breathing-pause", "Slow Breathing Pause", "Stand up and pause. Inhale. Long exhale. Repeat.", "low-energy", { duration: 2, xp: 20 }),
@@ -217,7 +217,7 @@ export const movements: Movement[] = [
   m("wall-pushups", "Wall Push-Ups", "Ten slow wall push-ups.", "strength-snacks", { duration: 2, xp: 30, difficulty: "Easy", icon: Hand, repsType: "pushups", reps: 10, instruction: "Keep your body straight and lower toward the wall with control." }),
   m("countertop-pushups", "Countertop Push-Ups", "Push-ups against the counter, at your own pace.", "strength-snacks", { duration: 2, xp: 35, difficulty: "Easy", icon: Hand, repsType: "pushups", reps: 10 }),
   m("calf-raises", "Calf Raises", "Two slow sets, breathing through each.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy", instruction: "Rise onto your toes, pause briefly, then lower slowly." }),
-  m("wall-sit", "Wall Sit", "A short hold, count steady breaths, rest as needed.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
+  m("wall-sit", "Wall Sit", "A short hold, steady breaths, rest as needed.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
   m("mini-lunges", "Mini Lunges", "Short, balanced lunges on each side.", "strength-snacks", { duration: 2, xp: 30, difficulty: "Easy" }),
   m("step-ups", "Step-Ups", "Step up and down on a stable surface.", "strength-snacks", { duration: 3, xp: 30, difficulty: "Easy" }),
   m("standing-core", "Standing Core Bracing", "Squeeze and release your core, slowly.", "strength-snacks", { duration: 2, xp: 25, difficulty: "Easy" }),
@@ -242,10 +242,10 @@ export const movements: Movement[] = [
   // HYDRATION & WELLNESS CHECK-INS
   m("hydration-reminder", "Hydration Check", "A glass of water, slow and steady.", "hydration-wellness", { duration: 1, xp: 10, icon: Droplet }),
   m("water-stretch-combo", "Water + Stretch Combo", "Sip, stand, stretch, repeat.", "hydration-wellness", { duration: 1, xp: 20 }),
-  m("posture-hydration", "Posture + Hydration Reset", "Sit tall, breathe, and drink.", "hydration-wellness", { duration: 1, xp: 20 }),
+  m("posture-hydration", "Posture + Hydration Reset", "Reset your posture, breathe, and drink.", "hydration-wellness", { duration: 1, xp: 20 }),
   m("sunlight-break", "Sunlight Break", "Step outside or to a window for a moment.", "hydration-wellness", { duration: 2, xp: 25, difficulty: "Easy", icon: Sun }),
   m("fresh-air-reset", "Fresh Air Reset", "A few breaths of fresh air outside.", "hydration-wellness", { duration: 3, xp: 25, difficulty: "Easy" }),
-  m("gratitude-pause", "Gratitude Pause", "Name one thing you're thankful for.", "hydration-wellness", { duration: 1, xp: 15, icon: Heart }),
+  m("gratitude-pause", "Gratitude Pause", "Name one thing you're thankful for and reflect on why it matters.", "hydration-wellness", { duration: 1, xp: 15, icon: Heart }),
 ];
 
 export function getMovement(id: string): Movement | undefined {
