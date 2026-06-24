@@ -142,7 +142,7 @@ export const MOVEMENT_ES: Record<string, { title: string; description: string; i
   "walk-3min": { title: "Caminata de 3 minutos", description: "Despégate de la pantalla y reinicia con una caminata corta." },
   "hallway-walk": { title: "Caminata por el pasillo", description: "Una vueltita corta para despejar la mente." },
   "march-in-place": { title: "Marcha en sitio", description: "Levanta las rodillas, mueve los brazos.", instruction: "Levanta las rodillas con suavidad y mantén un ritmo constante." },
-  "side-steps": { title: "Pasos laterales", description: "Movimiento lateral suave para despertar las caderas." },
+  "side-steps": { title: "Pasos laterales", description: "Movimiento lateral suave para activar las caderas." },
   "toe-taps": { title: "Toques con la punta del pie", description: "Toca cualquier superficie con la punta del pie." },
   "stair-walk": { title: "Subir escaleras", description: "Un tramo corto, lento y constante." },
   "arm-swings": { title: "Balanceo de brazos", description: "Suelta los hombros con balanceos amplios." },
