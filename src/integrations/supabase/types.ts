@@ -328,6 +328,7 @@ export type Database = {
       }
       reminder_settings: {
         Row: {
+          active_days: number
           breath: boolean
           created_at: string
           enabled: boolean
@@ -335,12 +336,12 @@ export type Database = {
           hydration: boolean
           interval_min: number
           movement: boolean
-          quiet_weekends: boolean
           start_hour: number
           updated_at: string
           user_id: string
         }
         Insert: {
+          active_days?: number
           breath?: boolean
           created_at?: string
           enabled?: boolean
@@ -348,12 +349,12 @@ export type Database = {
           hydration?: boolean
           interval_min?: number
           movement?: boolean
-          quiet_weekends?: boolean
           start_hour?: number
           updated_at?: string
           user_id: string
         }
         Update: {
+          active_days?: number
           breath?: boolean
           created_at?: string
           enabled?: boolean
@@ -361,7 +362,6 @@ export type Database = {
           hydration?: boolean
           interval_min?: number
           movement?: boolean
-          quiet_weekends?: boolean
           start_hour?: number
           updated_at?: string
           user_id?: string
