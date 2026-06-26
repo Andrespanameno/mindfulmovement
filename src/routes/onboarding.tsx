@@ -103,7 +103,7 @@ function OnboardingPage() {
         movement: current.movement,
         hydration: current.hydration,
         breath: current.breath,
-        quiet_weekends: current.quietWeekends,
+        active_days: current.activeDays,
       };
       const { error: remErr } = await supabase
         .from("reminder_settings")
