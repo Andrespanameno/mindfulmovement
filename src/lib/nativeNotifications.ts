@@ -140,7 +140,7 @@ export async function scheduleReminders(
   console.info("[nativeNotifications] schedule plan", {
     cadence: settings.intervalMin,
     activeHours: `${settings.startHour}-${settings.endHour}`,
-    quietWeekends: settings.quietWeekends,
+    activeDays: settings.activeDays,
     count: slots.length,
     times: slots.map((d) => d.toString()),
   });
@@ -195,10 +195,8 @@ export function generateScheduledSlots(
     day.setHours(0, 0, 0, 0);
     day.setDate(day.getDate() + d);
 
-    if (s.quietWeekends) {
-      const dow = day.getDay();
-      if (dow === 0 || dow === 6) continue;
-    }
+    const dow = day.getDay();
+    if (((s.activeDays ?? 127) & (1 << dow)) === 0) continue;
 
     const dayStart = new Date(day);
     dayStart.setHours(s.startHour, 0, 0, 0);
