@@ -35,7 +35,7 @@ export function RemindersSync() {
       const { data, error } = await supabase
         .from("reminder_settings")
         .select(
-          "enabled, start_hour, end_hour, interval_min, movement, hydration, breath, quiet_weekends",
+          "enabled, start_hour, end_hour, interval_min, movement, hydration, breath, active_days",
         )
         .eq("user_id", user.id)
         .maybeSingle();
@@ -53,7 +53,7 @@ export function RemindersSync() {
           movement: data.movement,
           hydration: data.hydration,
           breath: data.breath,
-          quietWeekends: data.quiet_weekends,
+          activeDays: data.active_days ?? 127,
         };
         hydrateReminderSettings(snap);
         lastSentRef.current = JSON.stringify(snap);
@@ -83,7 +83,7 @@ export function RemindersSync() {
         movement: s.movement,
         hydration: s.hydration,
         breath: s.breath,
-        quietWeekends: s.quietWeekends,
+        activeDays: s.activeDays,
       };
       const sig = JSON.stringify(snap);
       if (sig === lastSentRef.current) return;
@@ -98,7 +98,7 @@ export function RemindersSync() {
           movement: s.movement,
           hydration: s.hydration,
           breath: s.breath,
-          quiet_weekends: s.quietWeekends,
+          active_days: s.activeDays,
         },
         { onConflict: "user_id" },
       );
