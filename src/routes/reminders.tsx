@@ -42,6 +42,16 @@ export const Route = createFileRoute("/reminders")({
 
 const INTERVAL_OPTIONS: ReminderSettings["intervalMin"][] = [30, 60, 90, 120];
 
+const DAY_ORDER: { key: string; dow: number }[] = [
+  { key: "reminders.day.mon", dow: 1 },
+  { key: "reminders.day.tue", dow: 2 },
+  { key: "reminders.day.wed", dow: 3 },
+  { key: "reminders.day.thu", dow: 4 },
+  { key: "reminders.day.fri", dow: 5 },
+  { key: "reminders.day.sat", dow: 6 },
+  { key: "reminders.day.sun", dow: 0 },
+];
+
 function RemindersPage() {
   const { t, lang } = useI18n();
   const s = useReminderSettings();
