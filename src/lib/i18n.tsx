@@ -546,7 +546,7 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "Soft nudges to move, hydrate, and breathe, only when it fits your day.",
     es: "Recordatorios suaves para moverte, hidratarte y respirar, solo cuando encajen en tu día.",
   },
-  "reminders.gentle": { en: "Gentle reminders", es: "Recordatorios amables" },
+  "reminders.gentle": { en: "Gentle reminders", es: "Recordatorios gentiles" },
   "reminders.active_hours_status": {
     en: "Active during your hours",
     es: "Activos en tus horarios",
