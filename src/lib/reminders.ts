@@ -50,7 +50,11 @@ export interface ReminderSettings {
   movement: boolean;
   hydration: boolean;
   breath: boolean;
-  quietWeekends: boolean;
+  /**
+   * Bitmask of active weekdays. Bit `i` corresponds to JS `Date#getDay()`
+   * (0 = Sunday … 6 = Saturday). Default is all days on (0b1111111 = 127).
+   */
+  activeDays: number;
 }
 
 const KEY = "mm-reminder-settings";
@@ -63,7 +67,7 @@ const defaults: ReminderSettings = {
   movement: true,
   hydration: true,
   breath: true,
-  quietWeekends: false,
+  activeDays: 0b1111111, // all days
 };
 
 let state: ReminderSettings = defaults;
@@ -152,11 +156,21 @@ export function pickReminder(
 export function isWithinActiveWindow(s: ReminderSettings, d = new Date()): boolean {
   if (!s.enabled) return false;
   const day = d.getDay();
-  if (s.quietWeekends && (day === 0 || day === 6)) return false;
+  if (!isDayActive(s.activeDays, day)) return false;
   const h = d.getHours();
   if (s.startHour <= s.endHour) return h >= s.startHour && h < s.endHour;
   // wraps midnight
   return h >= s.startHour || h < s.endHour;
+}
+
+/** Returns true when the given JS day-of-week (0..6) is enabled in the mask. */
+export function isDayActive(mask: number, day: number): boolean {
+  return ((mask ?? 0) & (1 << day)) !== 0;
+}
+
+/** Toggle a single weekday in the bitmask. */
+export function toggleDay(mask: number, day: number): number {
+  return (mask ?? 0) ^ (1 << day);
 }
 
 /**
@@ -197,13 +211,13 @@ export function isDispatchSlotUTC(
     start_hour: number;
     end_hour: number;
     interval_min: number;
-    quiet_weekends: boolean;
+    active_days: number;
   },
   d: Date,
 ): boolean {
   if (!s.enabled) return false;
   const day = d.getUTCDay();
-  if (s.quiet_weekends && (day === 0 || day === 6)) return false;
+  if (((s.active_days ?? 127) & (1 << day)) === 0) return false;
   const h = d.getUTCHours();
   const inWindow =
     s.start_hour <= s.end_hour
