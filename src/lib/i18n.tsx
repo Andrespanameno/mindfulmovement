@@ -577,7 +577,6 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "A few intentional breaths.",
     es: "Unas respiraciones tranquilas.",
   },
-  "reminders.quiet_times": { en: "Quiet times", es: "Momentos en silencio" },
   "reminders.reminder_days": { en: "Reminder Days", es: "Días de recordatorio" },
   "reminders.day.mon": { en: "Mon", es: "Lun" },
   "reminders.day.tue": { en: "Tue", es: "Mar" },
