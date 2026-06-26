@@ -15,6 +15,8 @@ import {
   useReminderSettings,
   updateReminderSettings,
   formatHour,
+  isDayActive,
+  toggleDay,
   type ReminderSettings,
 } from "@/lib/reminders";
 import { useI18n } from "@/lib/i18n";
@@ -263,17 +265,24 @@ function RemindersPage() {
         </div>
       </Section>
 
-      <Section title={t("reminders.quiet_times")}>
-        <button
-          onClick={() => updateReminderSettings({ quietWeekends: !s.quietWeekends })}
-          className="w-full p-4 rounded-2xl bg-card ring-1 ring-black/5 flex items-center gap-3"
-        >
-          <div className="flex-1 text-left">
-            <p className="text-sm font-medium">{t("reminders.quiet_weekends")}</p>
-            <p className="text-xs text-muted-foreground">{t("reminders.no_nudges_weekend")}</p>
-          </div>
-          <Toggle on={s.quietWeekends} />
-        </button>
+      <Section title={t("reminders.reminder_days")}>
+        <div className="rounded-2xl bg-card ring-1 ring-black/5 divide-y divide-border">
+          {DAY_ORDER.map(({ key, dow }) => {
+            const on = isDayActive(s.activeDays, dow);
+            return (
+              <button
+                key={dow}
+                onClick={() =>
+                  updateReminderSettings({ activeDays: toggleDay(s.activeDays, dow) })
+                }
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
+              >
+                <div className="flex-1 text-sm font-medium">{t(key)}</div>
+                <Toggle on={on} />
+              </button>
+            );
+          })}
+        </div>
       </Section>
 
       <p className="text-xs text-muted-foreground italic text-center mt-2">
