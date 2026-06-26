@@ -48,11 +48,11 @@ function inActiveWindow(s: {
   enabled: boolean;
   start_hour: number;
   end_hour: number;
-  quiet_weekends: boolean;
+  active_days: number;
 }, now: Date): boolean {
   if (!s.enabled) return false;
   const day = now.getUTCDay();
-  if (s.quiet_weekends && (day === 0 || day === 6)) return false;
+  if (((s.active_days ?? 127) & (1 << day)) === 0) return false;
   const h = now.getUTCHours();
   if (s.start_hour <= s.end_hour) return h >= s.start_hour && h < s.end_hour;
   return h >= s.start_hour || h < s.end_hour;
@@ -76,7 +76,7 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
         const { data: settings, error: settingsErr } = await supabaseAdmin
           .from("reminder_settings")
           .select(
-            "user_id, enabled, start_hour, end_hour, interval_min, movement, hydration, breath, quiet_weekends",
+            "user_id, enabled, start_hour, end_hour, interval_min, movement, hydration, breath, active_days",
           )
           .eq("enabled", true);
 
