@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { cancelAllReminders } from "@/lib/nativeNotifications";
 
 interface AuthContextValue {
   session: Session | null;
@@ -53,6 +54,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
+    // Cancel any scheduled local notifications so a signed-out device
+    // stops receiving reminders until the user signs back in.
+    try {
+      await cancelAllReminders();
+    } catch (err) {
+      console.error("[auth] cancelAllReminders on signOut failed:", err);
+    }
     await supabase.auth.signOut();
   };
 
