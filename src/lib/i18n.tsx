@@ -655,7 +655,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "onb.interval.90": { en: "Every 90 min", es: "Cada 90 min" },
   "onb.interval.120": { en: "Every 2 hours", es: "Cada 2 horas" },
   "onb.reminder_note": {
-    en: "The reminder cadence can be adjusted anytime in your Profile settings once you're in the app.",
+    en: "The reminder cadence can be adjusted at any time in your Profile settings, once you're in the app.",
     es: "Puedes ajustar la frecuencia de los recordatorios cuando quieras desde tu Perfil.",
   },
 
