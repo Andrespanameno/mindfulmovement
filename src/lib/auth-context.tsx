@@ -3,6 +3,28 @@ import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { cancelAllReminders } from "@/lib/nativeNotifications";
 
+// Keys that describe the DEVICE (language, theme, remembered email for
+// convenience) and should survive sign-out. Everything else in localStorage
+// belongs to the previous user and MUST be cleared so the next signed-in
+// user (or the same user after a fresh sign-in) starts from DB truth
+// instead of stale per-user cache.
+const PRESERVE_KEYS = new Set(["mm-lang", "mm-theme", "mm-remembered-email"]);
+
+function clearLocalUserData() {
+  if (typeof window === "undefined") return;
+  try {
+    const toRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && !PRESERVE_KEYS.has(k)) toRemove.push(k);
+    }
+    toRemove.forEach((k) => localStorage.removeItem(k));
+    sessionStorage.clear();
+  } catch (err) {
+    console.error("[auth] clearLocalUserData failed:", err);
+  }
+}
+
 interface AuthContextValue {
   session: Session | null;
   user: User | null;
@@ -62,6 +84,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error("[auth] cancelAllReminders on signOut failed:", err);
     }
     await supabase.auth.signOut();
+    // Wipe per-user local cache (reminder settings, session/stats snapshot,
+    // dedup timestamps, motivational message history, hydration day cache)
+    // so nothing bleeds into the next session on this device.
+    clearLocalUserData();
   };
 
   const resetPassword: AuthContextValue["resetPassword"] = async (email) => {

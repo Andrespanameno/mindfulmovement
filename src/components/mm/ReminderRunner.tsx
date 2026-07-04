@@ -7,6 +7,7 @@ import {
 } from "@/lib/reminders";
 import { useI18n } from "@/lib/i18n";
 import { shouldSuppressReminder } from "@/lib/reminderDedup";
+import { useAuth } from "@/lib/auth-context";
 
 const LAST_KEY = "mm-reminder-last-fired";
 
@@ -49,8 +50,13 @@ function notify(title: string, body: string, actionLabel: string) {
 export function ReminderRunner() {
   const settings = useReminderSettings();
   const { lang, t } = useI18n();
+  const { user } = useAuth();
 
   useEffect(() => {
+    // Never fire in-app reminders when there is no signed-in user.
+    // Prevents stale reminders from the previous account triggering after
+    // sign-out / account deletion.
+    if (!user) return;
     const tick = () => {
       const nowDate = new Date();
       if (!isDispatchSlot(settings, nowDate)) return;
@@ -89,7 +95,7 @@ export function ReminderRunner() {
       window.clearTimeout(startTimer);
       if (interval) window.clearInterval(interval);
     };
-  }, [settings, lang, t]);
+  }, [settings, lang, t, user]);
 
   return null;
 }
