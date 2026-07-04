@@ -9,6 +9,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { deleteAccount } from "@/lib/account.functions";
 import { supabase } from "@/integrations/supabase/client";
+import { cancelAllReminders } from "@/lib/nativeNotifications";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -43,6 +44,13 @@ function SettingsPage() {
   const handleDelete = async () => {
     setDeleting(true);
     try {
+      // Cancel all scheduled local notifications BEFORE deleting the account
+      // so no further reminders fire on this device after deletion.
+      try {
+        await cancelAllReminders();
+      } catch (err) {
+        console.error("[settings] cancelAllReminders failed:", err);
+      }
       await runDelete();
       try {
         await supabase.auth.signOut();

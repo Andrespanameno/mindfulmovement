@@ -271,7 +271,21 @@ function slotsForDay(s: ReminderSettings, dayStart: Date, dayEnd: Date): Date[] 
 
 export async function cancelAllReminders(): Promise<void> {
   if (!isNative()) return;
-  await cancelOurs();
+  // Cancel every pending local notification this app has scheduled,
+  // including the test slot (ID_MAX + 1) and any legacy IDs outside the
+  // normal reminder range. Used on sign-out and account deletion so no
+  // further notifications ever fire for a signed-out or deleted user.
+  try {
+    const pending = await LocalNotifications.getPending();
+    const ids = pending.notifications
+      .filter((n) => typeof n.id === "number")
+      .map((n) => ({ id: n.id }));
+    if (ids.length > 0) {
+      await LocalNotifications.cancel({ notifications: ids });
+    }
+  } catch (err) {
+    console.error("[nativeNotifications] cancelAll failed:", err);
+  }
 }
 
 export async function scheduleTestNotification(lang: Lang = "en"): Promise<boolean> {
