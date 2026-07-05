@@ -149,6 +149,10 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "An account with this email already exists. We just resent the verification email — check your inbox.",
     es: "Ya existe una cuenta con este correo. Acabamos de reenviar el correo de verificación — revisa tu bandeja de entrada.",
   },
+  "auth.verify.existing_unverified": {
+    en: "This email is already registered but not verified. Please check your inbox or resend the verification email.",
+    es: "Este correo ya está registrado pero no verificado. Revisa tu bandeja de entrada o reenvía el correo de verificación.",
+  },
   "auth.validation.email_required": {
     en: "Please enter your email address.",
     es: "Por favor, ingresa tu correo electrónico.",
