@@ -145,6 +145,10 @@ const dict: Record<string, { en: string; es: string }> = {
     es: "Por favor verifica tu correo antes de continuar.",
   },
   "auth.verify.back": { en: "Back to sign in", es: "Volver a iniciar sesión" },
+  "auth.verify.existing_account": {
+    en: "An account with this email already exists. We just resent the verification email — check your inbox.",
+    es: "Ya existe una cuenta con este correo. Acabamos de reenviar el correo de verificación — revisa tu bandeja de entrada.",
+  },
   "auth.validation.email_required": {
     en: "Please enter your email address.",
     es: "Por favor, ingresa tu correo electrónico.",
