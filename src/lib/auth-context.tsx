@@ -29,7 +29,11 @@ interface AuthContextValue {
   session: Session | null;
   user: User | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: string | null }>;
+  signUp: (
+    email: string,
+    password: string,
+    fullName?: string,
+  ) => Promise<{ error: string | null; alreadyRegistered?: boolean }>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: string | null }>;
@@ -59,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp: AuthContextValue["signUp"] = async (email, password, fullName) => {
     const redirectUrl = `${window.location.origin}/home`;
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -67,7 +71,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data: fullName ? { full_name: fullName } : undefined,
       },
     });
-    return { error: error?.message ?? null };
+    // Supabase returns success with an empty `identities` array when the
+    // email is already registered — an anti-enumeration behavior that
+    // silently skips sending a confirmation email. Surface it so the UI
+    // can offer an explicit resend instead of failing silently.
+    const alreadyRegistered =
+      !error && !!data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0;
+    return { error: error?.message ?? null, alreadyRegistered };
   };
 
   const signIn: AuthContextValue["signIn"] = async (email, password) => {

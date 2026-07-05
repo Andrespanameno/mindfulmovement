@@ -156,9 +156,22 @@ function LoginPage() {
           navigate({ to: "/home" });
         }
       } else if (mode === "signup") {
-        const { error } = await signUp(email, password, fullName || undefined);
+        const { error, alreadyRegistered } = await signUp(email, password, fullName || undefined);
         if (error) {
           toast.error(error);
+        } else if (alreadyRegistered) {
+          // Existing account — Supabase suppressed the confirmation email.
+          // Trigger an explicit resend and route to the verify screen.
+          toast.message(t("auth.verify.existing_account"));
+          const { error: resendError } = await supabase.auth.resend({
+            type: "signup",
+            email,
+            options: { emailRedirectTo: `${window.location.origin}/home` },
+          });
+          if (resendError && !/already confirmed/i.test(resendError.message)) {
+            toast.error(resendError.message);
+          }
+          startVerify(email);
         } else {
           startVerify(email);
         }
