@@ -46,6 +46,7 @@ function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [pendingEmail, setPendingEmail] = useState("");
+  const [verifyReason, setVerifyReason] = useState<"new" | "existing">("new");
   const [resendCooldown, setResendCooldown] = useState(0);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -126,8 +127,9 @@ function LoginPage() {
     };
   }, []);
 
-  const startVerify = (addr: string) => {
+  const startVerify = (addr: string, reason: "new" | "existing" = "new") => {
     setPendingEmail(addr);
+    setVerifyReason(reason);
     setMode("verify");
     try {
       localStorage.setItem(RESEND_TS_KEY, String(Date.now()));
@@ -210,7 +212,7 @@ function LoginPage() {
           if (resendError && !/already confirmed/i.test(resendError.message)) {
             toast.error(resendError.message);
           }
-          startVerify(email);
+          startVerify(email, "existing");
         } else {
           startVerify(email);
         }
@@ -240,9 +242,16 @@ function LoginPage() {
           {tt.title}
         </h1>
         {mode === "verify" ? (
-          <p className="text-base text-muted-foreground text-pretty mb-8">
-            {t("auth.verify.sub").replace("{email}", pendingEmail)}
-          </p>
+          <div className="mb-8 space-y-3">
+            {verifyReason === "existing" && (
+              <p className="text-sm rounded-xl bg-secondary/60 ring-1 ring-black/5 p-3 text-foreground">
+                {t("auth.verify.existing_unverified")}
+              </p>
+            )}
+            <p className="text-base text-muted-foreground text-pretty">
+              {t("auth.verify.sub").replace("{email}", pendingEmail)}
+            </p>
+          </div>
         ) : (
           <p className="text-base text-muted-foreground text-pretty mb-10">
             {tt.sub}
