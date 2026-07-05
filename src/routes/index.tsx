@@ -21,6 +21,18 @@ export const Route = createFileRoute("/")({
 type Mode = "signin" | "signup" | "forgot" | "verify";
 
 const REMEMBER_KEY = "mm-remembered-email";
+const RESEND_TS_KEY = "mm-verify-resend-at";
+const RESEND_COOLDOWN_MS = 60_000;
+
+function computeRemaining(): number {
+  if (typeof window === "undefined") return 0;
+  const raw = localStorage.getItem(RESEND_TS_KEY);
+  if (!raw) return 0;
+  const sentAt = Number(raw);
+  if (!Number.isFinite(sentAt)) return 0;
+  const remainingMs = sentAt + RESEND_COOLDOWN_MS - Date.now();
+  return remainingMs > 0 ? Math.ceil(remainingMs / 1000) : 0;
+}
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -93,14 +105,36 @@ function LoginPage() {
 
   useEffect(() => {
     if (resendCooldown <= 0) return;
-    const id = window.setTimeout(() => setResendCooldown((s) => s - 1), 1000);
+    const id = window.setTimeout(() => setResendCooldown(computeRemaining()), 1000);
     return () => window.clearTimeout(id);
   }, [resendCooldown]);
+
+  useEffect(() => {
+    const recalc = () => setResendCooldown(computeRemaining());
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") recalc();
+    };
+    window.addEventListener("focus", recalc);
+    window.addEventListener("pageshow", recalc);
+    document.addEventListener("visibilitychange", onVisibility);
+    // Initial hydrate in case a cooldown is already active from a prior session.
+    recalc();
+    return () => {
+      window.removeEventListener("focus", recalc);
+      window.removeEventListener("pageshow", recalc);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
 
   const startVerify = (addr: string) => {
     setPendingEmail(addr);
     setMode("verify");
-    setResendCooldown(60);
+    try {
+      localStorage.setItem(RESEND_TS_KEY, String(Date.now()));
+    } catch {
+      /* ignore storage errors */
+    }
+    setResendCooldown(computeRemaining());
   };
 
   const handleResend = async () => {
@@ -116,7 +150,12 @@ function LoginPage() {
         toast.error(error.message);
       } else {
         toast.success(t("auth.verify.resend_success"));
-        setResendCooldown(60);
+        try {
+          localStorage.setItem(RESEND_TS_KEY, String(Date.now()));
+        } catch {
+          /* ignore storage errors */
+        }
+        setResendCooldown(computeRemaining());
       }
     } finally {
       setBusy(false);
