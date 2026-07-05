@@ -372,7 +372,13 @@ function LoginPage() {
               {t("auth.new_here")}{" "}
               <button
                 type="button"
-                onClick={() => setMode("signup")}
+                onClick={() => {
+                  setEmail("");
+                  setPassword("");
+                  setFullName("");
+                  setShowPassword(false);
+                  setMode("signup");
+                }}
                 className="text-foreground font-medium"
               >
                 {t("auth.begin")}
