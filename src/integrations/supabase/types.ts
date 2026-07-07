@@ -247,6 +247,7 @@ export type Database = {
           lifestyle: string | null
           onboarding_completed: boolean
           preferred_categories: string[]
+          session_max_minutes: number
           tutorial_seen: boolean
           updated_at: string
           wellness_goals: string[] | null
@@ -268,6 +269,7 @@ export type Database = {
           lifestyle?: string | null
           onboarding_completed?: boolean
           preferred_categories?: string[]
+          session_max_minutes?: number
           tutorial_seen?: boolean
           updated_at?: string
           wellness_goals?: string[] | null
@@ -289,6 +291,7 @@ export type Database = {
           lifestyle?: string | null
           onboarding_completed?: boolean
           preferred_categories?: string[]
+          session_max_minutes?: number
           tutorial_seen?: boolean
           updated_at?: string
           wellness_goals?: string[] | null
