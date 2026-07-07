@@ -274,6 +274,32 @@ function OnboardingPage() {
                   );
                 })}
               </div>
+              <div className="mt-6">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                  {tr("onb.session_length")}
+                </p>
+                <div className="grid grid-cols-3 gap-2.5">
+                  {([3, 4, 5] as const).map((mins) => {
+                    const selected = sessionMax === mins;
+                    return (
+                      <button
+                        key={mins}
+                        type="button"
+                        onClick={() => setSessionMax(mins)}
+                        className={cn(
+                          "p-3.5 rounded-2xl ring-1 text-center text-sm transition",
+                          selected
+                            ? "bg-primary/10 ring-primary font-medium"
+                            : "bg-card ring-black/5",
+                        )}
+                      >
+                        {tr(`session.length.${mins}` as const)}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-[11px] text-muted-foreground mt-2">{tr("onb.session_length.hint")}</p>
+              </div>
             </>
           )}
 
