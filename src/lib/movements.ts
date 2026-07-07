@@ -397,6 +397,12 @@ export interface BuildGuidedSessionOptions {
     hydration?: boolean;
     breath?: boolean;
   } | null;
+  /**
+   * Hard cap on total guided-session length in minutes. Clamped to 3–5.
+   * When set, overrides the fitness-based total cap when it is stricter.
+   * Defaults to 5 when omitted.
+   */
+  maxMinutes?: number | null;
 }
 
 type DifficultyWeights = Record<MovementDifficulty, number>;
