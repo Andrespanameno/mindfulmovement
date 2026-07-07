@@ -93,6 +93,7 @@ function SessionPage() {
       recentIds: readRecentIds(),
       allowBreath: reminders.breath,
       includeBreath: reminders.breath,
+      maxMinutes: profile?.session_max_minutes ?? 5,
       nudges: {
         movement: reminders.movement,
         hydration: reminders.hydration,
@@ -153,6 +154,7 @@ function SessionPage() {
         recentIds: readRecentIds(),
         allowBreath: reminders.breath,
         includeBreath: reminders.breath,
+        maxMinutes: profile.session_max_minutes ?? 5,
         nudges: {
           movement: reminders.movement,
           hydration: reminders.hydration,

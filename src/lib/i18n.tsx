@@ -771,6 +771,19 @@ const dict: Record<string, { en: string; es: string }> = {
   "unit.milliliters": { en: "Milliliters", es: "Mililitros" },
   "unit.hydration_unit": { en: "Hydration unit", es: "Unidad de hidratación" },
   "edit.updated": { en: "Profile updated", es: "Perfil actualizado" },
+  "edit.session_length": { en: "Guided session length", es: "Duración de sesión guiada" },
+  "edit.session_length.hint": {
+    en: "Sessions will never exceed this length.",
+    es: "Las sesiones nunca superarán esta duración.",
+  },
+  "session.length.3": { en: "3 minutes", es: "3 minutos" },
+  "session.length.4": { en: "4 minutes", es: "4 minutos" },
+  "session.length.5": { en: "5 minutes", es: "5 minutos" },
+  "onb.session_length": { en: "Max session length", es: "Duración máxima de sesión" },
+  "onb.session_length.hint": {
+    en: "You can change this later in your profile.",
+    es: "Puedes cambiarlo luego en tu perfil.",
+  },
 
   "error.404_title": { en: "Page not found", es: "Página no encontrada" },
   "error.404_sub": {
