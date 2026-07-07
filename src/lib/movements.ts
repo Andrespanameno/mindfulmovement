@@ -397,6 +397,12 @@ export interface BuildGuidedSessionOptions {
     hydration?: boolean;
     breath?: boolean;
   } | null;
+  /**
+   * Hard cap on total guided-session length in minutes. Clamped to 3–5.
+   * When set, overrides the fitness-based total cap when it is stricter.
+   * Defaults to 5 when omitted.
+   */
+  maxMinutes?: number | null;
 }
 
 type DifficultyWeights = Record<MovementDifficulty, number>;
@@ -728,13 +734,18 @@ export function buildGuidedSession(
   }
 
   // 5. Convert to timed steps using fitness envelope.
-  const { minSec, maxSec, totalCap } = durationEnvelopeFor(fitness);
+  const { minSec, maxSec, totalCap: fitnessCap } = durationEnvelopeFor(fitness);
+  // Apply the user-selected max session length (3–5 minutes). It's a hard
+  // ceiling: never exceed it, and take the stricter of it or the fitness cap.
+  const rawMax = opts.maxMinutes;
+  const maxMinutes = Math.max(3, Math.min(5, Math.round(rawMax ?? 5)));
+  const totalCap = Math.min(fitnessCap, maxMinutes * 60);
   const steps: SessionStep[] = [];
   let total = 0;
   for (const mv of ordered) {
     const raw = Math.round((mv.duration || 1) * 60);
     let secs = Math.max(minSec, Math.min(maxSec, raw));
-    if (total + secs > totalCap) secs = Math.max(45, totalCap - total);
+    if (total + secs > totalCap) secs = totalCap - total;
     if (secs < 30) break;
     steps.push({ movement: mv, seconds: secs });
     total += secs;

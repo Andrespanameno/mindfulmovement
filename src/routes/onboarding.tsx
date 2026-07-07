@@ -61,6 +61,7 @@ function OnboardingPage() {
     return match?.id ?? "workday";
   });
   const [interval, setInterval] = useState<ReminderSettings["intervalMin"]>(initial.intervalMin);
+  const [sessionMax, setSessionMax] = useState<3 | 4 | 5>(5);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -73,6 +74,8 @@ function OnboardingPage() {
     } else if (profile) {
       if (profile.lifestyle) setLifestyle(profile.lifestyle);
       if (profile.wellness_goals?.length) setGoals(profile.wellness_goals);
+      const m = profile.session_max_minutes;
+      if (m === 3 || m === 4 || m === 5) setSessionMax(m);
     }
   }, [profile, navigate]);
 
@@ -128,6 +131,7 @@ function OnboardingPage() {
       lifestyle,
       wellness_goals: goals,
       preferred_categories: seededCategories,
+      session_max_minutes: sessionMax,
       onboarding_completed: true,
     });
     setBusy(false);
@@ -269,6 +273,32 @@ function OnboardingPage() {
                     </button>
                   );
                 })}
+              </div>
+              <div className="mt-6">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                  {tr("onb.session_length")}
+                </p>
+                <div className="grid grid-cols-3 gap-2.5">
+                  {([3, 4, 5] as const).map((mins) => {
+                    const selected = sessionMax === mins;
+                    return (
+                      <button
+                        key={mins}
+                        type="button"
+                        onClick={() => setSessionMax(mins)}
+                        className={cn(
+                          "p-3.5 rounded-2xl ring-1 text-center text-sm transition",
+                          selected
+                            ? "bg-primary/10 ring-primary font-medium"
+                            : "bg-card ring-black/5",
+                        )}
+                      >
+                        {tr(`session.length.${mins}` as const)}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-[11px] text-muted-foreground mt-2">{tr("onb.session_length.hint")}</p>
               </div>
             </>
           )}

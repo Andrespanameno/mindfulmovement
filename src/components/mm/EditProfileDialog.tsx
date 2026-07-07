@@ -56,6 +56,11 @@ export function EditProfileDialog({
   const [lifestyle, setLifestyle] = useState(profile.lifestyle ?? "");
   const [goals, setGoals] = useState<string[]>(profile.wellness_goals ?? []);
   const [unit, setUnit] = useState<HydrationUnit>(profile.hydration_unit ?? "oz");
+  const [sessionMax, setSessionMax] = useState<3 | 4 | 5>(
+    (profile.session_max_minutes === 3 || profile.session_max_minutes === 4 || profile.session_max_minutes === 5)
+      ? profile.session_max_minutes
+      : 5,
+  );
   // Controlled string so the field can be empty while editing
   const [water, setWater] = useState<string>("");
   const [busy, setBusy] = useState(false);
@@ -67,6 +72,8 @@ export function EditProfileDialog({
       setWorkStyle(profile.work_style ?? "");
       setLifestyle(profile.lifestyle ?? "");
       setGoals(profile.wellness_goals ?? []);
+      const m = profile.session_max_minutes;
+      setSessionMax(m === 3 || m === 4 || m === 5 ? m : 5);
       const initialUnit: HydrationUnit = profile.hydration_unit ?? "oz";
       setUnit(initialUnit);
       // Prefer the last saved display value if it matches the current unit,
@@ -108,6 +115,7 @@ export function EditProfileDialog({
       hydration_unit: unit,
       daily_water_goal_display: numeric,
       daily_water_goal_display_unit: unit,
+      session_max_minutes: sessionMax,
       onboarding_completed: true,
     });
     setBusy(false);
@@ -233,6 +241,21 @@ export function EditProfileDialog({
                 if (v === "" || /^\d+$/.test(v)) setWater(v);
               }}
             />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>{t("edit.session_length")}</Label>
+            <Select value={String(sessionMax)} onValueChange={(v) => setSessionMax(Number(v) as 3 | 4 | 5)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="3">{t("session.length.3")}</SelectItem>
+                <SelectItem value="4">{t("session.length.4")}</SelectItem>
+                <SelectItem value="5">{t("session.length.5")}</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-[11px] text-muted-foreground">{t("edit.session_length.hint")}</p>
           </div>
         </div>
 
