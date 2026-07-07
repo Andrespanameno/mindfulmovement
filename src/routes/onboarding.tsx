@@ -61,6 +61,7 @@ function OnboardingPage() {
     return match?.id ?? "workday";
   });
   const [interval, setInterval] = useState<ReminderSettings["intervalMin"]>(initial.intervalMin);
+  const [sessionMax, setSessionMax] = useState<3 | 4 | 5>(5);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -73,6 +74,8 @@ function OnboardingPage() {
     } else if (profile) {
       if (profile.lifestyle) setLifestyle(profile.lifestyle);
       if (profile.wellness_goals?.length) setGoals(profile.wellness_goals);
+      const m = profile.session_max_minutes;
+      if (m === 3 || m === 4 || m === 5) setSessionMax(m);
     }
   }, [profile, navigate]);
 
@@ -128,6 +131,7 @@ function OnboardingPage() {
       lifestyle,
       wellness_goals: goals,
       preferred_categories: seededCategories,
+      session_max_minutes: sessionMax,
       onboarding_completed: true,
     });
     setBusy(false);
