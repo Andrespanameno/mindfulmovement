@@ -1,10 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Home, Sparkles, TrendingUp, User } from "lucide-react";
+import { Home, TrendingUp, User } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 
 const items = [
   { to: "/home", key: "nav.home", icon: Home },
-  { to: "/move", key: "nav.move", icon: Sparkles },
   { to: "/progress", key: "nav.progress", icon: TrendingUp },
   { to: "/profile", key: "nav.profile", icon: User },
 ] as const;
