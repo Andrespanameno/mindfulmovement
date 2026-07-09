@@ -55,12 +55,6 @@ function HomePage() {
   const reached = ouncesToday >= effectiveGoalOz - 0.05;
 
   const displayName = profile?.full_name || user?.email?.split("@")[0] || "there";
-  const initials = (profile?.full_name || user?.email || "U")
-    .split(" ")
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
 
   return (
     <AppShell>
@@ -71,14 +65,6 @@ function HomePage() {
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Link
-            to="/profile"
-            className="size-10 rounded-full bg-secondary ring-1 ring-border grid place-items-center text-xs font-semibold text-foreground hover:bg-accent/20 transition-colors"
-            aria-label={t("nav.profile")}
-            title={t("nav.profile")}
-          >
-            {initials}
-          </Link>
         </div>
       </header>
 
