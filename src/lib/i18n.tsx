@@ -766,6 +766,14 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "Sessions will never exceed this length.",
     es: "Las sesiones nunca superarán esta duración.",
   },
+  "edit.parent_friendly": {
+    en: "Include parent-friendly movements",
+    es: "Incluir movimientos para padres",
+  },
+  "edit.parent_friendly.hint": {
+    en: "Adds movements you can do with a little one nearby.",
+    es: "Añade movimientos que puedes hacer con un pequeño cerca.",
+  },
   "session.length.3": { en: "3 minutes", es: "3 minutos" },
   "session.length.4": { en: "4 minutes", es: "4 minutos" },
   "session.length.5": { en: "5 minutes", es: "5 minutos" },
