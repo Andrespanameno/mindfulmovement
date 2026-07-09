@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 
 export function StreakBadge({ className }: { className?: string }) {
-  const { streak, bestStreak } = useSessionStore();
+  const streak = useSessionStore((s) => s.streak);
+  const bestStreak = useSessionStore((s) => s.bestStreak);
   const { t } = useI18n();
   return (
     <div className={cn("p-4 rounded-2xl bg-secondary/60 ring-1 ring-black/5", className)}>
