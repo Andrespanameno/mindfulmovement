@@ -298,30 +298,30 @@ export function squatRepsFor(m: MovementLike): number {
 }
 
 /**
- * Returns true when the given movement is allowed for the given lifestyle id.
- * Movements without an `eligibleLifestyles` list are universally eligible.
- * Unknown / removed lifestyle ids are treated as a non-parent generic profile,
- * so they will NOT match parent-only movements.
+ * Returns true when the given movement is allowed given the user's
+ * parent-friendly preference. Movements without an `eligibleLifestyles`
+ * list are universally eligible. Parent-restricted movements are only
+ * eligible when the user has opted in via `include_parent_friendly`.
  */
-export function isMovementEligibleForLifestyle(
+export function isMovementEligibleForParent(
   mv: Movement,
-  lifestyle: string | null | undefined,
+  includeParentFriendly: boolean | null | undefined,
 ): boolean {
   if (!mv.eligibleLifestyles || mv.eligibleLifestyles.length === 0) return true;
-  if (!lifestyle) return false;
-  return mv.eligibleLifestyles.includes(lifestyle);
+  return includeParentFriendly === true;
 }
 
 /**
- * Filter a list of movements down to those eligible for the user's lifestyle
- * profile. This is Step 1 of the recommendation pipeline (lifestyle eligibility)
- * and runs BEFORE category preference, personalization weights, or randomization.
+ * Filter a list of movements down to those eligible for the user's
+ * parent-friendly preference. This is Step 1 of the recommendation
+ * pipeline and runs BEFORE category preference, personalization weights,
+ * or randomization.
  */
-export function filterMovementsByLifestyle<T extends Movement>(
+export function filterMovementsForParent<T extends Movement>(
   list: T[],
-  lifestyle: string | null | undefined,
+  includeParentFriendly: boolean | null | undefined,
 ): T[] {
-  return list.filter((mv) => isMovementEligibleForLifestyle(mv, lifestyle));
+  return list.filter((mv) => isMovementEligibleForParent(mv, includeParentFriendly));
 }
 
 /**
@@ -333,14 +333,14 @@ export function filterMovementsByLifestyle<T extends Movement>(
 export function pickNextMovement(
   preferredCategories: string[] | null | undefined,
   recentIds: string[] = [],
-  lifestyle?: string | null,
+  includeParentFriendly?: boolean | null,
 ): Movement {
   const prefs =
     preferredCategories && preferredCategories.length > 0
       ? preferredCategories
       : ALL_CATEGORY_IDS;
-  // Step 1: lifestyle eligibility. Step 2: category preferences.
-  const eligible = filterMovementsByLifestyle(movements, lifestyle);
+  // Step 1: parent-friendly eligibility. Step 2: category preferences.
+  const eligible = filterMovementsForParent(movements, includeParentFriendly);
   const pool = eligible.filter((mv) => prefs.includes(mv.category));
   const safe = pool.length > 0 ? pool : eligible.length > 0 ? eligible : movements;
   const fresh = safe.filter((mv) => !recentIds.includes(mv.id));
