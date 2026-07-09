@@ -99,13 +99,6 @@ function ProfilePage() {
         </button>
         <h1 className="text-xl font-semibold">{displayName}</h1>
         <p className="text-sm text-muted-foreground">{user?.email}</p>
-        <button
-          onClick={() => setEditOpen(true)}
-          disabled={loading || !profile}
-          className="mt-3 inline-flex items-center gap-1.5 font-medium text-primary hover:underline disabled:opacity-50 text-sm px-2 py-1 rounded-lg hover:bg-primary/5 transition"
-        >
-          <Pencil className="size-4" /> {c.t("profile.edit")}
-        </button>
         {profile && (lifestyle || profile.fitness_level || profile.work_style) && (
           <div className="flex flex-wrap justify-center gap-1.5 mt-3">
             {lifestyle && (
