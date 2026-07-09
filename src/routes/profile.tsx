@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { Bell, Settings, HelpCircle, LogOut, ChevronRight, Pencil, MessageSquare, Check, User } from "lucide-react";
+import { Bell, Settings, HelpCircle, LogOut, ChevronRight, MessageSquare, Check, User } from "lucide-react";
 import { useSessionStore } from "@/lib/useSessionStore";
 import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
