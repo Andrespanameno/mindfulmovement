@@ -162,22 +162,6 @@ export function EditProfileDialog({
           </div>
 
           <div className="space-y-1.5">
-            <Label>{t("edit.lifestyle")}</Label>
-            <Select value={lifestyle} onValueChange={setLifestyle}>
-              <SelectTrigger>
-                <SelectValue placeholder={t("edit.lifestyle.placeholder")} />
-              </SelectTrigger>
-              <SelectContent>
-                {LIFESTYLES.map((l) => (
-                  <SelectItem key={l.id} value={l.id}>
-                    {c.lifestyleLabel(l.id, l.label)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-1.5">
             <Label>{t("edit.work_style")}</Label>
             <Select value={workStyle} onValueChange={setWorkStyle}>
               <SelectTrigger>
