@@ -138,7 +138,7 @@ function ProfilePage() {
               {c.t(g.titleKey)}
             </h4>
             <div className="rounded-2xl bg-card ring-1 ring-black/5 divide-y divide-border">
-              {g.items.map(({ icon: Icon, labelKey, to }) => {
+              {g.items.map(({ icon: Icon, labelKey, to, onClick }) => {
                 const label = c.t(labelKey);
                 const content = (
                   <>
@@ -160,7 +160,9 @@ function ProfilePage() {
                 ) : (
                   <button
                     key={labelKey}
-                    className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
+                    onClick={onClick}
+                    disabled={!profile}
+                    className="w-full flex items-center gap-3 px-4 py-3.5 text-left disabled:opacity-60"
                   >
                     {content}
                   </button>
