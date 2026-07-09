@@ -144,7 +144,7 @@ function SessionPage() {
       preferredCategories: profile.preferred_categories,
       fitnessLevel: profile.fitness_level,
       workStyle: profile.work_style,
-      lifestyle: profile.lifestyle,
+      includeParentFriendly: profile.include_parent_friendly,
       wellnessGoals: profile.wellness_goals,
       recentIds: readRecentIds(),
       allowBreath: reminders.breath,
