@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
 import { WELLNESS_GOALS } from "@/lib/lifestyles";
@@ -154,21 +154,15 @@ function OnboardingPage() {
   const titles = [
     { eyebrow: tr("onb.step", { n: 1 }), title: tr("onb.step1.title"), sub: tr("onb.step1.sub") },
     { eyebrow: tr("onb.step", { n: 2 }), title: tr("onb.step2.title"), sub: tr("onb.step2.sub") },
-    { eyebrow: tr("onb.step", { n: 3 }), title: tr("onb.step3.title"), sub: tr("onb.step3.sub") },
   ];
   const t = titles[step];
-  const canNext = step === 0 ? !!lifestyle : true;
-
-  const lifestyleDef = LIFESTYLES.find((l) => l.id === lifestyle);
-  const seededCategoryMetas = (lifestyleDef?.defaultCategories ?? [])
-    .map((c) => getCategoryMeta(c))
-    .filter(Boolean);
+  const canNext = true;
 
   return (
     <div className="min-h-screen bg-background text-foreground flex justify-center">
       <div className="w-full max-w-[520px] flex flex-col px-6 pt-12 pb-8">
         <div className="flex items-center gap-1.5 mb-6">
-          {[0, 1, 2].map((i) => (
+          {[0, 1].map((i) => (
             <div
               key={i}
               className={cn(
@@ -185,62 +179,7 @@ function OnboardingPage() {
 
         <div className="flex-1">
           {step === 0 && (
-            <div className="grid grid-cols-1 gap-2.5">
-              {LIFESTYLES.map(({ id, label, description, icon: Icon }) => {
-                const selected = lifestyle === id;
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => setLifestyle(id)}
-                    className={cn(
-                      "w-full text-left p-4 rounded-2xl ring-1 transition flex items-start gap-3",
-                      selected
-                        ? "bg-primary/10 ring-primary"
-                        : "bg-card ring-black/5 hover:ring-black/10",
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        "size-10 rounded-xl grid place-items-center shrink-0",
-                        selected ? "bg-primary text-primary-foreground" : "bg-secondary",
-                      )}
-                    >
-                      <Icon className="size-5" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{content.lifestyleLabel(id, label)}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5 text-pretty">
-                        {content.lifestyleDesc(id, description)}
-                      </p>
-                    </div>
-                    {selected && <Check className="size-4 text-primary shrink-0 mt-1" />}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          {step === 1 && (
             <>
-              {seededCategoryMetas.length > 0 && (
-                <div className="mb-6 p-4 rounded-2xl bg-secondary/60 ring-1 ring-black/5">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-                    {tr("onb.start_rotation")}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {seededCategoryMetas.map((c) => (
-                      <span
-                        key={c!.id}
-                        className="text-[11px] px-2 py-0.5 rounded-full bg-background ring-1 ring-black/5"
-                      >
-                        {content.categoryShort(c!.id, c!.short)}
-                      </span>
-                    ))}
-                  </div>
-                  <p className="text-[11px] text-muted-foreground mt-2">{tr("onb.tune_later")}</p>
-                </div>
-              )}
               <div className="grid grid-cols-2 gap-2.5">
                 {WELLNESS_GOALS.map((g) => {
                   const selected = goals.includes(g);
@@ -290,7 +229,7 @@ function OnboardingPage() {
             </>
           )}
 
-          {step === 2 && (
+          {step === 1 && (
             <div className="space-y-6">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
@@ -363,7 +302,7 @@ function OnboardingPage() {
                 {tr("onb.back")}
               </button>
             )}
-            {step < 2 ? (
+            {step < 1 ? (
               <button
                 type="button"
                 onClick={next}
@@ -383,7 +322,7 @@ function OnboardingPage() {
               </button>
             )}
           </div>
-          {step === 1 && (
+          {step === 0 && (
             <button
               type="button"
               onClick={next}
