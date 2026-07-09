@@ -528,7 +528,7 @@ function goalCategoryBias(goals: string[] | null | undefined): {
       add("breath-calm", 0.5);
       add("low-energy", 0.5);
     }
-    if (g.includes("habit") || g.includes("consistency")) {
+    if (g.includes("consistency")) {
       // tiny generic nudge toward easy wins
       add("breath-calm", 0.2);
       add("desk-posture", 0.2);
