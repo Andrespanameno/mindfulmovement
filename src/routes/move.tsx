@@ -93,8 +93,8 @@ function MovePage() {
   // this user's lifestyle profile. Parent-only movements never appear for
   // non-parent profiles, regardless of category filter or preferences.
   const lifestyleEligible = useMemo(
-    () => filterMovementsByLifestyle(movements, profile?.lifestyle),
-    [profile?.lifestyle],
+    () => filterMovementsForParent(movements, profile?.include_parent_friendly),
+    [profile?.include_parent_friendly],
   );
 
   const { dailySubtitle, featuredTitle, featuredMessage } = useMemo(() => {
