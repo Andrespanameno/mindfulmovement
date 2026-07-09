@@ -127,7 +127,6 @@ export const WELLNESS_GOALS_ES: Record<string, string> = {
   "Stay hydrated": "Mantenerse hidratado",
   "Better posture": "Mejor postura",
   "Sleep better": "Dormir mejor",
-  "Build a habit": "Construir un hábito",
 };
 
 export const MOVEMENT_ES: Record<string, { title: string; description: string; instruction?: string }> = {

@@ -35,7 +35,6 @@ const GOALS = [
   "Stay hydrated",
   "Better posture",
   "Sleep better",
-  "Build a habit",
 ] as const;
 
 export function EditProfileDialog({
