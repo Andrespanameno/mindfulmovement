@@ -622,19 +622,14 @@ const dict: Record<string, { en: string; es: string }> = {
     es: "Abre Ajustes de iOS → Notificaciones → Mindful Movement para activarlas. Seguirás viendo los recordatorios dentro de la app.",
   },
 
-  "onb.step": { en: "Step {n} of 3", es: "Paso {n} de 3" },
-  "onb.step1.title": { en: "What does your day look like?", es: "¿Cómo es tu día?" },
+  "onb.step": { en: "Step {n} of 2", es: "Paso {n} de 2" },
+  "onb.step1.title": { en: "What feels most supportive?", es: "¿Qué te ayudaría más?" },
   "onb.step1.sub": {
-    en: "Pick the lifestyle that fits best. You can change this anytime.",
-    es: "Elige el estilo de vida que mejor te describa. Puedes cambiarlo cuando quieras.",
-  },
-  "onb.step2.title": { en: "What feels most supportive?", es: "¿Qué te ayudaría más?" },
-  "onb.step2.sub": {
     en: "Choose any goals that matter to you. Skip if you'd rather explore.",
     es: "Elige los objetivos que más te importen. Puedes saltarlo si prefieres explorar.",
   },
-  "onb.step3.title": { en: "When should we check in?", es: "¿Cuándo te recordamos?" },
-  "onb.step3.sub": {
+  "onb.step2.title": { en: "When should we check in?", es: "¿Cuándo te recordamos?" },
+  "onb.step2.sub": {
     en: "Gentle reminders, on your schedule.",
     es: "Recordatorios suaves, a tu ritmo.",
   },
@@ -647,10 +642,6 @@ const dict: Record<string, { en: string; es: string }> = {
   "onb.how_often": { en: "How often?", es: "¿Con qué frecuencia?" },
   "onb.back": { en: "Back", es: "Atrás" },
   "onb.enter": { en: "Enter your space", es: "Entrar a tu espacio" },
-  "onb.choose_lifestyle": {
-    en: "Choose a lifestyle to continue.",
-    es: "Selecciona un estilo de vida para continuar.",
-  },
   "onb.welcome": {
     en: "Welcome in. Your space is ready.",
     es: "¡Bienvenida/o! Tu espacio está listo.",
