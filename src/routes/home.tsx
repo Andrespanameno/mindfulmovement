@@ -31,7 +31,7 @@ export const Route = createFileRoute("/home")({
 });
 
 function HomePage() {
-  const { ouncesToday } = useSessionStore();
+  const ouncesToday = useSessionStore((s) => s.ouncesToday);
   const { profile } = useProfile();
   const { user } = useAuth();
   const { t } = useI18n();
@@ -138,7 +138,7 @@ function HomePage() {
 }
 
 function XpToday() {
-  const { xpToday } = useSessionStore();
+  const xpToday = useSessionStore((s) => s.xpToday);
   const { t } = useI18n();
   return (
     <div className="p-4 rounded-2xl bg-secondary/60 ring-1 ring-black/5">

@@ -28,7 +28,9 @@ export const Route = createFileRoute("/profile")({
 });
 
 function ProfilePage() {
-  const { streak, totalXp, completedToday } = useSessionStore();
+  const streak = useSessionStore((s) => s.streak);
+  const totalXp = useSessionStore((s) => s.totalXp);
+  const completedTodayCount = useSessionStore((s) => s.completedToday.length);
   const { user, signOut } = useAuth();
   const { profile, loading, updateProfile } = useProfile();
   const c = useContent();
@@ -73,7 +75,7 @@ function ProfilePage() {
   const stats = [
     { label: c.t("profile.day_streak"), value: String(streak) },
     { label: c.t("profile.total_xp"), value: totalXp >= 1000 ? `${(totalXp / 1000).toFixed(1)}k` : String(totalXp) },
-    { label: c.t("profile.today"), value: String(completedToday.length) },
+    { label: c.t("profile.today"), value: String(completedTodayCount) },
   ];
   return (
     <AppShell>

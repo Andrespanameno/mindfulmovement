@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useSessionStore } from "@/lib/useSessionStore";
 import { milestones, getMilestoneProgress } from "@/lib/xp";
 import { cn } from "@/lib/utils";
@@ -45,30 +46,28 @@ export function MilestoneGrid() {
   const c = useContent();
   const { t } = useI18n();
   const achievedLabel = t("milestone.achieved");
-  const derived = computeActiveDayStreaks(s.history);
-  const bestStreak = Math.max(s.bestStreak, derived.best);
-  const streak = Math.max(s.streak, derived.current);
-  const stateForMilestones = { ...s, streak, bestStreak };
-
-  // Sort: completed first, then locked ordered by closest to completion.
-  const sorted = [...milestones].sort((a, b) => {
-    const aDone = a.achieved(stateForMilestones);
-    const bDone = b.achieved(stateForMilestones);
-    if (aDone !== bDone) return aDone ? -1 : 1;
-    if (!aDone && !bDone) {
-      const ap = getMilestoneProgress(a, stateForMilestones);
-      const bp = getMilestoneProgress(b, stateForMilestones);
-      const ar = ap ? ap.current / ap.target : 0;
-      const br = bp ? bp.current / bp.target : 0;
-      return br - ar;
-    }
-    return 0;
-  });
-
-  // Next achievement: closest locked one.
-  const next = sorted.find((m) => !m.achieved(stateForMilestones));
-  const nextProgress = next ? getMilestoneProgress(next, stateForMilestones) : null;
-  const allDone = !next;
+  const { sorted, next, nextProgress, allDone, stateForMilestones } = useMemo(() => {
+    const derived = computeActiveDayStreaks(s.history);
+    const bestStreak = Math.max(s.bestStreak, derived.best);
+    const streak = Math.max(s.streak, derived.current);
+    const stateForMilestones = { ...s, streak, bestStreak };
+    const sorted = [...milestones].sort((a, b) => {
+      const aDone = a.achieved(stateForMilestones);
+      const bDone = b.achieved(stateForMilestones);
+      if (aDone !== bDone) return aDone ? -1 : 1;
+      if (!aDone && !bDone) {
+        const ap = getMilestoneProgress(a, stateForMilestones);
+        const bp = getMilestoneProgress(b, stateForMilestones);
+        const ar = ap ? ap.current / ap.target : 0;
+        const br = bp ? bp.current / bp.target : 0;
+        return br - ar;
+      }
+      return 0;
+    });
+    const next = sorted.find((m) => !m.achieved(stateForMilestones));
+    const nextProgress = next ? getMilestoneProgress(next, stateForMilestones) : null;
+    return { sorted, next, nextProgress, allDone: !next, stateForMilestones };
+  }, [s]);
 
   return (
     <div className="space-y-3">

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Link } from "@tanstack/react-router";
 import { Home, TrendingUp, User } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
@@ -8,7 +9,7 @@ const items = [
   { to: "/profile", key: "nav.profile", icon: User },
 ] as const;
 
-export function BottomNav() {
+function BottomNavImpl() {
   const { t } = useI18n();
   return (
     <nav className="fixed bottom-0 inset-x-0 z-50 bg-background/85 backdrop-blur-md border-t border-border">
@@ -38,3 +39,5 @@ export function BottomNav() {
     </nav>
   );
 }
+
+export const BottomNav = memo(BottomNavImpl);

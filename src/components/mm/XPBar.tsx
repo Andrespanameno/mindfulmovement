@@ -11,7 +11,7 @@ interface Props {
 }
 
 export function XPBar({ variant = "light", className }: Props) {
-  const { totalXp } = useSessionStore();
+  const totalXp = useSessionStore((s) => s.totalXp);
   const { level, title, xpIntoLevel, xpForNext, pct } = getLevelInfo(totalXp);
   const { t } = useI18n();
   const c = useContent();

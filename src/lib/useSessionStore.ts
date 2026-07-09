@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import type { Movement } from "./movements";
 import { isBreathingMovement, isPushupMovement, isSquatMovement } from "./movements";
 
@@ -418,6 +418,22 @@ export function subscribeToStats(listener: () => void) {
   };
 }
 
+function subscribe(cb: () => void) {
+  listeners.add(cb);
+  return () => {
+    listeners.delete(cb);
+  };
+}
+
+function ensureHydrated() {
+  if (!hydrated && typeof window !== "undefined") {
+    state = read();
+    hydrated = true;
+    rolloverIfNeeded();
+    scheduleMidnightRollover();
+  }
+}
+
 export interface HistoryHydration {
   history: Record<string, DailyEntry>;
   totals: {
@@ -448,21 +464,17 @@ export function hydrateHistory(payload: HistoryHydration) {
   });
 }
 
-export function useSessionStore(): SessionState {
-  const [, force] = useState(0);
-  useEffect(() => {
-    if (!hydrated) {
-      state = read();
-      hydrated = true;
-      rolloverIfNeeded();
-      scheduleMidnightRollover();
-    }
-    const l = () => force((n) => n + 1);
-    listeners.add(l);
-    force((n) => n + 1);
-    return () => {
-      listeners.delete(l);
-    };
-  }, []);
-  return state;
+export function useSessionStore(): SessionState;
+export function useSessionStore<T>(selector: (s: SessionState) => T): T;
+export function useSessionStore<T>(
+  selector?: (s: SessionState) => T,
+): T | SessionState {
+  const getSnapshot = () => {
+    ensureHydrated();
+    return selector ? selector(state) : state;
+  };
+  // Server snapshot: same shape, no window side effects.
+  const getServerSnapshot = () =>
+    selector ? selector(state) : state;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

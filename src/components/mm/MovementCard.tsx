@@ -17,11 +17,10 @@ interface Props {
 }
 
 export function MovementCard({ movement, variant = "full" }: Props) {
-  const { completedToday } = useSessionStore();
+  const done = useSessionStore((s) => s.completedToday.includes(movement.id));
   const { t } = useI18n();
   const c = useContent();
   const [justDone, setJustDone] = useState(false);
-  const done = completedToday.includes(movement.id);
   const Icon = movement.icon;
   const title = c.movementTitle(movement.id, movement.title);
   const desc = c.movementDesc(movement.id, movement.description);
