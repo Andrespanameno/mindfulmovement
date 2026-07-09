@@ -588,7 +588,7 @@ export function buildGuidedSession(
   const recentIds = opts.recentIds ?? [];
   const fitness = opts.fitnessLevel ?? null;
   const workStyle = opts.workStyle ?? null;
-  const lifestyle = opts.lifestyle ?? null;
+  const includeParentFriendly = opts.includeParentFriendly ?? false;
   const goals = opts.wellnessGoals ?? [];
 
   // Normalize the "What to Nudge" toggles. If the caller didn't provide
@@ -608,9 +608,9 @@ export function buildGuidedSession(
   if (!allowBreath) nudgeBreath = false;
   const onlyMovement = nudgeMovement && !nudgeHydration && !nudgeBreath;
 
-  // Step 1: lifestyle eligibility — filter the global movement pool BEFORE
-  // building weights, so non-parent profiles can never draw a parent movement.
-  const eligibleMovements = filterMovementsByLifestyle(movements, lifestyle);
+  // Step 1: parent-friendly eligibility — filter the global movement pool
+  // BEFORE building weights, so non-parent users never draw a parent movement.
+  const eligibleMovements = filterMovementsForParent(movements, includeParentFriendly);
 
   const hasPrefs = !!(opts.preferredCategories && opts.preferredCategories.length > 0);
   const prefs = hasPrefs
