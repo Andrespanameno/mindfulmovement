@@ -745,8 +745,6 @@ const dict: Record<string, { en: string; es: string }> = {
   "edit.name": { en: "Your name", es: "Tu nombre" },
   "edit.fitness": { en: "Fitness level", es: "Nivel físico" },
   "edit.fitness.placeholder": { en: "Select your level", es: "Elige tu nivel" },
-  "edit.lifestyle": { en: "Lifestyle", es: "Estilo de vida" },
-  "edit.lifestyle.placeholder": { en: "Select your lifestyle", es: "Elige tu estilo de vida" },
   "edit.work_style": { en: "Work style", es: "Estilo de trabajo" },
   "edit.work_style.placeholder": { en: "How do you spend your day?", es: "¿Cómo pasas tu día?" },
   "edit.goals": { en: "Wellness goals", es: "Objetivos de bienestar" },
