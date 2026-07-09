@@ -82,25 +82,11 @@ function SessionPage() {
     return () => setGuidedSessionActive(false);
   }, []);
 
-  // Build once per mount so the session feels consistent through.
-  const [steps, setSteps] = useState<SessionStep[]>(() =>
-    buildGuidedSession({
-      preferredCategories: profile?.preferred_categories,
-      fitnessLevel: profile?.fitness_level,
-      workStyle: profile?.work_style,
-      lifestyle: profile?.lifestyle,
-      wellnessGoals: profile?.wellness_goals,
-      recentIds: readRecentIds(),
-      allowBreath: reminders.breath,
-      includeBreath: reminders.breath,
-      maxMinutes: profile?.session_max_minutes ?? 5,
-      nudges: {
-        movement: reminders.movement,
-        hydration: reminders.hydration,
-        breath: reminders.breath,
-      },
-    }),
-  );
+  // Defer building until profile loads so the user's saved
+  // session_max_minutes preference is applied on the very first build.
+  // Building eagerly with `profile == null` silently falls back to 5.
+  const [steps, setSteps] = useState<SessionStep[]>([]);
+  const builtForMaxRef = useRef<number | null>(null);
   const [index, setIndex] = useState(0);
   const [running, setRunning] = useState(true);
   const [done, setDone] = useState(false);
@@ -141,34 +127,45 @@ function SessionPage() {
     if (done) setGuidedSessionActive(false);
   }, [done]);
 
-  // Rebuild when profile loads (if initial render had no prefs yet).
+  // Build (or rebuild) whenever the profile loads or the saved max-length
+  // preference changes — but never mid-session. This ensures we always read
+  // the *latest* saved preference before generating steps, regardless of how
+  // the user landed here (home, reminder toast, native notification tap).
   useEffect(() => {
     if (!profile) return;
-    if (steps.length === 0) {
-      const next = buildGuidedSession({
-        preferredCategories: profile.preferred_categories,
-        fitnessLevel: profile.fitness_level,
-        workStyle: profile.work_style,
-        lifestyle: profile.lifestyle,
-        wellnessGoals: profile.wellness_goals,
-        recentIds: readRecentIds(),
-        allowBreath: reminders.breath,
-        includeBreath: reminders.breath,
-        maxMinutes: profile.session_max_minutes ?? 5,
-        nudges: {
-          movement: reminders.movement,
-          hydration: reminders.hydration,
-          breath: reminders.breath,
-        },
-      });
-      setSteps(next);
-      setElapsedBeforeMs(0);
-      setRunStartAt(Date.now());
-      setNowTs(Date.now());
-      setRunning(true);
-    }
+    const max = profile.session_max_minutes ?? 5;
+    if (builtForMaxRef.current === max && steps.length > 0) return;
+    // Don't disrupt an in-progress session past the first step.
+    if (steps.length > 0 && index > 0) return;
+    console.info(
+      `[guided-session] building with session_max_minutes=${max} (profile loaded)`,
+    );
+    const next = buildGuidedSession({
+      preferredCategories: profile.preferred_categories,
+      fitnessLevel: profile.fitness_level,
+      workStyle: profile.work_style,
+      lifestyle: profile.lifestyle,
+      wellnessGoals: profile.wellness_goals,
+      recentIds: readRecentIds(),
+      allowBreath: reminders.breath,
+      includeBreath: reminders.breath,
+      maxMinutes: max,
+      nudges: {
+        movement: reminders.movement,
+        hydration: reminders.hydration,
+        breath: reminders.breath,
+      },
+    });
+    builtForMaxRef.current = max;
+    setSteps(next);
+    setIndex(0);
+    setConfirmed(false);
+    setElapsedBeforeMs(0);
+    setRunStartAt(Date.now());
+    setNowTs(Date.now());
+    setRunning(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile?.id]);
+  }, [profile?.id, profile?.session_max_minutes]);
 
   // Once a session has been built, record its movement ids so the next
   // guided session will down-weight them.
