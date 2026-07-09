@@ -241,6 +241,17 @@ export function EditProfileDialog({
             </div>
           </div>
 
+          <label className="flex items-center gap-2 p-2 rounded-lg ring-1 ring-border cursor-pointer">
+            <Checkbox
+              checked={includeParent}
+              onCheckedChange={(v) => setIncludeParent(v === true)}
+            />
+            <div className="flex-1">
+              <p className="text-sm">{t("edit.parent_friendly")}</p>
+              <p className="text-[11px] text-muted-foreground">{t("edit.parent_friendly.hint")}</p>
+            </div>
+          </label>
+
           <div className="space-y-1.5">
             <div className="flex items-center justify-between gap-2">
               <Label>{t("settings.language.label")}</Label>
