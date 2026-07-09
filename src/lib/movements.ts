@@ -377,11 +377,15 @@ export interface BuildGuidedSessionOptions {
   fitnessLevel?: string | null;   // "beginner" | "casual" | "active" | "athletic"
   workStyle?: string | null;      // "desk" | "hybrid" | "active" | "on-the-go"
   /**
-   * Lifestyle profile id (e.g. "hybrid", "stay-at-home-parent"). Used to
-   * gate movements via `eligibleLifestyles` BEFORE any category or weight
-   * logic runs — so parent-only movements never leak into other profiles.
+   * Lifestyle profile id — retained for backward compatibility with older
+   * callers, but no longer influences session generation.
    */
   lifestyle?: string | null;
+  /**
+   * Whether parent-friendly movements are eligible in the session. Gates
+   * the movement pool BEFORE any category or weight logic runs.
+   */
+  includeParentFriendly?: boolean | null;
   wellnessGoals?: string[] | null;
   recentIds?: string[] | null;    // ids picked in recent sessions (avoid repeats)
   allowBreath?: boolean;
