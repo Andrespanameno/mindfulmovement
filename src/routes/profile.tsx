@@ -27,23 +27,6 @@ export const Route = createFileRoute("/profile")({
   component: ProfilePage,
 });
 
-const groups: { titleKey: string; items: Item[] }[] = [
-  {
-    titleKey: "profile.group.wellness",
-    items: [
-      { icon: User, labelKey: "profile.menu.profile", onClick: () => undefined },
-      { icon: Bell, labelKey: "profile.menu.reminders", to: "/reminders" },
-    ],
-  },
-  {
-    titleKey: "profile.group.account",
-    items: [
-      { icon: Settings, labelKey: "profile.menu.settings", to: "/settings" },
-      { icon: HelpCircle, labelKey: "profile.menu.support", to: "/support" },
-    ],
-  },
-];
-
 function ProfilePage() {
   const { streak, totalXp, completedToday } = useSessionStore();
   const { user, signOut } = useAuth();
