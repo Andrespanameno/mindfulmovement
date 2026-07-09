@@ -3,7 +3,6 @@ import { AppShell } from "@/components/mm/AppShell";
 import { ArrowLeft, Shield, FileText, ChevronRight, Sparkles, Trash2, RotateCcw } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { useProfile } from "@/lib/useProfile";
-import { LanguageToggle } from "@/components/mm/LanguageToggle";
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
@@ -108,14 +107,6 @@ function SettingsPage() {
       <div className="mb-8">
         <h1 className="text-xl font-semibold">{t("settings.title")}</h1>
         <p className="text-sm text-muted-foreground mt-1">{t("settings.sub")}</p>
-      </div>
-
-      <div className="mb-6 rounded-2xl bg-card ring-1 ring-black/5 p-4 flex items-center gap-3">
-        <div className="flex-1">
-          <p className="text-sm font-medium">{t("settings.language.label")}</p>
-          <p className="text-xs text-muted-foreground mt-0.5">{t("settings.language.hint")}</p>
-        </div>
-        <LanguageToggle />
       </div>
 
       <div className="rounded-2xl bg-card ring-1 ring-black/5 divide-y divide-border mb-auto">
