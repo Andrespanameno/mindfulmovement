@@ -4,8 +4,7 @@ import { toast } from "sonner";
 import { ArrowRight, Check } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
-import { LIFESTYLES, WELLNESS_GOALS } from "@/lib/lifestyles";
-import { getCategoryMeta } from "@/lib/movements";
+import { WELLNESS_GOALS } from "@/lib/lifestyles";
 import {
   getReminderSettings,
   hydrateReminderSettings,
@@ -29,7 +28,7 @@ export const Route = createFileRoute("/onboarding")({
   component: OnboardingPage,
 });
 
-type Step = 0 | 1 | 2;
+type Step = 0 | 1;
 
 const WINDOWS: { id: string; labelKey: string; start: number; end: number }[] = [
   { id: "morning", labelKey: "onb.window.morning", start: 7, end: 12 },
@@ -53,7 +52,6 @@ function OnboardingPage() {
   const { profile, loading, updateProfile } = useProfile();
 
   const [step, setStep] = useState<Step>(0);
-  const [lifestyle, setLifestyle] = useState<string | null>(null);
   const [goals, setGoals] = useState<string[]>([]);
   const initial = useMemo(() => getReminderSettings(), []);
   const [windowId, setWindowId] = useState<string>(() => {
@@ -72,7 +70,6 @@ function OnboardingPage() {
     if (profile?.onboarding_completed) {
       navigate({ to: "/home", replace: true });
     } else if (profile) {
-      if (profile.lifestyle) setLifestyle(profile.lifestyle);
       if (profile.wellness_goals?.length) setGoals(profile.wellness_goals);
       const m = profile.session_max_minutes;
       if (m === 3 || m === 4 || m === 5) setSessionMax(m);
@@ -82,15 +79,10 @@ function OnboardingPage() {
   const toggleGoal = (g: string) =>
     setGoals((prev) => (prev.includes(g) ? prev.filter((x) => x !== g) : [...prev, g]));
 
-  const next = () => setStep((s) => (s < 2 ? ((s + 1) as Step) : s));
+  const next = () => setStep((s) => (s < 1 ? ((s + 1) as Step) : s));
   const back = () => setStep((s) => (s > 0 ? ((s - 1) as Step) : s));
 
   const finish = async () => {
-    if (!lifestyle) {
-      toast.error(tr("onb.choose_lifestyle"));
-      setStep(0);
-      return;
-    }
     setBusy(true);
     const win = WINDOWS.find((w) => w.id === windowId)!;
     // Persist reminder settings directly to the DB so the Profile/Reminders
@@ -122,13 +114,8 @@ function OnboardingPage() {
         intervalMin: interval,
       });
     }
-    const lifestyleDef = LIFESTYLES.find((l) => l.id === lifestyle);
-    const seededCategories =
-      profile?.preferred_categories && profile.preferred_categories.length > 0
-        ? profile.preferred_categories
-        : (lifestyleDef?.defaultCategories ?? []);
+    const seededCategories = profile?.preferred_categories ?? [];
     const { error } = await updateProfile({
-      lifestyle,
       wellness_goals: goals,
       preferred_categories: seededCategories,
       session_max_minutes: sessionMax,
