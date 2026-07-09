@@ -25,6 +25,7 @@ import { useI18n } from "@/lib/i18n";
 import { useContent } from "@/lib/i18n-content";
 import { HydrationUnitToggle } from "@/components/mm/HydrationUnitToggle";
 import { ozToMl, mlToOz, ML_PER_OZ, type HydrationUnit } from "@/lib/hydrationUnit";
+import { LanguageToggle } from "@/components/mm/LanguageToggle";
 
 const FITNESS = ["beginner", "casual", "active", "athletic"] as const;
 const WORK_STYLES = ["desk", "hybrid", "active", "on-the-go"] as const;
@@ -194,24 +195,6 @@ export function EditProfileDialog({
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label>{t("edit.goals")}</Label>
-            <div className="grid grid-cols-2 gap-2">
-              {GOALS.map((g) => (
-                <label
-                  key={g}
-                  className="flex items-center gap-2 p-2 rounded-lg ring-1 ring-border cursor-pointer"
-                >
-                  <Checkbox
-                    checked={goals.includes(g)}
-                    onCheckedChange={() => toggleGoal(g)}
-                  />
-                  <span className="text-sm">{c.wellnessGoal(g)}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
           <div className="space-y-1.5">
             <div className="flex items-center justify-between gap-2">
               <Label htmlFor="water">{unit === "ml" ? t("edit.water_ml") : t("edit.water_oz")}</Label>
@@ -256,6 +239,32 @@ export function EditProfileDialog({
               </SelectContent>
             </Select>
             <p className="text-[11px] text-muted-foreground">{t("edit.session_length.hint")}</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>{t("edit.goals")}</Label>
+            <div className="grid grid-cols-2 gap-2">
+              {GOALS.map((g) => (
+                <label
+                  key={g}
+                  className="flex items-center gap-2 p-2 rounded-lg ring-1 ring-border cursor-pointer"
+                >
+                  <Checkbox
+                    checked={goals.includes(g)}
+                    onCheckedChange={() => toggleGoal(g)}
+                  />
+                  <span className="text-sm">{c.wellnessGoal(g)}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between gap-2">
+              <Label>{t("settings.language.label")}</Label>
+              <LanguageToggle />
+            </div>
+            <p className="text-[11px] text-muted-foreground">{t("settings.language.hint")}</p>
           </div>
         </div>
 
