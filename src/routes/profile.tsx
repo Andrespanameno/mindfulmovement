@@ -6,7 +6,6 @@ import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
 import { EditProfileDialog } from "@/components/mm/EditProfileDialog";
 import { AvatarPickerDialog, AVATAR_PRESETS } from "@/components/mm/AvatarPickerDialog";
-import { getLifestyle } from "@/lib/lifestyles";
 import { useContent } from "@/lib/i18n-content";
 import { useState } from "react";
 
@@ -64,7 +63,6 @@ function ProfilePage() {
     user?.email ??
     "Friend";
   const initial = displayName.charAt(0).toUpperCase();
-  const lifestyle = getLifestyle(profile?.lifestyle);
   const avatarUrl = profile?.avatar_preset ? AVATAR_PRESETS[profile.avatar_preset] : null;
 
   const handleSignOut = async () => {
@@ -100,13 +98,8 @@ function ProfilePage() {
         </button>
         <h1 className="text-xl font-semibold">{displayName}</h1>
         <p className="text-sm text-muted-foreground">{user?.email}</p>
-        {profile && (lifestyle || profile.fitness_level || profile.work_style) && (
+        {profile && (profile.fitness_level || profile.work_style) && (
           <div className="flex flex-wrap justify-center gap-1.5 mt-3">
-            {lifestyle && (
-              <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                <lifestyle.icon className="size-3" /> {c.lifestyleLabel(lifestyle.id, lifestyle.label)}
-              </span>
-            )}
             {profile.fitness_level && (
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-secondary capitalize">
                 {c.fitness(profile.fitness_level)}

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { useMemo, useState } from "react";
-import { movements, CATEGORIES, filterMovementsByLifestyle, type MovementCategory } from "@/lib/movements";
+import { movements, CATEGORIES, filterMovementsForParent, type MovementCategory } from "@/lib/movements";
 import { MovementCard } from "@/components/mm/MovementCard";
 import { useSessionStore } from "@/lib/useSessionStore";
 import { useProfile } from "@/lib/useProfile";
@@ -93,8 +93,8 @@ function MovePage() {
   // this user's lifestyle profile. Parent-only movements never appear for
   // non-parent profiles, regardless of category filter or preferences.
   const lifestyleEligible = useMemo(
-    () => filterMovementsByLifestyle(movements, profile?.lifestyle),
-    [profile?.lifestyle],
+    () => filterMovementsForParent(movements, profile?.include_parent_friendly),
+    [profile?.include_parent_friendly],
   );
 
   const { dailySubtitle, featuredTitle, featuredMessage } = useMemo(() => {

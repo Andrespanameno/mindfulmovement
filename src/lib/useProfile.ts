@@ -21,10 +21,11 @@ export interface Profile {
   in_app_notifications: boolean;
   avatar_preset: string | null;
   session_max_minutes: number;
+  include_parent_friendly: boolean;
 }
 
 export type ProfileUpdate = Partial<
-  Pick<Profile, "full_name" | "fitness_level" | "work_style" | "lifestyle" | "wellness_goals" | "daily_water_goal" | "preferred_categories" | "onboarding_completed" | "tutorial_seen" | "has_seen_welcome_modal" | "hydration_unit" | "daily_water_goal_display" | "daily_water_goal_display_unit" | "in_app_notifications" | "avatar_preset" | "session_max_minutes">
+  Pick<Profile, "full_name" | "fitness_level" | "work_style" | "lifestyle" | "wellness_goals" | "daily_water_goal" | "preferred_categories" | "onboarding_completed" | "tutorial_seen" | "has_seen_welcome_modal" | "hydration_unit" | "daily_water_goal_display" | "daily_water_goal_display_unit" | "in_app_notifications" | "avatar_preset" | "session_max_minutes" | "include_parent_friendly">
 >;
 
 // Shared module-level store so every useProfile() consumer (AuthGate,

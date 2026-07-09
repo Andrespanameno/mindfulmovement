@@ -243,6 +243,7 @@ export type Database = {
           hydration_unit: string
           id: string
           in_app_notifications: boolean
+          include_parent_friendly: boolean
           language: string
           lifestyle: string | null
           onboarding_completed: boolean
@@ -265,6 +266,7 @@ export type Database = {
           hydration_unit?: string
           id: string
           in_app_notifications?: boolean
+          include_parent_friendly?: boolean
           language?: string
           lifestyle?: string | null
           onboarding_completed?: boolean
@@ -287,6 +289,7 @@ export type Database = {
           hydration_unit?: string
           id?: string
           in_app_notifications?: boolean
+          include_parent_friendly?: boolean
           language?: string
           lifestyle?: string | null
           onboarding_completed?: boolean

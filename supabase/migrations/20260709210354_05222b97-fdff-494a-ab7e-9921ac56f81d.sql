@@ -1,0 +1,2 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS include_parent_friendly BOOLEAN NOT NULL DEFAULT false;
+UPDATE public.profiles SET include_parent_friendly = true WHERE lifestyle IN ('stay-at-home-parent', 'busy-parent');

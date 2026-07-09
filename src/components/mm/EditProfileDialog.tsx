@@ -20,7 +20,6 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import type { Profile, ProfileUpdate } from "@/lib/useProfile";
-import { LIFESTYLES } from "@/lib/lifestyles";
 import { useI18n } from "@/lib/i18n";
 import { useContent } from "@/lib/i18n-content";
 import { HydrationUnitToggle } from "@/components/mm/HydrationUnitToggle";
@@ -53,8 +52,8 @@ export function EditProfileDialog({
   const [fullName, setFullName] = useState(profile.full_name ?? "");
   const [fitness, setFitness] = useState(profile.fitness_level ?? "");
   const [workStyle, setWorkStyle] = useState(profile.work_style ?? "");
-  const [lifestyle, setLifestyle] = useState(profile.lifestyle ?? "");
   const [goals, setGoals] = useState<string[]>(profile.wellness_goals ?? []);
+  const [includeParent, setIncludeParent] = useState<boolean>(profile.include_parent_friendly ?? false);
   const [unit, setUnit] = useState<HydrationUnit>(profile.hydration_unit ?? "oz");
   const [sessionMax, setSessionMax] = useState<3 | 4 | 5>(
     (profile.session_max_minutes === 3 || profile.session_max_minutes === 4 || profile.session_max_minutes === 5)
@@ -70,8 +69,8 @@ export function EditProfileDialog({
       setFullName(profile.full_name ?? "");
       setFitness(profile.fitness_level ?? "");
       setWorkStyle(profile.work_style ?? "");
-      setLifestyle(profile.lifestyle ?? "");
       setGoals(profile.wellness_goals ?? []);
+      setIncludeParent(profile.include_parent_friendly ?? false);
       const m = profile.session_max_minutes;
       setSessionMax(m === 3 || m === 4 || m === 5 ? m : 5);
       const initialUnit: HydrationUnit = profile.hydration_unit ?? "oz";
@@ -109,13 +108,13 @@ export function EditProfileDialog({
       full_name: fullName.trim() || null,
       fitness_level: fitness || null,
       work_style: workStyle || null,
-      lifestyle: lifestyle || null,
       wellness_goals: goals,
       daily_water_goal: waterOz,
       hydration_unit: unit,
       daily_water_goal_display: numeric,
       daily_water_goal_display_unit: unit,
       session_max_minutes: sessionMax,
+      include_parent_friendly: includeParent,
       onboarding_completed: true,
     });
     setBusy(false);
@@ -156,22 +155,6 @@ export function EditProfileDialog({
                 {FITNESS.map((f) => (
                   <SelectItem key={f} value={f} className="capitalize">
                     {c.fitness(f)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label>{t("edit.lifestyle")}</Label>
-            <Select value={lifestyle} onValueChange={setLifestyle}>
-              <SelectTrigger>
-                <SelectValue placeholder={t("edit.lifestyle.placeholder")} />
-              </SelectTrigger>
-              <SelectContent>
-                {LIFESTYLES.map((l) => (
-                  <SelectItem key={l.id} value={l.id}>
-                    {c.lifestyleLabel(l.id, l.label)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -257,6 +240,17 @@ export function EditProfileDialog({
               ))}
             </div>
           </div>
+
+          <label className="flex items-center gap-2 p-2 rounded-lg ring-1 ring-border cursor-pointer">
+            <Checkbox
+              checked={includeParent}
+              onCheckedChange={(v) => setIncludeParent(v === true)}
+            />
+            <div className="flex-1">
+              <p className="text-sm">{t("edit.parent_friendly")}</p>
+              <p className="text-[11px] text-muted-foreground">{t("edit.parent_friendly.hint")}</p>
+            </div>
+          </label>
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between gap-2">

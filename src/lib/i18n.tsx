@@ -622,19 +622,14 @@ const dict: Record<string, { en: string; es: string }> = {
     es: "Abre Ajustes de iOS → Notificaciones → Mindful Movement para activarlas. Seguirás viendo los recordatorios dentro de la app.",
   },
 
-  "onb.step": { en: "Step {n} of 3", es: "Paso {n} de 3" },
-  "onb.step1.title": { en: "What does your day look like?", es: "¿Cómo es tu día?" },
+  "onb.step": { en: "Step {n} of 2", es: "Paso {n} de 2" },
+  "onb.step1.title": { en: "What feels most supportive?", es: "¿Qué te ayudaría más?" },
   "onb.step1.sub": {
-    en: "Pick the lifestyle that fits best. You can change this anytime.",
-    es: "Elige el estilo de vida que mejor te describa. Puedes cambiarlo cuando quieras.",
-  },
-  "onb.step2.title": { en: "What feels most supportive?", es: "¿Qué te ayudaría más?" },
-  "onb.step2.sub": {
     en: "Choose any goals that matter to you. Skip if you'd rather explore.",
     es: "Elige los objetivos que más te importen. Puedes saltarlo si prefieres explorar.",
   },
-  "onb.step3.title": { en: "When should we check in?", es: "¿Cuándo te recordamos?" },
-  "onb.step3.sub": {
+  "onb.step2.title": { en: "When should we check in?", es: "¿Cuándo te recordamos?" },
+  "onb.step2.sub": {
     en: "Gentle reminders, on your schedule.",
     es: "Recordatorios suaves, a tu ritmo.",
   },
@@ -647,10 +642,6 @@ const dict: Record<string, { en: string; es: string }> = {
   "onb.how_often": { en: "How often?", es: "¿Con qué frecuencia?" },
   "onb.back": { en: "Back", es: "Atrás" },
   "onb.enter": { en: "Enter your space", es: "Entrar a tu espacio" },
-  "onb.choose_lifestyle": {
-    en: "Choose a lifestyle to continue.",
-    es: "Selecciona un estilo de vida para continuar.",
-  },
   "onb.welcome": {
     en: "Welcome in. Your space is ready.",
     es: "¡Bienvenida/o! Tu espacio está listo.",
@@ -754,8 +745,6 @@ const dict: Record<string, { en: string; es: string }> = {
   "edit.name": { en: "Your name", es: "Tu nombre" },
   "edit.fitness": { en: "Fitness level", es: "Nivel físico" },
   "edit.fitness.placeholder": { en: "Select your level", es: "Elige tu nivel" },
-  "edit.lifestyle": { en: "Lifestyle", es: "Estilo de vida" },
-  "edit.lifestyle.placeholder": { en: "Select your lifestyle", es: "Elige tu estilo de vida" },
   "edit.work_style": { en: "Work style", es: "Estilo de trabajo" },
   "edit.work_style.placeholder": { en: "How do you spend your day?", es: "¿Cómo pasas tu día?" },
   "edit.goals": { en: "Wellness goals", es: "Objetivos de bienestar" },
@@ -776,6 +765,14 @@ const dict: Record<string, { en: string; es: string }> = {
   "edit.session_length.hint": {
     en: "Sessions will never exceed this length.",
     es: "Las sesiones nunca superarán esta duración.",
+  },
+  "edit.parent_friendly": {
+    en: "Include parent-friendly movements",
+    es: "Incluir movimientos para padres",
+  },
+  "edit.parent_friendly.hint": {
+    en: "Adds movements you can do with a little one nearby.",
+    es: "Añade movimientos que puedes hacer con un pequeño cerca.",
   },
   "session.length.3": { en: "3 minutes", es: "3 minutos" },
   "session.length.4": { en: "4 minutes", es: "4 minutos" },
