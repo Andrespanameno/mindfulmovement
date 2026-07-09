@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
 import { useMemo, useState } from "react";
-import { movements, CATEGORIES, filterMovementsByLifestyle, type MovementCategory } from "@/lib/movements";
+import { movements, CATEGORIES, filterMovementsForParent, type MovementCategory } from "@/lib/movements";
 import { MovementCard } from "@/components/mm/MovementCard";
 import { useSessionStore } from "@/lib/useSessionStore";
 import { useProfile } from "@/lib/useProfile";
