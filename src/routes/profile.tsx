@@ -35,6 +35,22 @@ function ProfilePage() {
   const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);
   const [avatarOpen, setAvatarOpen] = useState(false);
+  const groups: { titleKey: string; items: Item[] }[] = [
+    {
+      titleKey: "profile.group.wellness",
+      items: [
+        { icon: User, labelKey: "profile.menu.profile", onClick: () => setEditOpen(true) },
+        { icon: Bell, labelKey: "profile.menu.reminders", to: "/reminders" },
+      ],
+    },
+    {
+      titleKey: "profile.group.account",
+      items: [
+        { icon: Settings, labelKey: "profile.menu.settings", to: "/settings" },
+        { icon: HelpCircle, labelKey: "profile.menu.support", to: "/support" },
+      ],
+    },
+  ];
   const inAppOn = profile?.in_app_notifications !== false;
   const toggleInApp = () => {
     if (!profile) return;
