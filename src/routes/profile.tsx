@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/mm/AppShell";
-import { Bell, Settings, HelpCircle, LogOut, ChevronRight, Pencil, MessageSquare, Check } from "lucide-react";
+import { Bell, Settings, HelpCircle, LogOut, ChevronRight, MessageSquare, Check, User } from "lucide-react";
 import { useSessionStore } from "@/lib/useSessionStore";
 import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
@@ -14,6 +14,7 @@ type Item = {
   icon: typeof Bell;
   labelKey: string;
   to?: "/reminders" | "/support" | "/settings";
+  onClick?: () => void;
 };
 
 export const Route = createFileRoute("/profile")({
@@ -26,20 +27,6 @@ export const Route = createFileRoute("/profile")({
   component: ProfilePage,
 });
 
-const groups: { titleKey: string; items: Item[] }[] = [
-  {
-    titleKey: "profile.group.wellness",
-    items: [{ icon: Bell, labelKey: "profile.menu.reminders", to: "/reminders" }],
-  },
-  {
-    titleKey: "profile.group.account",
-    items: [
-      { icon: Settings, labelKey: "profile.menu.settings", to: "/settings" },
-      { icon: HelpCircle, labelKey: "profile.menu.support", to: "/support" },
-    ],
-  },
-];
-
 function ProfilePage() {
   const { streak, totalXp, completedToday } = useSessionStore();
   const { user, signOut } = useAuth();
@@ -48,6 +35,22 @@ function ProfilePage() {
   const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);
   const [avatarOpen, setAvatarOpen] = useState(false);
+  const groups: { titleKey: string; items: Item[] }[] = [
+    {
+      titleKey: "profile.group.wellness",
+      items: [
+        { icon: User, labelKey: "profile.menu.profile", onClick: () => setEditOpen(true) },
+        { icon: Bell, labelKey: "profile.menu.reminders", to: "/reminders" },
+      ],
+    },
+    {
+      titleKey: "profile.group.account",
+      items: [
+        { icon: Settings, labelKey: "profile.menu.settings", to: "/settings" },
+        { icon: HelpCircle, labelKey: "profile.menu.support", to: "/support" },
+      ],
+    },
+  ];
   const inAppOn = profile?.in_app_notifications !== false;
   const toggleInApp = () => {
     if (!profile) return;
@@ -95,13 +98,6 @@ function ProfilePage() {
         </button>
         <h1 className="text-xl font-semibold">{displayName}</h1>
         <p className="text-sm text-muted-foreground">{user?.email}</p>
-        <button
-          onClick={() => setEditOpen(true)}
-          disabled={loading || !profile}
-          className="mt-3 inline-flex items-center gap-1.5 font-medium text-primary hover:underline disabled:opacity-50 text-sm px-2 py-1 rounded-lg hover:bg-primary/5 transition"
-        >
-          <Pencil className="size-4" /> {c.t("profile.edit")}
-        </button>
         {profile && (lifestyle || profile.fitness_level || profile.work_style) && (
           <div className="flex flex-wrap justify-center gap-1.5 mt-3">
             {lifestyle && (
@@ -142,7 +138,7 @@ function ProfilePage() {
               {c.t(g.titleKey)}
             </h4>
             <div className="rounded-2xl bg-card ring-1 ring-black/5 divide-y divide-border">
-              {g.items.map(({ icon: Icon, labelKey, to }) => {
+              {g.items.map(({ icon: Icon, labelKey, to, onClick }) => {
                 const label = c.t(labelKey);
                 const content = (
                   <>
@@ -164,7 +160,9 @@ function ProfilePage() {
                 ) : (
                   <button
                     key={labelKey}
-                    className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
+                    onClick={onClick}
+                    disabled={!profile}
+                    className="w-full flex items-center gap-3 px-4 py-3.5 text-left disabled:opacity-60"
                   >
                     {content}
                   </button>

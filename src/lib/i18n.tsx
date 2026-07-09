@@ -395,6 +395,7 @@ const dict: Record<string, { en: string; es: string }> = {
   "profile.today": { en: "Today", es: "Hoy" },
   "profile.group.wellness": { en: "Wellness", es: "Bienestar" },
   "profile.group.account": { en: "Account", es: "Cuenta" },
+  "profile.menu.profile": { en: "Profile", es: "Perfil" },
   "profile.menu.reminders": { en: "Reminders", es: "Recordatorios" },
   "profile.menu.settings": { en: "Settings", es: "Ajustes" },
   "profile.menu.support": { en: "Help & support", es: "Ayuda y soporte" },
