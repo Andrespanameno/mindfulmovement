@@ -55,12 +55,6 @@ function HomePage() {
   const reached = ouncesToday >= effectiveGoalOz - 0.05;
 
   const displayName = profile?.full_name || user?.email?.split("@")[0] || "there";
-  const initials = (profile?.full_name || user?.email || "U")
-    .split(" ")
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
 
   return (
     <AppShell>
