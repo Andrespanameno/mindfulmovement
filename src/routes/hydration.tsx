@@ -56,8 +56,11 @@ function HydrationPage() {
     if (next === unit) return;
     void updateProfile({ hydration_unit: next });
   };
-  const { ouncesToday, lastHydrationAdd, remindersEnabled, reminderIntervalMin, lastReminderAt } =
-    useSessionStore();
+  const ouncesToday = useSessionStore((s) => s.ouncesToday);
+  const lastHydrationAdd = useSessionStore((s) => s.lastHydrationAdd);
+  const remindersEnabled = useSessionStore((s) => s.remindersEnabled);
+  const reminderIntervalMin = useSessionStore((s) => s.reminderIntervalMin);
+  const lastReminderAt = useSessionStore((s) => s.lastReminderAt);
   const todayKey = localDateKey(new Date());
   const baselineStorageKey = `mm-hydration-baseline-${todayKey}`;
   const roundsStorageKey = `mm-hydration-rounds-${todayKey}`;
