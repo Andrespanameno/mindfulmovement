@@ -30,7 +30,10 @@ export const Route = createFileRoute("/profile")({
 const groups: { titleKey: string; items: Item[] }[] = [
   {
     titleKey: "profile.group.wellness",
-    items: [{ icon: Bell, labelKey: "profile.menu.reminders", to: "/reminders" }],
+    items: [
+      { icon: User, labelKey: "profile.menu.profile", onClick: () => undefined },
+      { icon: Bell, labelKey: "profile.menu.reminders", to: "/reminders" },
+    ],
   },
   {
     titleKey: "profile.group.account",
