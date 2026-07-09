@@ -760,10 +760,37 @@ export function buildGuidedSession(
     for (let i = steps.length; i < 3 && fallback.length > 0; i++) {
       const mv = weightedDraw(fallback, weights) ?? fallback[0];
       if (!mv) break;
-      steps.push({ movement: mv, seconds: minSec });
+      const remainingCap = Math.max(0, totalCap - steps.reduce((a, s) => a + s.seconds, 0));
+      if (remainingCap < 30) break;
+      steps.push({ movement: mv, seconds: Math.min(minSec, remainingCap) });
       const idx = fallback.indexOf(mv);
       if (idx >= 0) fallback.splice(idx, 1);
     }
+  }
+
+  // Final hard-cap enforcement: trim any overflow so total NEVER exceeds
+  // the user's selected max. Drop trailing steps below the 30s minimum.
+  {
+    let running = 0;
+    const capped: SessionStep[] = [];
+    for (const s of steps) {
+      const room = totalCap - running;
+      if (room <= 0) break;
+      const secs = Math.min(s.seconds, room);
+      if (secs < 30 && capped.length >= 1) break;
+      capped.push({ ...s, seconds: Math.max(30, secs) });
+      running += capped[capped.length - 1].seconds;
+      if (running >= totalCap) break;
+    }
+    steps.length = 0;
+    steps.push(...capped);
+  }
+
+  const finalTotal = steps.reduce((a, s) => a + s.seconds, 0);
+  if (typeof console !== "undefined") {
+    console.info(
+      `[guided-session] maxMinutes=${maxMinutes} cap=${totalCap}s totalGenerated=${finalTotal}s steps=${steps.length}`,
+    );
   }
 
   return steps;
