@@ -1,10 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Play, Pause, SkipForward, X, Check, Sparkles } from "lucide-react";
+import { Play, Pause, SkipForward, X, Check, Sparkles, Shuffle } from "lucide-react";
 import { App as CapacitorApp } from "@capacitor/app";
 import { isNative } from "@/lib/native";
 import { AppShell } from "@/components/mm/AppShell";
-import { buildGuidedSession, type SessionStep } from "@/lib/movements";
+import { buildGuidedSession, pickReplacementMovement, type SessionStep } from "@/lib/movements";
 import { useProfile } from "@/lib/useProfile";
 import { completeMovement } from "@/lib/useSessionStore";
 import { supabase } from "@/integrations/supabase/client";
@@ -94,6 +94,9 @@ function SessionPage() {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const loggedRef = useRef<Set<string>>(new Set());
   const [imgFailed, setImgFailed] = useState(false);
+  // Track ids the user has already swapped away from this session so the
+  // replacement picker never re-suggests them.
+  const [replacedIds, setReplacedIds] = useState<string[]>([]);
 
   // Timestamp-based timer state. `runStartAt` is the wall-clock ms when the
   // current running segment began; `elapsedBeforeMs` accumulates time from
@@ -326,6 +329,41 @@ function SessionPage() {
 
   const handleExit = () => navigate({ to: "/home" });
 
+  // Replace the current step with a fresh eligible movement of the same
+  // duration. Respects parent-friendly, category caps, recency, and other
+  // personalization filters. Preserves the current step's `seconds` so the
+  // overall session length never changes. Only allowed before the user has
+  // marked the step done.
+  const replaceCurrentStep = () => {
+    if (!current || confirmed) return;
+    const next = pickReplacementMovement({
+      currentMovementId: current.movement.id,
+      sessionMovementIds: steps.map((s) => s.movement.id),
+      excludeIds: replacedIds,
+      preferredCategories: profile?.preferred_categories ?? null,
+      fitnessLevel: profile?.fitness_level ?? null,
+      workStyle: profile?.work_style ?? null,
+      includeParentFriendly: profile?.include_parent_friendly ?? false,
+      wellnessGoals: profile?.wellness_goals ?? null,
+      recentIds: readRecentIds(),
+    });
+    if (!next) {
+      notify.info(t("session.replace.none"));
+      return;
+    }
+    setReplacedIds((prev) => [...prev, current.movement.id]);
+    setSteps((prev) => {
+      const copy = prev.slice();
+      copy[index] = { movement: next, seconds: prev[index].seconds };
+      return copy;
+    });
+    setElapsedBeforeMs(0);
+    setRunStartAt(Date.now());
+    setNowTs(Date.now());
+    setRunning(true);
+    setConfirmed(false);
+  };
+
   // Programmatic navigation for the completion screen. Using onClick +
   // navigate (instead of <Link>) avoids cases where a late native event
   // (notification tap replay, focus-change touch) swallows the first tap on
@@ -551,6 +589,14 @@ function SessionPage() {
               className="h-12 px-5 rounded-full bg-card ring-1 ring-black/5 text-sm font-medium inline-flex items-center gap-2 opacity-50 cursor-not-allowed"
             >
               <SkipForward className="size-4" /> {t("session.next")}
+            </button>
+            <button
+              onClick={replaceCurrentStep}
+              aria-label={t("session.aria.replace")}
+              title={t("session.replace.hint")}
+              className="h-12 px-5 rounded-full bg-card ring-1 ring-black/5 text-sm font-medium inline-flex items-center gap-2 active:scale-95 transition-transform"
+            >
+              <Shuffle className="size-4" /> {t("session.replace")}
             </button>
           </>
         ) : (
