@@ -835,8 +835,9 @@ export function pickReplacementMovement(opts: PickReplacementOptions): Movement 
     workStyle = null,
     includeParentFriendly = false,
     wellnessGoals = [],
-    recentIds = [],
+    recentIds: recentIdsIn = [],
   } = opts;
+  const recentIds = recentIdsIn ?? [];
 
   const eligible = filterMovementsForParent(movements, includeParentFriendly);
   const current = movements.find((m) => m.id === currentMovementId);
