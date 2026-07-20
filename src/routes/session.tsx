@@ -590,6 +590,14 @@ function SessionPage() {
             >
               <SkipForward className="size-4" /> {t("session.next")}
             </button>
+            <button
+              onClick={replaceCurrentStep}
+              aria-label={t("session.aria.replace")}
+              title={t("session.replace.hint")}
+              className="h-12 px-5 rounded-full bg-card ring-1 ring-black/5 text-sm font-medium inline-flex items-center gap-2 active:scale-95 transition-transform"
+            >
+              <Shuffle className="size-4" /> {t("session.replace")}
+            </button>
           </>
         ) : (
           <>
