@@ -802,3 +802,97 @@ export function buildGuidedSession(
 
 // Backwards-compatible alias used by a few legacy filters/icons.
 export { Repeat as RotateIcon };
+
+// ---------------------------------------------------------------------------
+// Single-step replacement — used by the "Replace Movement" action inside
+// an active guided session. Picks a fresh movement that respects the same
+// personalization/eligibility filters as buildGuidedSession, avoids ids
+// already in the current session (or previously replaced), and preserves
+// the at-most-one-per-session cap for breath and hydration.
+// ---------------------------------------------------------------------------
+
+export interface PickReplacementOptions {
+  currentMovementId: string;
+  /** All movement ids currently in the session (including the one being replaced). */
+  sessionMovementIds: string[];
+  /** Ids the user has already swapped away from this session — never re-suggest. */
+  excludeIds?: string[];
+  preferredCategories?: string[] | null;
+  fitnessLevel?: string | null;
+  workStyle?: string | null;
+  includeParentFriendly?: boolean | null;
+  wellnessGoals?: string[] | null;
+  recentIds?: string[] | null;
+}
+
+export function pickReplacementMovement(opts: PickReplacementOptions): Movement | null {
+  const {
+    currentMovementId,
+    sessionMovementIds,
+    excludeIds = [],
+    preferredCategories,
+    fitnessLevel = null,
+    workStyle = null,
+    includeParentFriendly = false,
+    wellnessGoals = [],
+    recentIds = [],
+  } = opts;
+
+  const eligible = filterMovementsForParent(movements, includeParentFriendly);
+  const current = movements.find((m) => m.id === currentMovementId);
+
+  // Category cap: if another (non-current) step in this session is already
+  // breath or hydration, don't add a second one via replacement.
+  const otherCats = new Set(
+    sessionMovementIds
+      .filter((id) => id !== currentMovementId)
+      .map((id) => movements.find((m) => m.id === id)?.category)
+      .filter((c): c is MovementCategory => !!c),
+  );
+
+  const excluded = new Set<string>([
+    currentMovementId,
+    ...sessionMovementIds,
+    ...excludeIds,
+  ]);
+
+  const hasPrefs = !!(preferredCategories && preferredCategories.length > 0);
+  const prefs = hasPrefs
+    ? preferredCategories!
+    : ALL_CATEGORY_IDS.filter((c) => c !== "parent-friendly");
+  const diffW = difficultyWeightsFor(fitnessLevel);
+  const workBias = workStyleCategoryBias(workStyle);
+  const { boosts: goalBoosts } = goalCategoryBias(wellnessGoals);
+
+  const weightOf = (mv: Movement): number => {
+    const inPrefs = prefs.includes(mv.category);
+    const prefMult = hasPrefs ? (inPrefs ? 1.5 : 0.4) : 1.0;
+    const workMult = workBias[mv.category] ?? 1.0;
+    const goalAdd = goalBoosts[mv.category] ?? 0;
+    const diffMult = diffW[mv.difficulty] ?? 1.0;
+    const recencyMult = recentIds.includes(mv.id) ? 0.2 : 1.0;
+    return Math.max(0.01, (prefMult * workMult + goalAdd) * diffMult * recencyMult);
+  };
+
+  const targetDuration = current?.duration ?? null;
+
+  const passesCategoryCap = (mv: Movement) => {
+    if (mv.category === "breath-calm" && otherCats.has("breath-calm")) return false;
+    if (mv.category === "hydration-wellness" && otherCats.has("hydration-wellness")) return false;
+    return true;
+  };
+
+  const basePool = eligible.filter((mv) => !excluded.has(mv.id) && passesCategoryCap(mv));
+
+  // Preference 1: same nominal duration as the replaced movement.
+  const sameDuration = targetDuration != null
+    ? basePool.filter((mv) => mv.duration === targetDuration)
+    : [];
+
+  const weights = new Map<string, number>();
+  for (const mv of eligible) weights.set(mv.id, weightOf(mv));
+
+  const tryDraw = (pool: Movement[]) => (pool.length > 0 ? weightedDraw(pool, weights) : null);
+
+  return tryDraw(sameDuration) ?? tryDraw(basePool);
+}
