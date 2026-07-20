@@ -677,6 +677,16 @@ const dict: Record<string, { en: string; es: string }> = {
   "session.aria.mark_done": { en: "Mark movement done", es: "Marcar movimiento como hecho" },
   "session.aria.next": { en: "Next movement", es: "Siguiente movimiento" },
   "session.tap_done_first": { en: "Tap Done first", es: "Primero toca Hecho" },
+  "session.replace": { en: "Replace", es: "Reemplazar" },
+  "session.aria.replace": { en: "Replace movement", es: "Reemplazar movimiento" },
+  "session.replace.hint": {
+    en: "Swap this movement for another of the same length",
+    es: "Cambia este movimiento por otro de la misma duración",
+  },
+  "session.replace.none": {
+    en: "No other eligible movement to swap in",
+    es: "No hay otro movimiento disponible para cambiar",
+  },
 
   "mv.aria.undo": { en: "Undo completion", es: "Deshacer" },
   "mv.aria.mark_complete": { en: "Mark complete", es: "Marcar como hecho" },
