@@ -83,7 +83,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "theme-color", content: "#0a0a0a" },
       { title: "Mindful Movement - Micro Actions, Macro Results" },
       { name: "description", content: "A calm wellness app for busy adults. Move a little, hydrate, breathe, and feel better, one small step at a time." },
       { name: "author", content: "Mindful Movement" },

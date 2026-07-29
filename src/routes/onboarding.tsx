@@ -290,7 +290,10 @@ function OnboardingPage() {
           )}
         </div>
 
-        <div className="sticky bottom-0 pt-6 mt-6 bg-gradient-to-t from-background via-background to-transparent">
+        <div
+          className="sticky bottom-0 pt-6 mt-6 bg-gradient-to-t from-background via-background to-transparent"
+          style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+        >
           <div className="flex items-center gap-3">
             {step > 0 && (
               <button
