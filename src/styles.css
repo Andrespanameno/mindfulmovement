@@ -147,3 +147,26 @@
     color: var(--color-foreground);
   }
 }
+
+/*
+ * Native/mobile safe areas.
+ *
+ * Requires <meta name="viewport" content="... viewport-fit=cover"> so the
+ * Android/iOS WebView reports real env(safe-area-inset-*) values. On the web
+ * (and on devices without insets) these resolve to 0px, so existing spacing
+ * is preserved exactly.
+ */
+@utility pt-safe-top {
+  padding-top: calc(env(safe-area-inset-top, 0px) + var(--safe-extra-top, 0px));
+}
+
+@utility pb-safe-bottom {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--safe-extra-bottom, 0px));
+}
+
+@layer base {
+  /* Keyboard-aware padding applied by NativeBridge on Android. */
+  body.kb-open {
+    padding-bottom: var(--kb-height, 0px);
+  }
+}
