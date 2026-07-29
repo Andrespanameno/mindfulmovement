@@ -12,13 +12,16 @@ const items = [
 function BottomNavImpl() {
   const { t } = useI18n();
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 bg-background/85 backdrop-blur-md border-t border-border">
+    <nav
+      className="fixed bottom-0 inset-x-0 z-50 bg-background/85 backdrop-blur-md border-t border-border"
+      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+    >
       <div className="max-w-[480px] mx-auto px-6 py-3 flex items-center justify-between">
         {items.map(({ to, key, icon: Icon }) => (
           <Link
             key={to}
             to={to}
-            className="flex flex-col items-center gap-1 py-1 px-3 text-muted-foreground transition-colors"
+            className="flex flex-col items-center justify-center gap-1 py-1 px-3 min-h-12 min-w-12 text-muted-foreground transition-colors"
             activeProps={{ className: "text-foreground" }}
           >
             {({ isActive }) => (

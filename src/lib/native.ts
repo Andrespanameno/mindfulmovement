@@ -15,3 +15,11 @@ export function isIOS(): boolean {
     return false;
   }
 }
+
+export function isAndroid(): boolean {
+  try {
+    return Capacitor.getPlatform() === "android";
+  } catch {
+    return false;
+  }
+}
