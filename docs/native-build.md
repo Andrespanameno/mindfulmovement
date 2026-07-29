@@ -35,7 +35,32 @@ In Xcode: select the `App` scheme → Product → Archive → upload to App Stor
 ## What is **not** implemented
 
 - APNs / FCM remote push. Reminders are device-local only.
-- Android wrapper. The plugin works on Android too — add later with `npx cap add android`.
+
+## Native Android build (Capacitor)
+
+The web layer is Android-ready: safe-area insets, `viewport-fit=cover`, hardware
+back-button handling, soft-keyboard padding, and ≥48dp tap targets in the tab bar.
+`@capacitor/android` and `@capacitor/keyboard` are installed.
+
+```bash
+bun install
+npx cap add android
+bun run build
+npx cap sync android
+npx cap open android      # Android Studio
+```
+
+### Still required in Android Studio / the `android/` project
+
+- `AndroidManifest.xml`: `POST_NOTIFICATIONS` (Android 13+) and
+  `SCHEDULE_EXACT_ALARM` / `USE_EXACT_ALARM` so reminders survive Doze
+  (the scheduler uses `allowWhileIdle`).
+- Adaptive launcher icons and a monochrome white-on-transparent notification
+  small icon in `android/app/src/main/res` (replace `ic_stat_icon_config_sample`).
+- `applicationId` must match `app.lovable.mindfulmovement`; set signing config,
+  target SDK, and Play Console listing.
+- Edge-to-edge / status-bar styling in `styles.xml` for Android 15+.
+- Device testing of Doze-mode reminder delivery and battery-optimization exemptions.
 
 ## Troubleshooting
 
