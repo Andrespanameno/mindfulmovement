@@ -2,7 +2,9 @@ import { useEffect } from "react";
 import { useRouter } from "@tanstack/react-router";
 import { App } from "@capacitor/app";
 import { LocalNotifications } from "@capacitor/local-notifications";
-import { isNative } from "@/lib/native";
+import { Keyboard } from "@capacitor/keyboard";
+import { isNative, isAndroid } from "@/lib/native";
+import { registerAndroidBackHandler } from "@/lib/androidBack";
 import { getReminderSettings } from "@/lib/reminders";
 import { scheduleReminders } from "@/lib/nativeNotifications";
 import { useI18n } from "@/lib/i18n";
@@ -59,6 +61,39 @@ export function NativeBridge() {
       void Promise.resolve(appHandle).then((h) => h.remove());
     };
   }, [router, lang]);
+
+  // Android hardware back button.
+  useEffect(() => registerAndroidBackHandler(), []);
+
+  // Android soft-keyboard: pad the body so focused inputs and sticky
+  // footers are never covered, and scroll the focused field into view.
+  useEffect(() => {
+    if (!isNative() || !isAndroid()) return;
+
+    const showHandle = Keyboard.addListener("keyboardWillShow", (info) => {
+      document.body.classList.add("kb-open");
+      document.body.style.setProperty("--kb-height", `${info.keyboardHeight}px`);
+      const active = document.activeElement as HTMLElement | null;
+      if (active && typeof active.scrollIntoView === "function") {
+        setTimeout(
+          () => active.scrollIntoView({ block: "center", behavior: "smooth" }),
+          50,
+        );
+      }
+    });
+
+    const hideHandle = Keyboard.addListener("keyboardWillHide", () => {
+      document.body.classList.remove("kb-open");
+      document.body.style.removeProperty("--kb-height");
+    });
+
+    return () => {
+      void Promise.resolve(showHandle).then((h) => h.remove());
+      void Promise.resolve(hideHandle).then((h) => h.remove());
+      document.body.classList.remove("kb-open");
+      document.body.style.removeProperty("--kb-height");
+    };
+  }, []);
 
   return null;
 }
