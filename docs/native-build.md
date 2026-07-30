@@ -1,25 +1,53 @@
-# Native iOS build (Capacitor)
+# Native builds (Capacitor)
 
-Mindful Movement ships native iOS reminders via [`@capacitor/local-notifications`](https://capacitorjs.com/docs/apis/local-notifications). The Capacitor config lives in `capacitor.config.ts` at the repo root.
+Mindful Movement ships native reminders via [`@capacitor/local-notifications`](https://capacitorjs.com/docs/apis/local-notifications). The Capacitor config lives in `capacitor.config.ts` at the repo root.
+
+## How the native shell works (read this first)
+
+This app is **server-rendered** (TanStack Start on a Cloudflare Worker). `vite build`
+produces a server bundle, not a static site — there is deliberately **no
+`.output/public/index.html`**, so a classic `webDir`-based Capacitor build cannot work
+and `cap sync` will fail if you point it at the build output.
+
+Instead the native apps are **remote-URL shells**:
+
+```ts
+server: { url: 'https://mindfulmovement.lovable.app', androidScheme: 'https' }
+webDir: 'capacitor-shell'   // local offline/splash fallback only
+```
+
+- The WebView loads the published site over HTTPS, so SSR, server functions, auth,
+  email and the database all behave exactly as on the web.
+- Native plugins (local notifications, hardware back button, keyboard) still work —
+  they live in the Capacitor bridge, not in the page bundle.
+- `capacitor-shell/index.html` is a dependency-free splash/offline page. It satisfies
+  `cap sync` and is what users see if the device is offline at cold start.
+- **`bun run build` is not required** for the native shell.
+- Pressing **Publish** in Lovable updates every installed app immediately — no store
+  resubmission for UI changes. Treat Publish as a production release.
+- The app requires a network connection on cold start; there is no offline mode.
 
 ## One-time setup (per workstation)
 
 ```bash
 bun install
 npx cap add ios          # generates the ios/ Xcode project
+npx cap add android      # generates the android/ Android Studio project
 ```
 
 > ⚠️ Confirm the `appId` in `capacitor.config.ts` matches the iOS bundle identifier already used in TestFlight before running `cap add ios`. Default is `app.lovable.mindfulmovement`.
 
-## Build → run → ship
+## iOS: sync → run → ship
 
 ```bash
-bun run build            # produces dist/
-npx cap sync ios         # copies web build + plugins into the iOS project
+npx cap sync ios         # copies the shell + plugins into the iOS project
 npx cap open ios         # opens Xcode
 ```
 
 In Xcode: select the `App` scheme → Product → Archive → upload to App Store Connect (TestFlight).
+
+Re-run `npx cap sync ios` only after changing `capacitor.config.ts`, the shell page,
+or installing/removing a Capacitor plugin.
 
 ## How reminders work on device
 
@@ -35,8 +63,9 @@ In Xcode: select the `App` scheme → Product → Archive → upload to App Stor
 ## What is **not** implemented
 
 - APNs / FCM remote push. Reminders are device-local only.
+- Offline use. The shell page is a fallback, not a cached copy of the app.
 
-## Native Android build (Capacitor)
+## Android build (Capacitor)
 
 The web layer is Android-ready: safe-area insets, `viewport-fit=cover`, hardware
 back-button handling, soft-keyboard padding, and ≥48dp tap targets in the tab bar.
@@ -45,7 +74,6 @@ back-button handling, soft-keyboard padding, and ≥48dp tap targets in the tab 
 ```bash
 bun install
 npx cap add android
-bun run build
 npx cap sync android
 npx cap open android      # Android Studio
 ```
@@ -61,9 +89,16 @@ npx cap open android      # Android Studio
   target SDK, and Play Console listing.
 - Edge-to-edge / status-bar styling in `styles.xml` for Android 15+.
 - Device testing of Doze-mode reminder delivery and battery-optimization exemptions.
+- Play Console listing should call out the genuine native functionality (scheduled
+  local reminders, hardware back handling, keyboard integration) — pure webview
+  wrappers are sometimes flagged during review.
 
 ## Troubleshooting
 
+- **`cap sync` fails with "Could not find the web assets directory":** you pointed
+  `webDir` at a build output. It must stay `capacitor-shell`; see the section above.
+- **App shows the "Reconnect" screen:** the device has no network, or the published
+  URL in `capacitor.config.ts` is wrong / the site is not published yet.
 - **No prompt on first launch:** delete the app on the device, then reinstall. iOS only asks once per install.
-- **Notifications not appearing in Settings:** confirm the bundle id matches and that `npx cap sync ios` was run after installing `@capacitor/local-notifications`.
+- **Notifications not appearing in Settings:** confirm the bundle id / `applicationId` matches and that `npx cap sync` was run after installing `@capacitor/local-notifications`.
 - **Duplicates with in-app toasts:** expected when the app is foregrounded near a slot. Native banners are delivered by iOS even while the app is open.
