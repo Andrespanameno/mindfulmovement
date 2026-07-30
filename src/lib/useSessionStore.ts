@@ -380,7 +380,6 @@ export function markReminderShown() {
 }
 
 export interface StatsSnapshot {
-  // (see hydration flags below)
   totalXp: number;
   xpToday: number;
   streak: number;
@@ -413,17 +412,6 @@ export function isProgressHydrated() {
 export function resetProgressHydration() {
   statsHydrated = false;
   historyHydrated = false;
-}
-
-function _unusedStatsSnapshot(): StatsSnapshot {
-  return {
-    totalXp: state.totalXp,
-    xpToday: state.xpToday,
-    streak: state.streak,
-    bestStreak: state.bestStreak,
-    lastActiveDate: state.lastActiveDate,
-    streakBonusDate: state.streakBonusDate,
-  };
 }
 
 export function hydrateStats(snap: Partial<StatsSnapshot>) {
