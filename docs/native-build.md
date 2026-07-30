@@ -88,6 +88,23 @@ npx cap open android      # Android Studio
 - `applicationId` must match `app.lovable.mindfulmovement`; set signing config,
   target SDK, and Play Console listing.
 - Edge-to-edge / status-bar styling in `styles.xml` for Android 15+.
+- **Suppress the default WebView error page** so the branded offline screen in
+  `capacitor-shell/index.html` shows instead of "Webpage not available". In
+  `MainActivity.java`, after `super.onCreate(...)`:
+
+  ```java
+  bridge.getWebView().setWebViewClient(new BridgeWebViewClient(bridge) {
+    @Override
+    public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError err) {
+      if (req.isForMainFrame()) {
+        view.loadUrl("file:///android_asset/public/index.html");
+      }
+    }
+  });
+  ```
+
+  That local page retries the published URL, offers "Open Network Settings",
+  and auto-reloads once `navigator.onLine` flips back to true.
 - Device testing of Doze-mode reminder delivery and battery-optimization exemptions.
 - Play Console listing should call out the genuine native functionality (scheduled
   local reminders, hardware back handling, keyboard integration) — pure webview
