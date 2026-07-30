@@ -519,9 +519,6 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "Let's Get You Moving",
     es: "Regresemos a estar en movimiento",
   },
-    en: "Let's Get You Moving",
-    es: "Regresemos a estar en movimiento",
-  },
   "offline.message": {
     en: "Mindful Movement needs an internet connection to load your personalized experience. Reconnect to continue your wellness journey.",
     es: "Mindful Movement necesita conexión a internet para cargar tu experiencia personalizada. Vuelve a conectarte para continuar tu camino hacia una vida más saludable.",
@@ -532,6 +529,14 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "Connection restored. Loading Mindful Movement...",
     es: "Conexión restablecida. Cargando Mindful Movement...",
   },
+  "achv.unlocked": { en: "Achievement Unlocked", es: "Logro desbloqueado" },
+  "achv.message": {
+    en: "You did it! Small steps are adding up.",
+    es: "¡Lo lograste! Tus pasos pequeños están dando resultados.",
+  },
+  "achv.celebrate": { en: "Celebrate", es: "Celebrar" },
+  "achv.view": { en: "View Achievements", es: "Ver logros" },
+  "achv.close": { en: "Close", es: "Cerrar" },
   "settings.language.hint": {
     en: "Choose your preferred language.",
     es: "Elige tu idioma preferido.",
