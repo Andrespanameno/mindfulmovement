@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievement_celebrations_seen: {
+        Row: {
+          achievement_id: string
+          celebrated: boolean
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          celebrated?: boolean
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          celebrated?: boolean
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       breathing_sessions: {
         Row: {
           completed_at: string
@@ -232,6 +256,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          achievements_baselined: boolean
           avatar_preset: string | null
           created_at: string
           daily_water_goal: number
@@ -255,6 +280,7 @@ export type Database = {
           work_style: string | null
         }
         Insert: {
+          achievements_baselined?: boolean
           avatar_preset?: string | null
           created_at?: string
           daily_water_goal?: number
@@ -278,6 +304,7 @@ export type Database = {
           work_style?: string | null
         }
         Update: {
+          achievements_baselined?: boolean
           avatar_preset?: string | null
           created_at?: string
           daily_water_goal?: number

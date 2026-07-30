@@ -274,6 +274,68 @@ export interface MilestoneProgress {
   unit?: string;
 }
 
+/** Derives best/current "active day" streaks from a day-keyed history map. */
+export function computeActiveDayStreaks(
+  history: Record<string, { sessions: number }>,
+) {
+  const keys = Object.keys(history).sort();
+  let run = 0;
+  let best = 0;
+  let current = 0;
+  const today = new Date().toISOString().slice(0, 10);
+  const yesterday = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return d.toISOString().slice(0, 10);
+  })();
+  let lastActive: string | null = null;
+  for (const k of keys) {
+    if ((history[k]?.sessions ?? 0) > 0) {
+      run += 1;
+      best = Math.max(best, run);
+      lastActive = k;
+    } else {
+      run = 0;
+    }
+  }
+  if (lastActive && (lastActive === today || lastActive === yesterday)) {
+    const d = new Date(lastActive);
+    while (true) {
+      const k = d.toISOString().slice(0, 10);
+      if ((history[k]?.sessions ?? 0) > 0) {
+        current += 1;
+        d.setDate(d.getDate() - 1);
+      } else break;
+    }
+  }
+  return { current, best };
+}
+
+/**
+ * Single source of truth for the state milestones are evaluated against.
+ * Keeps the Achievements page and the celebration queue perfectly aligned —
+ * thresholds and calculation logic are unchanged.
+ */
+export function deriveMilestoneState<
+  T extends MilestoneState & { history: Record<string, { sessions: number }> },
+>(s: T): T {
+  const derived = computeActiveDayStreaks(s.history);
+  return {
+    ...s,
+    bestStreak: Math.max(s.bestStreak, derived.best),
+    streak: Math.max(s.streak, derived.current),
+  };
+}
+
+/** Ids of every milestone currently achieved for the given state. */
+export function achievedMilestoneIds(s: MilestoneState): string[] {
+  return milestones.filter((m) => m.achieved(s)).map((m) => m.id);
+}
+
+export function getMilestoneById(id: string): Milestone | undefined {
+  return milestones.find((m) => m.id === id);
+}
+
 /**
  * Returns numerical progress toward a milestone (used for locked cards
  * and the "Next Achievement" highlight). Returns null if progress is

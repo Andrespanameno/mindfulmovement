@@ -529,6 +529,14 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "Connection restored. Loading Mindful Movement...",
     es: "Conexión restablecida. Cargando Mindful Movement...",
   },
+  "achv.unlocked": { en: "Achievement Unlocked", es: "Logro desbloqueado" },
+  "achv.message": {
+    en: "You did it! Small steps are adding up.",
+    es: "¡Lo lograste! Tus pasos pequeños están dando resultados.",
+  },
+  "achv.celebrate": { en: "Celebrate", es: "Celebrar" },
+  "achv.view": { en: "View Achievements", es: "Ver logros" },
+  "achv.close": { en: "Close", es: "Cerrar" },
   "settings.language.hint": {
     en: "Choose your preferred language.",
     es: "Elige tu idioma preferido.",
