@@ -3,8 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   achievedMilestoneIds,
   deriveMilestoneState,
+  getMilestoneById,
   type MilestoneState,
 } from "@/lib/xp";
+import { isProgressHydrated, resetProgressHydration } from "@/lib/useSessionStore";
 
 const TABLE = "achievement_celebrations_seen";
 
@@ -51,6 +53,32 @@ const acknowledged = new Set<string>();
 const inFlight = new Set<string>();
 let ready = false;
 let loadingFor: string | null = null;
+/**
+ * Snapshot of achievement ids that were unlocked the last time the engine
+ * evaluated. `null` means no baseline has been taken yet for this user —
+ * the first evaluation only establishes it and never celebrates.
+ */
+let previousUnlocked: Set<string> | null = null;
+
+const DEBUG = import.meta.env.DEV;
+
+function debugLog(
+  id: string,
+  prev: boolean,
+  next: boolean,
+  reason: string,
+  queued: boolean,
+) {
+  if (!DEBUG) return;
+  console.info("[achievements]", {
+    achievementId: id,
+    achievementName: getMilestoneById(id)?.label ?? "(unknown)",
+    previousState: prev ? "unlocked" : "locked",
+    currentState: next ? "unlocked" : "locked",
+    reason,
+    queued,
+  });
+}
 
 export function resetAchievementCelebrations() {
   userId = null;
@@ -58,6 +86,8 @@ export function resetAchievementCelebrations() {
   loadingFor = null;
   acknowledged.clear();
   inFlight.clear();
+  previousUnlocked = null;
+  resetProgressHydration();
   queue = [];
   current = null;
   publish();
@@ -78,6 +108,7 @@ export async function initAchievementCelebrations(
   userId = id;
   ready = false;
   acknowledged.clear();
+  previousUnlocked = null;
 
   const [seenRes, profileRes] = await Promise.all([
     (supabase.from(TABLE as never) as never as ReturnType<typeof supabase.from>)
