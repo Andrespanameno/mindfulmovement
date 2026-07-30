@@ -3,8 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   achievedMilestoneIds,
   deriveMilestoneState,
+  getMilestoneById,
   type MilestoneState,
 } from "@/lib/xp";
+import { isProgressHydrated, resetProgressHydration } from "@/lib/useSessionStore";
 
 const TABLE = "achievement_celebrations_seen";
 
@@ -51,6 +53,32 @@ const acknowledged = new Set<string>();
 const inFlight = new Set<string>();
 let ready = false;
 let loadingFor: string | null = null;
+/**
+ * Snapshot of achievement ids that were unlocked the last time the engine
+ * evaluated. `null` means no baseline has been taken yet for this user —
+ * the first evaluation only establishes it and never celebrates.
+ */
+let previousUnlocked: Set<string> | null = null;
+
+const DEBUG = import.meta.env.DEV;
+
+function debugLog(
+  id: string,
+  prev: boolean,
+  next: boolean,
+  reason: string,
+  queued: boolean,
+) {
+  if (!DEBUG) return;
+  console.info("[achievements]", {
+    achievementId: id,
+    achievementName: getMilestoneById(id)?.label ?? "(unknown)",
+    previousState: prev ? "unlocked" : "locked",
+    currentState: next ? "unlocked" : "locked",
+    reason,
+    queued,
+  });
+}
 
 export function resetAchievementCelebrations() {
   userId = null;
@@ -58,6 +86,9 @@ export function resetAchievementCelebrations() {
   loadingFor = null;
   acknowledged.clear();
   inFlight.clear();
+  previousUnlocked = null;
+  needsBaseline = false;
+  resetProgressHydration();
   queue = [];
   current = null;
   publish();
@@ -78,6 +109,7 @@ export async function initAchievementCelebrations(
   userId = id;
   ready = false;
   acknowledged.clear();
+  previousUnlocked = null;
 
   const [seenRes, profileRes] = await Promise.all([
     (supabase.from(TABLE as never) as never as ReturnType<typeof supabase.from>)
@@ -101,20 +133,36 @@ export async function initAchievementCelebrations(
       ?.achievements_baselined ?? false;
 
   if (!baselined) {
-    const already = achievedMilestoneIds(deriveMilestoneState(state));
-    const toMark = already.filter((a) => !acknowledged.has(a));
-    if (toMark.length > 0) {
-      await acknowledge(id, toMark);
-      toMark.forEach((a) => acknowledged.add(a));
+    // Only baseline against fully loaded progress; otherwise defer so we
+    // don't permanently record an empty (zeroed) baseline.
+    if (isProgressHydrated()) {
+      await baselineNow(id, state);
+    } else {
+      needsBaseline = true;
     }
-    await supabase
-      .from("profiles")
-      .update({ achievements_baselined: true })
-      .eq("id", id);
   }
 
   ready = true;
   loadingFor = null;
+}
+
+let needsBaseline = false;
+
+async function baselineNow(
+  id: string,
+  state: MilestoneState & { history: Record<string, { sessions: number }> },
+): Promise<void> {
+  const already = achievedMilestoneIds(deriveMilestoneState(state));
+  const toMark = already.filter((a) => !acknowledged.has(a));
+  if (toMark.length > 0) {
+    await acknowledge(id, toMark);
+    toMark.forEach((a) => acknowledged.add(a));
+  }
+  await supabase
+    .from("profiles")
+    .update({ achievements_baselined: true })
+    .eq("id", id);
+  needsBaseline = false;
 }
 
 async function acknowledge(id: string, ids: string[]): Promise<boolean> {
@@ -148,10 +196,59 @@ export async function checkAchievementUnlocks(
   const id = userId;
   if (!id || !ready) return;
 
-  const earned = achievedMilestoneIds(deriveMilestoneState(state));
-  const fresh = earned.filter(
-    (a) => !acknowledged.has(a) && !inFlight.has(a),
-  );
+  // Never evaluate against half-loaded progress: the local store starts at
+  // zero and only reflects reality after the remote stats + history land.
+  // Evaluating early would make every real achievement look "newly unlocked".
+  if (!isProgressHydrated()) {
+    if (DEBUG) {
+      console.info(
+        "[achievements] skipped evaluation — remote progress not hydrated yet",
+      );
+    }
+    return;
+  }
+
+  const earned = new Set(achievedMilestoneIds(deriveMilestoneState(state)));
+
+  if (needsBaseline) {
+    await baselineNow(id, state);
+    if (userId !== id) return;
+    previousUnlocked = earned;
+    if (DEBUG) {
+      earned.forEach((a) =>
+        debugLog(a, true, true, "deferred baseline (no celebration)", false),
+      );
+    }
+    return;
+  }
+
+  // First evaluation for this user: record the baseline only. Nothing here
+  // has "just transitioned", so nothing may be celebrated.
+  if (previousUnlocked === null) {
+    previousUnlocked = earned;
+    if (DEBUG) {
+      earned.forEach((a) =>
+        debugLog(a, true, true, "baseline snapshot (no celebration)", false),
+      );
+    }
+    return;
+  }
+
+  const prev = previousUnlocked;
+  const transitioned = [...earned].filter((a) => !prev.has(a));
+  // Keep the snapshot in sync even when nothing is celebrated.
+  previousUnlocked = earned;
+
+  if (transitioned.length === 0) return;
+
+  const fresh = transitioned.filter((a) => {
+    if (acknowledged.has(a)) {
+      debugLog(a, false, true, "already acknowledged in database", false);
+      return false;
+    }
+    if (inFlight.has(a)) return false;
+    return true;
+  });
   if (fresh.length === 0) return;
 
   fresh.forEach((a) => inFlight.add(a));
@@ -165,6 +262,7 @@ export async function checkAchievementUnlocks(
     acknowledged.add(a);
     queue.push(a);
     changed = true;
+    debugLog(a, false, true, "locked -> unlocked transition", true);
   }
   if (!changed) return;
 

@@ -399,7 +399,23 @@ export function getStatsSnapshot(): StatsSnapshot {
   };
 }
 
+/* ---- remote hydration flags -------------------------------------- */
+let statsHydrated = false;
+let historyHydrated = false;
+
+/** True once both remote stats and history have been loaded for a user. */
+export function isProgressHydrated() {
+  return statsHydrated && historyHydrated;
+}
+
+/** Called on sign-out / user switch so hydration must happen again. */
+export function resetProgressHydration() {
+  statsHydrated = false;
+  historyHydrated = false;
+}
+
 export function hydrateStats(snap: Partial<StatsSnapshot>) {
+  statsHydrated = true;
   setState((s) => ({
     ...s,
     totalXp: snap.totalXp ?? s.totalXp,
@@ -447,6 +463,7 @@ export interface HistoryHydration {
 }
 
 export function hydrateHistory(payload: HistoryHydration) {
+  historyHydrated = true;
   setState((s) => {
     const t = today();
     const dbToday = payload.history[t];
