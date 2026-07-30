@@ -132,20 +132,36 @@ export async function initAchievementCelebrations(
       ?.achievements_baselined ?? false;
 
   if (!baselined) {
-    const already = achievedMilestoneIds(deriveMilestoneState(state));
-    const toMark = already.filter((a) => !acknowledged.has(a));
-    if (toMark.length > 0) {
-      await acknowledge(id, toMark);
-      toMark.forEach((a) => acknowledged.add(a));
+    // Only baseline against fully loaded progress; otherwise defer so we
+    // don't permanently record an empty (zeroed) baseline.
+    if (isProgressHydrated()) {
+      await baselineNow(id, state);
+    } else {
+      needsBaseline = true;
     }
-    await supabase
-      .from("profiles")
-      .update({ achievements_baselined: true })
-      .eq("id", id);
   }
 
   ready = true;
   loadingFor = null;
+}
+
+let needsBaseline = false;
+
+async function baselineNow(
+  id: string,
+  state: MilestoneState & { history: Record<string, { sessions: number }> },
+): Promise<void> {
+  const already = achievedMilestoneIds(deriveMilestoneState(state));
+  const toMark = already.filter((a) => !acknowledged.has(a));
+  if (toMark.length > 0) {
+    await acknowledge(id, toMark);
+    toMark.forEach((a) => acknowledged.add(a));
+  }
+  await supabase
+    .from("profiles")
+    .update({ achievements_baselined: true })
+    .eq("id", id);
+  needsBaseline = false;
 }
 
 async function acknowledge(id: string, ids: string[]): Promise<boolean> {
