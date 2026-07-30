@@ -400,6 +400,7 @@ export function getStatsSnapshot(): StatsSnapshot {
 }
 
 export function hydrateStats(snap: Partial<StatsSnapshot>) {
+  statsHydrated = true;
   setState((s) => ({
     ...s,
     totalXp: snap.totalXp ?? s.totalXp,
@@ -447,6 +448,7 @@ export interface HistoryHydration {
 }
 
 export function hydrateHistory(payload: HistoryHydration) {
+  historyHydrated = true;
   setState((s) => {
     const t = today();
     const dbToday = payload.history[t];
