@@ -4,7 +4,16 @@ import { KeyboardResize } from '@capacitor/keyboard';
 const config: CapacitorConfig = {
   appId: 'app.lovable.mindfulmovement',
   appName: 'Mindful Movement',
-  webDir: 'dist',
+  // The app is server-rendered, so the Vite build never emits a static
+  // index.html. The native shell loads the published site over HTTPS instead;
+  // `webDir` only provides the local offline/splash fallback that `cap sync`
+  // copies into the native projects.
+  webDir: 'capacitor-shell',
+  server: {
+    url: 'https://mindfulmovement.lovable.app',
+    androidScheme: 'https',
+    cleartext: false,
+  },
   ios: {
     contentInset: 'always',
   },

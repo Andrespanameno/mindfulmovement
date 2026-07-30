@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>Mindful Movement</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: calc(env(safe-area-inset-top) + 24px) 24px
+          calc(env(safe-area-inset-bottom) + 24px);
+        background: #0a0a0a;
+        color: #fafafa;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui,
+          sans-serif;
+        text-align: center;
+      }
+      .wrap {
+        max-width: 22rem;
+      }
+      .dot {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 24px;
+        border-radius: 999px;
+        background: #7c7cff;
+        opacity: 0.9;
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+        50% {
+          transform: scale(1.12);
+          opacity: 1;
+        }
+      }
+      h1 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0 0 8px;
+        letter-spacing: -0.01em;
+      }
+      p {
+        font-size: 0.875rem;
+        line-height: 1.5;
+        margin: 0 0 24px;
+        color: #a1a1aa;
+      }
+      button {
+        appearance: none;
+        border: 0;
+        border-radius: 10px;
+        background: #7c7cff;
+        color: #0a0a0a;
+        font: inherit;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        min-height: 48px;
+        padding: 0 24px;
+        cursor: pointer;
+      }
+      button:active {
+        opacity: 0.85;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="dot" aria-hidden="true"></div>
+      <h1>Mindful Movement</h1>
+      <p>
+        We couldn't reach the app. Check your connection and try again — micro
+        consistency, macro results.
+      </p>
+      <button type="button" onclick="location.reload()">Reconnect</button>
+    </div>
+  </body>
+</html>
