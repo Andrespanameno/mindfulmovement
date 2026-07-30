@@ -519,6 +519,9 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "Let's Get You Moving",
     es: "Regresemos a estar en movimiento",
   },
+    en: "Let's Get You Moving",
+    es: "Regresemos a estar en movimiento",
+  },
   "offline.message": {
     en: "Mindful Movement needs an internet connection to load your personalized experience. Reconnect to continue your wellness journey.",
     es: "Mindful Movement necesita conexión a internet para cargar tu experiencia personalizada. Vuelve a conectarte para continuar tu camino hacia una vida más saludable.",
