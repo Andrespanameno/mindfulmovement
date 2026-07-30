@@ -179,10 +179,47 @@ export async function checkAchievementUnlocks(
   const id = userId;
   if (!id || !ready) return;
 
-  const earned = achievedMilestoneIds(deriveMilestoneState(state));
-  const fresh = earned.filter(
-    (a) => !acknowledged.has(a) && !inFlight.has(a),
-  );
+  // Never evaluate against half-loaded progress: the local store starts at
+  // zero and only reflects reality after the remote stats + history land.
+  // Evaluating early would make every real achievement look "newly unlocked".
+  if (!isProgressHydrated()) {
+    if (DEBUG) {
+      console.info(
+        "[achievements] skipped evaluation — remote progress not hydrated yet",
+      );
+    }
+    return;
+  }
+
+  const earned = new Set(achievedMilestoneIds(deriveMilestoneState(state)));
+
+  // First evaluation for this user: record the baseline only. Nothing here
+  // has "just transitioned", so nothing may be celebrated.
+  if (previousUnlocked === null) {
+    previousUnlocked = earned;
+    if (DEBUG) {
+      earned.forEach((a) =>
+        debugLog(a, true, true, "baseline snapshot (no celebration)", false),
+      );
+    }
+    return;
+  }
+
+  const prev = previousUnlocked;
+  const transitioned = [...earned].filter((a) => !prev.has(a));
+  // Keep the snapshot in sync even when nothing is celebrated.
+  previousUnlocked = earned;
+
+  if (transitioned.length === 0) return;
+
+  const fresh = transitioned.filter((a) => {
+    if (acknowledged.has(a)) {
+      debugLog(a, false, true, "already acknowledged in database", false);
+      return false;
+    }
+    if (inFlight.has(a)) return false;
+    return true;
+  });
   if (fresh.length === 0) return;
 
   fresh.forEach((a) => inFlight.add(a));
@@ -196,6 +233,7 @@ export async function checkAchievementUnlocks(
     acknowledged.add(a);
     queue.push(a);
     changed = true;
+    debugLog(a, false, true, "locked -> unlocked transition", true);
   }
   if (!changed) return;
 
