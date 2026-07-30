@@ -209,6 +209,18 @@ export async function checkAchievementUnlocks(
 
   const earned = new Set(achievedMilestoneIds(deriveMilestoneState(state)));
 
+  if (needsBaseline) {
+    await baselineNow(id, state);
+    if (userId !== id) return;
+    previousUnlocked = earned;
+    if (DEBUG) {
+      earned.forEach((a) =>
+        debugLog(a, true, true, "deferred baseline (no celebration)", false),
+      );
+    }
+    return;
+  }
+
   // First evaluation for this user: record the baseline only. Nothing here
   // has "just transitioned", so nothing may be celebrated.
   if (previousUnlocked === null) {
