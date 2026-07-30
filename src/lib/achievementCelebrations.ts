@@ -87,6 +87,7 @@ export function resetAchievementCelebrations() {
   acknowledged.clear();
   inFlight.clear();
   previousUnlocked = null;
+  needsBaseline = false;
   resetProgressHydration();
   queue = [];
   current = null;
