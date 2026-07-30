@@ -1,45 +1,10 @@
 import { useMemo } from "react";
 import { useSessionStore } from "@/lib/useSessionStore";
-import { milestones, getMilestoneProgress } from "@/lib/xp";
+import { milestones, getMilestoneProgress, deriveMilestoneState } from "@/lib/xp";
 import { cn } from "@/lib/utils";
 import { Check, Lock, Trophy } from "lucide-react";
 import { useContent } from "@/lib/i18n-content";
 import { useI18n } from "@/lib/i18n";
-
-function computeActiveDayStreaks(history: Record<string, { sessions: number }>) {
-  const keys = Object.keys(history).sort();
-  let run = 0;
-  let best = 0;
-  let current = 0;
-  const today = new Date().toISOString().slice(0, 10);
-  const yesterday = (() => {
-    const d = new Date();
-    d.setDate(d.getDate() - 1);
-    return d.toISOString().slice(0, 10);
-  })();
-  let lastActive: string | null = null;
-  for (const k of keys) {
-    if ((history[k]?.sessions ?? 0) > 0) {
-      run += 1;
-      best = Math.max(best, run);
-      lastActive = k;
-    } else {
-      run = 0;
-    }
-  }
-  if (lastActive && (lastActive === today || lastActive === yesterday)) {
-    // walk backward to count current streak
-    const d = new Date(lastActive);
-    while (true) {
-      const k = d.toISOString().slice(0, 10);
-      if ((history[k]?.sessions ?? 0) > 0) {
-        current += 1;
-        d.setDate(d.getDate() - 1);
-      } else break;
-    }
-  }
-  return { current, best };
-}
 
 export function MilestoneGrid() {
   const s = useSessionStore();
@@ -47,10 +12,7 @@ export function MilestoneGrid() {
   const { t } = useI18n();
   const achievedLabel = t("milestone.achieved");
   const { sorted, next, nextProgress, allDone, stateForMilestones } = useMemo(() => {
-    const derived = computeActiveDayStreaks(s.history);
-    const bestStreak = Math.max(s.bestStreak, derived.best);
-    const streak = Math.max(s.streak, derived.current);
-    const stateForMilestones = { ...s, streak, bestStreak };
+    const stateForMilestones = deriveMilestoneState(s);
     const sorted = [...milestones].sort((a, b) => {
       const aDone = a.achieved(stateForMilestones);
       const bDone = b.achieved(stateForMilestones);
