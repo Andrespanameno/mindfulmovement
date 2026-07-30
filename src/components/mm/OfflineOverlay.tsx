@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { CloudOff, RotateCw } from "lucide-react";
 import { isNative, isAndroid } from "@/lib/native";
+import { useI18n } from "@/lib/i18n";
 
 /**
  * Full-screen, branded offline experience.
@@ -10,8 +11,10 @@ import { isNative, isAndroid } from "@/lib/native";
  * dismisses (and reloads) as soon as connectivity returns.
  */
 export function OfflineOverlay() {
+  const { t } = useI18n();
   const [offline, setOffline] = useState(false);
   const [retrying, setRetrying] = useState(false);
+  const [reconnected, setReconnected] = useState(false);
 
   useEffect(() => {
     if (typeof navigator === "undefined") return;
@@ -19,7 +22,7 @@ export function OfflineOverlay() {
 
     const goOffline = () => setOffline(true);
     const goOnline = () => {
-      setOffline(false);
+      setReconnected(true);
       // Connection restored: reload so the app fetches whatever failed.
       window.location.reload();
     };
@@ -77,14 +80,13 @@ export function OfflineOverlay() {
           id="mm-offline-title"
           className="text-xl font-semibold tracking-tight text-card-foreground"
         >
-          Let's Get You Moving
+          {t("offline.title")}
         </h1>
         <p
           id="mm-offline-desc"
           className="mx-auto mt-3 max-w-[19rem] text-sm leading-relaxed text-muted-foreground"
         >
-          Mindful Movement needs an internet connection to load your
-          personalized experience. Reconnect to continue your wellness journey.
+          {reconnected ? t("offline.loading") : t("offline.message")}
         </p>
 
         <button
@@ -96,7 +98,7 @@ export function OfflineOverlay() {
             className={`h-4 w-4 ${retrying ? "animate-spin" : ""}`}
             aria-hidden="true"
           />
-          Retry
+          {t("offline.retry")}
         </button>
 
         <button
@@ -104,7 +106,7 @@ export function OfflineOverlay() {
           onClick={openNetworkSettings}
           className="mt-2 inline-flex min-h-12 w-full items-center justify-center rounded-xl px-6 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
-          Open Network Settings
+          {t("offline.settings")}
         </button>
       </div>
     </div>

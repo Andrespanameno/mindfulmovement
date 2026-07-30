@@ -152,19 +152,48 @@
           <line x1="2" y1="2" x2="22" y2="22" />
         </svg>
       </div>
-      <h1 id="t">Let's Get You Moving</h1>
-      <p id="d">
-        Mindful Movement needs an internet connection to load your personalized
-        experience. Reconnect to continue your wellness journey.
-      </p>
-      <button type="button" id="retry">Retry</button>
-      <button type="button" class="secondary" id="settings">
-        Open Network Settings
-      </button>
+      <h1 id="t"></h1>
+      <p id="d"></p>
+      <button type="button" id="retry"></button>
+      <button type="button" class="secondary" id="settings"></button>
     </div>
     <script>
       var APP_URL = "https://mindfulmovement.lovable.app";
+      var STRINGS = {
+        en: {
+          title: "Let's Get You Moving",
+          message:
+            "Mindful Movement needs an internet connection to load your personalized experience. Reconnect to continue your wellness journey.",
+          retry: "Retry",
+          settings: "Open Network Settings",
+          loading: "Connection restored. Loading Mindful Movement...",
+        },
+        es: {
+          title: "Regresemos a estar en movimiento",
+          message:
+            "Mindful Movement necesita conexión a internet para cargar tu experiencia personalizada. Vuelve a conectarte para continuar tu camino hacia una vida más saludable.",
+          retry: "Reintentar",
+          settings: "Abrir ajustes de red",
+          loading: "Conexión restablecida. Cargando Mindful Movement...",
+        },
+      };
+      function detectLang() {
+        var stored = null;
+        try {
+          stored = window.localStorage.getItem("mm-lang");
+        } catch (e) {}
+        if (stored === "es" || stored === "en") return stored;
+        var nav = (navigator.language || "en").toLowerCase();
+        return nav.indexOf("es") === 0 ? "es" : "en";
+      }
+      var L = STRINGS[detectLang()];
+      document.documentElement.lang = detectLang();
+      document.getElementById("t").textContent = L.title;
+      document.getElementById("d").textContent = L.message;
+      document.getElementById("retry").textContent = L.retry;
+      document.getElementById("settings").textContent = L.settings;
       function reload() {
+        document.getElementById("d").textContent = L.loading;
         location.replace(APP_URL);
       }
       document.getElementById("retry").addEventListener("click", reload);

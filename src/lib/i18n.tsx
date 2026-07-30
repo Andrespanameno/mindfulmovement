@@ -515,6 +515,20 @@ const dict: Record<string, { en: string; es: string }> = {
   "settings.item.terms": { en: "Terms of Service", es: "Términos de servicio" },
   "settings.version": { en: "Mindful Movement v1.0.0", es: "Mindful Movement v1.0.0" },
   "settings.language.label": { en: "Language", es: "Idioma" },
+  "offline.title": {
+    en: "Let's Get You Moving",
+    es: "Regresemos a estar en movimiento",
+  },
+  "offline.message": {
+    en: "Mindful Movement needs an internet connection to load your personalized experience. Reconnect to continue your wellness journey.",
+    es: "Mindful Movement necesita conexión a internet para cargar tu experiencia personalizada. Vuelve a conectarte para continuar tu camino hacia una vida más saludable.",
+  },
+  "offline.retry": { en: "Retry", es: "Reintentar" },
+  "offline.settings": { en: "Open Network Settings", es: "Abrir ajustes de red" },
+  "offline.loading": {
+    en: "Connection restored. Loading Mindful Movement...",
+    es: "Conexión restablecida. Cargando Mindful Movement...",
+  },
   "settings.language.hint": {
     en: "Choose your preferred language.",
     es: "Elige tu idioma preferido.",
