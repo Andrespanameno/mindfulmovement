@@ -380,6 +380,7 @@ export function markReminderShown() {
 }
 
 export interface StatsSnapshot {
+  // (see hydration flags below)
   totalXp: number;
   xpToday: number;
   streak: number;
@@ -389,6 +390,32 @@ export interface StatsSnapshot {
 }
 
 export function getStatsSnapshot(): StatsSnapshot {
+  return {
+    totalXp: state.totalXp,
+    xpToday: state.xpToday,
+    streak: state.streak,
+    bestStreak: state.bestStreak,
+    lastActiveDate: state.lastActiveDate,
+    streakBonusDate: state.streakBonusDate,
+  };
+}
+
+/* ---- remote hydration flags -------------------------------------- */
+let statsHydrated = false;
+let historyHydrated = false;
+
+/** True once both remote stats and history have been loaded for a user. */
+export function isProgressHydrated() {
+  return statsHydrated && historyHydrated;
+}
+
+/** Called on sign-out / user switch so hydration must happen again. */
+export function resetProgressHydration() {
+  statsHydrated = false;
+  historyHydrated = false;
+}
+
+function _unusedStatsSnapshot(): StatsSnapshot {
   return {
     totalXp: state.totalXp,
     xpToday: state.xpToday,
