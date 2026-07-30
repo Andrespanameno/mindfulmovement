@@ -20,6 +20,7 @@ import { ProgressSync } from "@/components/mm/ProgressSync";
 import { RemindersSync } from "@/components/mm/RemindersSync";
 import { DispatchedReminders } from "@/components/mm/DispatchedReminders";
 import { NativeBridge } from "@/components/mm/NativeBridge";
+import { OfflineOverlay } from "@/components/mm/OfflineOverlay";
 import { initTheme } from "@/lib/theme";
 
 function NotFoundComponent() {
@@ -156,6 +157,7 @@ function RootComponent() {
           <RemindersSync />
           <DispatchedReminders />
           <NativeBridge />
+          <OfflineOverlay />
         </I18nProvider>
       </AuthProvider>
     </QueryClientProvider>
