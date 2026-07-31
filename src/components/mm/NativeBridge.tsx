@@ -8,6 +8,7 @@ import { registerAndroidBackHandler } from "@/lib/androidBack";
 import { getReminderSettings } from "@/lib/reminders";
 import { scheduleReminders } from "@/lib/nativeNotifications";
 import { useI18n } from "@/lib/i18n";
+import { completeAuthFromUrl, hasAuthCallbackPayload } from "@/lib/authCallback";
 import {
   markReminderHandled,
   isOnSessionRoute,
@@ -64,6 +65,56 @@ export function NativeBridge() {
 
   // Android hardware back button.
   useEffect(() => registerAndroidBackHandler(), []);
+
+  // Universal Links (iOS) / App Links (Android) / custom-scheme deep links.
+  // Email verification links land here when the app is installed: complete
+  // the session in-app, then let AuthGate route to onboarding or home.
+  useEffect(() => {
+    if (!isNative()) return;
+
+    const handleUrl = async (rawUrl: string) => {
+      let path = "/";
+      try {
+        const parsed = new URL(rawUrl);
+        path = parsed.pathname || "/";
+      } catch {
+        /* keep default */
+      }
+      if (hasAuthCallbackPayload(rawUrl) || path.startsWith("/auth/callback")) {
+        console.info("[NativeBridge] auth deep link received");
+        const result = await completeAuthFromUrl(rawUrl);
+        // "/" lets AuthGate decide: onboarding for first-time users, home
+        // for anyone who already finished profile setup.
+        const target = result.ok ? "/" : "/";
+        try {
+          router.navigate({ to: target, replace: true });
+        } catch {
+          window.location.assign(target);
+        }
+        return;
+      }
+      if (path && path !== "/") {
+        try {
+          router.navigate({ to: path });
+        } catch {
+          window.location.assign(path);
+        }
+      }
+    };
+
+    const urlHandle = App.addListener("appUrlOpen", (event) => {
+      void handleUrl(event.url);
+    });
+
+    // Cold start from a link.
+    void App.getLaunchUrl().then((launch) => {
+      if (launch?.url) void handleUrl(launch.url);
+    });
+
+    return () => {
+      void Promise.resolve(urlHandle).then((h) => h.remove());
+    };
+  }, [router]);
 
   // Android soft-keyboard: pad the body so focused inputs and sticky
   // footers are never covered, and scroll the focused field into view.
