@@ -3,7 +3,7 @@ import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
 
-const PUBLIC_ROUTES = new Set(["/", "/reset-password"]);
+const PUBLIC_ROUTES = new Set(["/", "/reset-password", "/auth/callback"]);
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const { session, loading } = useAuth();
