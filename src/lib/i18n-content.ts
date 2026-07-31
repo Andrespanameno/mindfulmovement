@@ -284,7 +284,7 @@ export const MESSAGE_ES: Record<string, string> = {
   "Hydration is a quiet act of kindness to yourself.": "La hidratación es un acto silencioso de amabilidad hacia ti.",
   "One glass closer to a softer afternoon.": "Un vaso más cerca de una tarde más suave.",
   "Gentle hydration, gentle energy.": "Hidratación suave, energía suave.",
-  "Small sips, real care.": "Sorbos pequeños, cuidado real.",
+  "Small sips, real care.": "Pequeños sorbos, cuido real.",
   "Look how far small steps have carried you.": "Mira qué lejos te han llevado los pasos pequeños.",
   "Consistency, not intensity, built this.": "La constancia, no la intensidad, construyó esto.",
   "Every entry here is a moment you chose yourself.": "Cada entrada aquí es un momento que elegiste tú.",
@@ -295,7 +295,7 @@ export const MESSAGE_ES: Record<string, string> = {
   "A rhythm is forming, one mindful day at a time.": "Se está formando un ritmo, un día consciente a la vez.",
   "This is what kind progress looks like.": "Así se ve el progreso amable.",
   "Each session here is a small thank-you to your future self.": "Cada sesión aquí es un pequeño gracias a tu yo futuro.",
-  "Movement, breath, hydration, all woven into your week.": "Movimiento, respiración, hidratación, todo tejido en tu semana.",
+  "Movement, breath, hydration — all woven into your week.": "Movimiento, respiración, hidratación, todo tejido en tu semana.",
   "Streaks are built breath by breath.": "La constancia se construye respiración a respiración.",
 };
 

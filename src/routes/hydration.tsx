@@ -6,6 +6,7 @@ import { notify } from "@/lib/notify";
 import { supabase } from "@/integrations/supabase/client";
 import { useMotivationalMessage } from "@/hooks/useMotivationalMessage";
 import { useI18n } from "@/lib/i18n";
+import { translateMessage } from "@/lib/i18n-content";
 import { useProfile } from "@/lib/useProfile";
 import { HydrationUnitToggle } from "@/components/mm/HydrationUnitToggle";
 import { formatAmount, mlToOz, ML_PER_OZ, QUICK_ADDS_ML, type HydrationUnit } from "@/lib/hydrationUnit";
@@ -32,7 +33,7 @@ export const Route = createFileRoute("/hydration")({
 });
 
 function HydrationPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const { profile, updateProfile } = useProfile();
   const unit: HydrationUnit = profile?.hydration_unit ?? "oz";
   const goalOz = profile?.daily_water_goal ?? DEFAULT_HYDRATION_GOAL_OZ;
@@ -151,13 +152,18 @@ function HydrationPage() {
   useEffect(() => {
     if (roundOunces >= effectiveGoalOz - 0.05 && !reachedRef.current) {
       reachedRef.current = true;
+      const raw = hydrationMsg?.message;
       notify.success(t("hydration.toast.goal"), {
-        description: hydrationMsg?.message ?? t("hydration.toast.goal_sub"),
+        description: raw
+          ? lang === "es"
+            ? translateMessage(raw)
+            : raw
+          : t("hydration.toast.goal_sub"),
       });
       nextHydrationMsg();
     }
     if (roundOunces < effectiveGoalOz - 0.05) reachedRef.current = false;
-  }, [roundOunces, effectiveGoalOz, hydrationMsg, nextHydrationMsg]);
+  }, [roundOunces, effectiveGoalOz, hydrationMsg, nextHydrationMsg, lang]);
 
   // Gentle reminders while the page is open
   useEffect(() => {
