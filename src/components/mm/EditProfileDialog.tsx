@@ -25,16 +25,10 @@ import { useContent } from "@/lib/i18n-content";
 import { HydrationUnitToggle } from "@/components/mm/HydrationUnitToggle";
 import { ozToMl, mlToOz, ML_PER_OZ, type HydrationUnit } from "@/lib/hydrationUnit";
 import { LanguageToggle } from "@/components/mm/LanguageToggle";
+import { WELLNESS_GOALS } from "@/lib/lifestyles";
 
 const FITNESS = ["beginner", "casual", "active", "athletic"] as const;
 const WORK_STYLES = ["desk", "hybrid", "active", "on-the-go"] as const;
-const GOALS = [
-  "Reduce stress",
-  "Move more",
-  "Stay hydrated",
-  "Better posture",
-  "Sleep better",
-] as const;
 
 export function EditProfileDialog({
   open,
@@ -226,7 +220,7 @@ export function EditProfileDialog({
           <div className="space-y-2">
             <Label>{t("edit.goals")}</Label>
             <div className="grid grid-cols-2 gap-2">
-              {GOALS.map((g) => (
+              {WELLNESS_GOALS.map((g) => (
                 <label
                   key={g}
                   className="flex items-center gap-2 p-2 rounded-lg ring-1 ring-border cursor-pointer"
