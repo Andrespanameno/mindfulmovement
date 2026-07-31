@@ -3,6 +3,7 @@ import { AppShell } from "@/components/mm/AppShell";
 import { ArrowLeft, Shield, FileText, ChevronRight, Sparkles, Trash2, RotateCcw } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { useProfile } from "@/lib/useProfile";
+import { useAppVersion } from "@/lib/appVersion";
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
@@ -33,6 +34,7 @@ export const Route = createFileRoute("/settings")({
 
 function SettingsPage() {
   const { t } = useI18n();
+  const appVersion = useAppVersion();
   const navigate = useNavigate();
   const { updateProfile } = useProfile();
   const runDelete = useServerFn(deleteAccount);
@@ -126,7 +128,14 @@ function SettingsPage() {
       </div>
 
       <p className="text-center text-xs text-muted-foreground mt-8">
-        {t("settings.version")}
+        {appVersion?.version
+          ? appVersion.build
+            ? t("settings.version_build", {
+                version: appVersion.version,
+                build: appVersion.build,
+              })
+            : t("settings.version", { version: appVersion.version })
+          : ""}
       </p>
 
       <div className="mt-6 space-y-3">
