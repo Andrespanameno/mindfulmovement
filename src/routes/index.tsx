@@ -146,7 +146,7 @@ function LoginPage() {
       const { error } = await supabase.auth.resend({
         type: "signup",
         email: pendingEmail,
-        options: { emailRedirectTo: `${window.location.origin}/home` },
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
       });
       if (error) {
         toast.error(error.message);
@@ -207,7 +207,7 @@ function LoginPage() {
           const { error: resendError } = await supabase.auth.resend({
             type: "signup",
             email,
-            options: { emailRedirectTo: `${window.location.origin}/home` },
+            options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
           });
           if (resendError && !/already confirmed/i.test(resendError.message)) {
             toast.error(resendError.message);

@@ -119,3 +119,66 @@ npx cap open android      # Android Studio
 - **No prompt on first launch:** delete the app on the device, then reinstall. iOS only asks once per install.
 - **Notifications not appearing in Settings:** confirm the bundle id / `applicationId` matches and that `npx cap sync` was run after installing `@capacitor/local-notifications`.
 - **Duplicates with in-app toasts:** expected when the app is foregrounded near a slot. Native banners are delivered by iOS even while the app is open.
+## Email verification deep links (Universal Links / App Links)
+
+Verification emails now point at `https://mindfulmovement.lovable.app/auth/callback`.
+That single URL serves three situations:
+
+1. **App installed + links verified** — iOS/Android open the app, Capacitor fires
+   `appUrlOpen`, `NativeBridge` completes the Supabase session and hands off to
+   `AuthGate`, which lands the user on Profile Setup (or Home if onboarding is done).
+2. **App installed but links not verified / scheme blocked** — the browser shows the
+   branded "Email verified successfully!" page with an **Open Mindful Movement**
+   button (custom scheme first, HTTPS link second).
+3. **Desktop browser** — verification completes and the web app continues normally.
+
+Onboarding never continues silently in a mobile browser.
+
+### Association files (served by the app)
+
+- `GET /.well-known/apple-app-site-association` → `application/json`
+- `GET /.well-known/assetlinks.json` → `application/json`
+
+Fill them in with project secrets, then re-publish:
+
+| Secret | Value |
+| --- | --- |
+| `APPLE_APP_SITE_ASSOCIATION_APP_IDS` | `<TEAMID>.app.lovable.mindfulmovement` (comma-separate multiple app IDs) |
+| `ANDROID_APP_LINK_FINGERPRINTS` | SHA-256 app-signing fingerprints from Play Console → Setup → App integrity |
+
+Verify with `curl -i https://mindfulmovement.lovable.app/.well-known/assetlinks.json`.
+
+### iOS native setup (Xcode, one time)
+
+1. Target **App** → *Signing & Capabilities* → **+ Capability** → **Associated Domains**.
+2. Add `applinks:mindfulmovement.lovable.app`.
+3. *Info* → **URL Types** → add identifier `app.lovable.mindfulmovement`, URL Scheme
+   `mindfulmovement` (this powers the "Open Mindful Movement" button fallback).
+4. Archive and upload; iOS refetches the association file on install.
+
+### Android native setup (`android/app/src/main/AndroidManifest.xml`, one time)
+
+Inside the main `<activity>`:
+
+```xml
+<intent-filter android:autoVerify="true">
+  <action android:name="android.intent.action.VIEW" />
+  <category android:name="android.intent.category.DEFAULT" />
+  <category android:name="android.intent.category.BROWSABLE" />
+  <data android:scheme="https" android:host="mindfulmovement.lovable.app" />
+</intent-filter>
+<intent-filter>
+  <action android:name="android.intent.action.VIEW" />
+  <category android:name="android.intent.category.DEFAULT" />
+  <category android:name="android.intent.category.BROWSABLE" />
+  <data android:scheme="mindfulmovement" />
+</intent-filter>
+```
+
+Check verification with
+`adb shell pm get-app-links app.lovable.mindfulmovement`.
+
+> Supabase's confirmation link first hits its own `/auth/v1/verify` endpoint and then
+> redirects to `/auth/callback`, so the redirect URL must stay in the allowed redirect
+> list. Both the site URL and `https://mindfulmovement.lovable.app/auth/callback` are
+> already covered by the wildcard site config.
