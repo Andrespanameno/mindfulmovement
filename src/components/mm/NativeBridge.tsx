@@ -82,10 +82,11 @@ export function NativeBridge() {
       }
       if (hasAuthCallbackPayload(rawUrl) || path.startsWith("/auth/callback")) {
         console.info("[NativeBridge] auth deep link received");
-        const result = await completeAuthFromUrl(rawUrl);
+        await completeAuthFromUrl(rawUrl);
         // "/" lets AuthGate decide: onboarding for first-time users, home
-        // for anyone who already finished profile setup.
-        const target = result.ok ? "/" : "/";
+        // for anyone who already finished profile setup, sign-in if the link
+        // was invalid or expired.
+        const target = "/";
         try {
           router.navigate({ to: target, replace: true });
         } catch {
