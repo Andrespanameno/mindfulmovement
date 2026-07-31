@@ -148,6 +148,42 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "This email is already registered but not verified. Please check your inbox or resend the verification email.",
     es: "Este correo ya está registrado pero no verificado. Revisa tu bandeja de entrada o reenvía el correo de verificación.",
   },
+  "authcb.working": {
+    en: "Verifying your email…",
+    es: "Estamos verificando tu correo…",
+  },
+  "authcb.verified_title": {
+    en: "Email verified successfully!",
+    es: "¡Correo verificado con éxito!",
+  },
+  "authcb.verified_body": {
+    en: "You can now return to Mindful Movement to finish setting up your account.",
+    es: "Ahora puedes volver a Mindful Movement para terminar de configurar tu cuenta.",
+  },
+  "authcb.open_app": {
+    en: "Open Mindful Movement",
+    es: "Abrir Mindful Movement",
+  },
+  "authcb.continue_browser": {
+    en: "Continue in this browser instead",
+    es: "Continuar en este navegador",
+  },
+  "authcb.redirecting": {
+    en: "Taking you into the app…",
+    es: "Te estamos llevando a la app…",
+  },
+  "authcb.error_title": {
+    en: "We couldn't verify this link",
+    es: "No pudimos verificar este enlace",
+  },
+  "authcb.error_body": {
+    en: "The verification link may have expired. Sign in again to request a new one.",
+    es: "El enlace de verificación puede haber expirado. Inicia sesión de nuevo para solicitar otro.",
+  },
+  "authcb.back_to_signin": {
+    en: "Back to sign in",
+    es: "Volver a iniciar sesión",
+  },
   "auth.validation.email_required": {
     en: "Please enter your email address.",
     es: "Por favor, ingresa tu correo electrónico.",
