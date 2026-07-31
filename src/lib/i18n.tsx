@@ -65,11 +65,6 @@ const dict: Record<string, { en: string; es: string }> = {
     en: "Log water through the day to build a steady hydration habit, sip by sip.",
     es: "Registra el agua que tomas durante el día para crear un hábito constante, sorbo a sorbo.",
   },
-  "tutorial.move.title": { en: "Movement tab", es: "Pestaña de movimiento" },
-  "tutorial.move.body": {
-    en: "Tap here to explore all movements, stretches, breathing exercises, and resets.",
-    es: "Toca esta pestaña para explorar movimientos, estiramientos, respiraciones y pausas.",
-  },
   "tutorial.progress.title": { en: "Progress tab", es: "Pestaña de progreso" },
   "tutorial.progress.body": {
     en: "Track your weekly and monthly progress: consistency, movement, hydration, and milestones.",
