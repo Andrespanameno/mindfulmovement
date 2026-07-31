@@ -16,10 +16,6 @@ const config: CapacitorConfig = {
   },
   ios: {
     contentInset: 'always',
-    // Custom scheme used as the browser -> app handoff fallback on the
-    // "Email verified" page. Register `mindfulmovement` under
-    // Info.plist -> CFBundleURLTypes (see docs/native-build.md).
-    scheme: 'Mindful Movement',
   },
   android: {
     // Resize the WebView when the soft keyboard opens so focused inputs and
