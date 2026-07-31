@@ -149,7 +149,6 @@ const dict: Record<string, { en: string; es: string }> = {
     es: "Este correo ya está registrado pero no verificado. Revisa tu bandeja de entrada o reenvía el correo de verificación.",
   },
   "auth.validation.email_required": {
-*** placeholder
     en: "Please enter your email address.",
     es: "Por favor, ingresa tu correo electrónico.",
   },
