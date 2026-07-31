@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Sparkles, Award, Droplet, Compass, TrendingUp, User, X, ArrowRight } from "lucide-react";
+import { Sparkles, Award, Droplet, TrendingUp, User, X, ArrowRight } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { useProfile } from "@/lib/useProfile";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,6 @@ const STEPS: Step[] = [
   { icon: Sparkles, titleKey: "tutorial.guided.title", bodyKey: "tutorial.guided.body" },
   { icon: Award, titleKey: "tutorial.xp.title", bodyKey: "tutorial.xp.body" },
   { icon: Droplet, titleKey: "tutorial.hydration.title", bodyKey: "tutorial.hydration.body" },
-  { icon: Compass, titleKey: "tutorial.move.title", bodyKey: "tutorial.move.body" },
   { icon: TrendingUp, titleKey: "tutorial.progress.title", bodyKey: "tutorial.progress.body" },
   { icon: User, titleKey: "tutorial.profile.title", bodyKey: "tutorial.profile.body" },
 ];
