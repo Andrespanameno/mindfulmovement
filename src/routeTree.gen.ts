@@ -24,6 +24,7 @@ import { Route as HydrationRouteImport } from './routes/hydration'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
@@ -104,6 +105,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailQueueProcessRoute =
   LovableEmailQueueProcessRouteImport.update({
     id: '/lovable/email/queue/process',
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -209,6 +218,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/terms'
+    | '/auth/callback'
     | '/api/public/hooks/send-reminders'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/terms'
+    | '/auth/callback'
     | '/api/public/hooks/send-reminders'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -251,6 +262,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/terms'
+    | '/auth/callback'
     | '/api/public/hooks/send-reminders'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -273,6 +285,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   ApiPublicHooksSendRemindersRoute: typeof ApiPublicHooksSendRemindersRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -386,6 +399,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/queue/process': {
       id: '/lovable/email/queue/process'
       path: '/lovable/email/queue/process'
@@ -433,6 +453,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   ApiPublicHooksSendRemindersRoute: ApiPublicHooksSendRemindersRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
@@ -441,13 +462,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
