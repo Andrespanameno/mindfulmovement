@@ -123,10 +123,6 @@ export const WELLNESS_GOALS_ES: Record<string, string> = {
   "Increase hydration": "Aumentar la hidratación",
   "Improve energy": "Mejorar la energía",
   "Breath control & mindfulness": "Respiración y mindfulness",
-  "Move more": "Moverse más",
-  "Stay hydrated": "Mantenerse hidratado",
-  "Better posture": "Mejor postura",
-  "Sleep better": "Dormir mejor",
 };
 
 export const MOVEMENT_ES: Record<string, { title: string; description: string; instruction?: string }> = {
