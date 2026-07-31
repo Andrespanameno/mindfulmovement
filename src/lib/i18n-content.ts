@@ -295,7 +295,7 @@ export const MESSAGE_ES: Record<string, string> = {
   "A rhythm is forming, one mindful day at a time.": "Se está formando un ritmo, un día consciente a la vez.",
   "This is what kind progress looks like.": "Así se ve el progreso amable.",
   "Each session here is a small thank-you to your future self.": "Cada sesión aquí es un pequeño gracias a tu yo futuro.",
-  "Movement, breath, hydration, all woven into your week.": "Movimiento, respiración, hidratación, todo tejido en tu semana.",
+  "Movement, breath, hydration — all woven into your week.": "Movimiento, respiración, hidratación, todo tejido en tu semana.",
   "Streaks are built breath by breath.": "La constancia se construye respiración a respiración.",
 };
 
