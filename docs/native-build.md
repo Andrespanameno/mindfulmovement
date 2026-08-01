@@ -88,23 +88,27 @@ npx cap open android      # Android Studio
 - `applicationId` must match `app.lovable.mindfulmovement`; set signing config,
   target SDK, and Play Console listing.
 - Edge-to-edge / status-bar styling in `styles.xml` for Android 15+.
-- **Suppress the default WebView error page** so the branded offline screen in
-  `capacitor-shell/index.html` shows instead of "Webpage not available". In
-  `MainActivity.java`, after `super.onCreate(...)`:
+- **Offline error interception (required).** Copy the maintained
+  `MainActivity.java` from this repo into the generated project — see
+  [`native/android/README.md`](../native/android/README.md):
 
-  ```java
-  bridge.getWebView().setWebViewClient(new BridgeWebViewClient(bridge) {
-    @Override
-    public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError err) {
-      if (req.isForMainFrame()) {
-        view.loadUrl("file:///android_asset/public/index.html");
-      }
-    }
-  });
+  ```bash
+  cp native/android/app/src/main/java/app/lovable/mindfulmovement/MainActivity.java \
+     android/app/src/main/java/app/lovable/mindfulmovement/MainActivity.java
   ```
 
-  That local page retries the published URL, offers "Open Network Settings",
-  and auto-reloads once `navigator.onLine` flips back to true.
+  It overrides `WebViewClient.onReceivedError`, and for **main-frame
+  connectivity failures only** (DNS/`ERR_NAME_NOT_RESOLVED`, no internet,
+  timeout, connection failure) loads
+  `file:///android_asset/public/index.html` — the branded, EN/ES
+  `capacitor-shell/index.html` — instead of Android's default
+  "Webpage not available" page. Sub-resource errors, HTTP status errors and SSL
+  errors are left to the default behaviour; certificate errors are never
+  bypassed. Loop protection lives on both sides (a `showingOffline` guard
+  natively, exponential backoff + `navigator.onLine` checks in the page).
+
+  Because this is native code, **publishing the Lovable app does not update it**:
+  run `npx cap sync android`, then rebuild and reinstall from Android Studio.
 - Device testing of Doze-mode reminder delivery and battery-optimization exemptions.
 - Play Console listing should call out the genuine native functionality (scheduled
   local reminders, hardware back handling, keyboard integration) — pure webview
