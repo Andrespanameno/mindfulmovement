@@ -97,9 +97,7 @@ public class MainActivity extends BridgeActivity {
                     || code == WebViewClient.ERROR_TIMEOUT          // timeout
                     || code == WebViewClient.ERROR_IO               // network read/write failure
                     || code == WebViewClient.ERROR_UNKNOWN          // generic net error (no network)
-                    || code == WebViewClient.ERROR_PROXY_AUTHENTICATION
-                    || code == WebViewClient.ERROR_REDIRECT_LOOP
-                    || code == WebViewClient.ERROR_BAD_URL && false; // never treat bad URL as offline
+                    || code == WebViewClient.ERROR_PROXY_AUTHENTICATION;
             }
         });
     }
