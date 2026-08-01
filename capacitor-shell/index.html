@@ -193,10 +193,34 @@
       document.getElementById("retry").textContent = L.retry;
       document.getElementById("settings").textContent = L.settings;
       function reload() {
+        if (!navigator.onLine) {
+          document.getElementById("d").textContent = L.stillOffline;
+          return;
+        }
         document.getElementById("d").textContent = L.loading;
         location.replace(APP_URL);
       }
-      document.getElementById("retry").addEventListener("click", reload);
+      // Retry-loop protection: exponential backoff (3s -> 48s), and never
+      // auto-retry while the device reports it is offline.
+      var attempts = 0;
+      var timer = null;
+      function scheduleAutoRetry() {
+        if (timer) clearTimeout(timer);
+        var delay = Math.min(3000 * Math.pow(2, attempts), 48000);
+        timer = setTimeout(function () {
+          if (navigator.onLine) {
+            attempts++;
+            reload();
+          }
+          scheduleAutoRetry();
+        }, delay);
+      }
+      scheduleAutoRetry();
+      document.getElementById("retry").addEventListener("click", function () {
+        attempts = 0;
+        reload();
+        scheduleAutoRetry();
+      });
       document.getElementById("settings").addEventListener("click", function () {
         try {
           location.href =
@@ -206,10 +230,10 @@
         }
       });
       // Auto-recover as soon as the device is back online.
-      window.addEventListener("online", reload);
-      setInterval(function () {
-        if (navigator.onLine) reload();
-      }, 3000);
+      window.addEventListener("online", function () {
+        attempts = 0;
+        reload();
+      });
     </script>
   </body>
 </html>
